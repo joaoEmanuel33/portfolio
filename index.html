@@ -117,7 +117,7 @@
         
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('game-canvas'), antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.shadowMap.enabled = true; // ATIVANDO SOMBRAS
+        renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
         // Iluminação
@@ -133,37 +133,36 @@
         dirLight.shadow.camera.bottom = -1500;
         scene.add(dirLight);
 
-        // --- O CENÁRIO (CHÃO PARA NÃO FLUTUAR) ---
+        // --- O CENÁRIO (GRAMA) ---
         const groundGeo = new THREE.PlaneGeometry(10000, 10000);
-        const groundMat = new THREE.MeshLambertMaterial({ color: 0x2d4c1e }); // Verde grama
+        const groundMat = new THREE.MeshLambertMaterial({ color: 0x2d4c1e }); 
         const ground = new THREE.Mesh(groundGeo, groundMat);
         ground.rotation.x = -Math.PI / 2;
         ground.receiveShadow = true;
         scene.add(ground);
 
-        // --- O CIRCUITO (CURVAS, RETAS E CHICANE) ---
-        // Desenhando o traçado real
+        // --- O CIRCUITO ---
         const trackCurve = new THREE.CatmullRomCurve3([
-            new THREE.Vector3(0, 0, 500),      // Reta principal (Largada)
-            new THREE.Vector3(500, 0, 500),    // Curva 1 rápida
-            new THREE.Vector3(900, 0, 100),    // Curva 2 longa
-            new THREE.Vector3(400, 0, -300),   // Mergulho
-            new THREE.Vector3(0, 0, -100),     // Chicane Entrada (Forte)
-            new THREE.Vector3(-100, 0, -250),  // Chicane Meio
-            new THREE.Vector3(0, 0, -400),     // Chicane Saída
-            new THREE.Vector3(-300, 0, -600),  // Grampo longo
-            new THREE.Vector3(-800, 0, -200),  // Reta oposta
-            new THREE.Vector3(-700, 0, 400),   // Última curva
-            new THREE.Vector3(-300, 0, 500)    // Retorno pra reta
+            new THREE.Vector3(0, 0, 500),      
+            new THREE.Vector3(500, 0, 500),    
+            new THREE.Vector3(900, 0, 100),    
+            new THREE.Vector3(400, 0, -300),   
+            new THREE.Vector3(0, 0, -100),     
+            new THREE.Vector3(-100, 0, -250),  
+            new THREE.Vector3(0, 0, -400),     
+            new THREE.Vector3(-300, 0, -600),  
+            new THREE.Vector3(-800, 0, -200),  
+            new THREE.Vector3(-700, 0, 400),   
+            new THREE.Vector3(-300, 0, 500)    
         ], true);
 
-        // Pista Asfalto
+        // Pista
         const roadWidth = 55;
         const roadGeo = new THREE.TubeGeometry(trackCurve, 300, roadWidth, 8, true);
-        roadGeo.scale(1, 0.02, 1); // Achata o tubo para virar uma fita plana
+        roadGeo.scale(1, 0.02, 1);
         const roadMat = new THREE.MeshPhongMaterial({ color: 0x222222 });
         const road = new THREE.Mesh(roadGeo, roadMat);
-        road.position.y = 0.5; // Um pouquinho acima da grama
+        road.position.y = 0.5; 
         road.receiveShadow = true;
         scene.add(road);
 
@@ -172,7 +171,6 @@
         const curbGeo = new THREE.TubeGeometry(trackCurve, 300, curbWidth, 8, true);
         curbGeo.scale(1, 0.015, 1);
         
-        // Criando textura listrada para a zebra via Canvas
         const curbCanvas = document.createElement('canvas');
         curbCanvas.width = 128; curbCanvas.height = 128;
         const cCtx = curbCanvas.getContext('2d');
@@ -195,12 +193,12 @@
         startLine.position.y = 0.6;
         scene.add(startLine);
 
-        // --- SAUSAGE CURBS (O TERROR DOS PILOTOS) ---
+        // --- SAUSAGE CURBS (CORRIGIDOS PARA EVITAR CRASH) ---
         const sausages = [];
-        const sausageGeo = new THREE.CapsuleGeometry(3, 15, 4, 8);
-        const sausageMat = new THREE.MeshLambertMaterial({ color: 0xffd700 }); // Amarelo
+        // Solução: Trocando CapsuleGeometry por CylinderGeometry para evitar problemas com a versão do Three.js
+        const sausageGeo = new THREE.CylinderGeometry(2.5, 2.5, 14, 12);
+        const sausageMat = new THREE.MeshLambertMaterial({ color: 0xffd700 }); 
         
-        // Posicionando nas chicanes (descobrindo o u na curva)
         const chicanePoints = [0.42, 0.45, 0.48]; 
         chicanePoints.forEach((u, index) => {
             const point = trackCurve.getPointAt(u);
@@ -208,33 +206,30 @@
             const normal = new THREE.Vector3(-tangent.z, 0, tangent.x).normalize();
             
             const sausage = new THREE.Mesh(sausageGeo, sausageMat);
-            sausage.rotation.z = Math.PI / 2; // Deita a capsula
-            // Alterna lados da pista
+            sausage.rotation.z = Math.PI / 2; 
+            
             const side = index % 2 === 0 ? 1 : -1;
             sausage.position.copy(point).add(normal.multiplyScalar(side * (roadWidth - 10)));
-            sausage.position.y = 2; // Altura da zebra
+            sausage.position.y = 2; 
             sausage.castShadow = true;
             sausages.push(sausage);
             scene.add(sausage);
         });
 
-        // Pontos lógicos para o Anti-Cheat e Checkpoints
+        // Pontos lógicos da pista
         const logicPoints = trackCurve.getSpacedPoints(400);
 
-        // --- O CARRO F1 (CORRIGIDO PARA FRENTE) ---
+        // --- O CARRO F1 ---
         const carGroup = new THREE.Group();
         const redMat = new THREE.MeshPhongMaterial({ color: 0xcc0000 });
         const blackMat = new THREE.MeshPhongMaterial({ color: 0x111111 });
 
-        // Importante: No 3D puro, o Z positivo é para onde a matemática pura manda ele se angle for 0.
         const chassis = new THREE.Mesh(new THREE.BoxGeometry(3, 1, 8), redMat); chassis.position.y = 1;
-        // Bico agora aponta pro +Z (Frente real)
         const nose = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.8, 3), redMat); nose.position.set(0, 0.9, 5.5);
         const cockpit = new THREE.Mesh(new THREE.BoxGeometry(2, 0.8, 3), blackMat); cockpit.position.set(0, 1.8, -1);
         const frontWing = new THREE.Mesh(new THREE.BoxGeometry(5, 0.2, 1.5), blackMat); frontWing.position.set(0, 0.6, 6.5);
         const rearWing = new THREE.Mesh(new THREE.BoxGeometry(5, 0.2, 1.5), blackMat); rearWing.position.set(0, 2.5, -3.5);
         
-        // Sombras
         chassis.castShadow = true; nose.castShadow = true; cockpit.castShadow = true; 
         frontWing.castShadow = true; rearWing.castShadow = true;
 
@@ -249,16 +244,14 @@
         }
         createWheel(2.2, 4.5); createWheel(-2.2, 4.5); createWheel(2.2, -3); createWheel(-2.2, -3);
 
-        // Largada: Posição 0 da curva
         carGroup.position.copy(logicPoints[0]);
-        // Direcionando para a reta
         const startTangent = trackCurve.getTangentAt(0);
         let angle = Math.atan2(startTangent.x, startTangent.z);
         carGroup.rotation.y = angle;
         
         scene.add(carGroup);
 
-        // --- FÍSICA CORRIGIDA ---
+        // --- FÍSICA ---
         let speed = 0, steering = 0, verticalVelocity = 0;
         const keys = {};
         document.addEventListener('keydown', (e) => keys[e.code] = true);
@@ -268,31 +261,25 @@
             if (!gameActive) return;
             requestAnimationFrame(animate);
 
-            // Aceleração Real (Soma positiva vai pra frente)
             let acceleration = 0;
             if (keys['ArrowUp'] || keys['KeyW']) acceleration = 0.25;
-            if (keys['ArrowDown'] || keys['KeyS']) acceleration = -0.15; // Freio/Ré
+            if (keys['ArrowDown'] || keys['KeyS']) acceleration = -0.15; 
             
             if (keys['ArrowLeft'] || keys['KeyA']) steering = 1;
             else if (keys['ArrowRight'] || keys['KeyD']) steering = -1;
             else steering = 0;
 
             speed += acceleration;
-            speed *= 0.985; // Atrito aerodinâmico
-            speed = Math.max(-4, Math.min(12, speed)); // Top speed maior
+            speed *= 0.985; 
+            speed = Math.max(-4, Math.min(12, speed)); 
 
-            // Curvar apenas se estiver em movimento
             if(Math.abs(speed) > 0.1) {
-                // Ao dar ré, a direção inverte naturalmente
                 angle += steering * 0.035 * (speed > 0 ? 1 : -1);
             }
 
-            // O SEGREDINHO DA RÉ: A soma (+ ao invés de -) faz ele andar pra frente onde o bico aponta!
             let nextX = carGroup.position.x + Math.sin(angle) * speed;
             let nextZ = carGroup.position.z + Math.cos(angle) * speed;
 
-            // --- SISTEMA DE PISTA E COLISÃO UNIVERSAL ---
-            // Descobre qual o ponto da pista mais próximo do carro
             let minSquareDist = Infinity;
             let closestIndex = 0;
             for(let i = 0; i < logicPoints.length; i++) {
@@ -307,47 +294,72 @@
 
             let distToCenter = Math.sqrt(minSquareDist);
 
-            // Bateu no muro invisível de contenção?
             if (distToCenter > roadWidth + 8) {
-                speed *= -0.5; // Quica
+                speed *= -0.5; 
             } else {
                 carGroup.position.x = nextX;
                 carGroup.position.z = nextZ;
             }
             carGroup.rotation.y = angle;
 
-            // --- FÍSICA DOS SAUSAGE CURBS (PULO) ---
             sausages.forEach(sau => {
                 if (carGroup.position.distanceTo(sau.position) < 18) {
-                    verticalVelocity = 2.5; // Faz o carro voar
-                    speed *= 0.9; // Perde velocidade na pancada
+                    verticalVelocity = 2.5; 
+                    speed *= 0.9; 
                 }
             });
 
-            // Gravidade e Pulo
             carGroup.position.y += verticalVelocity;
             if (carGroup.position.y > 0) {
-                verticalVelocity -= 0.15; // Puxa pra baixo
+                verticalVelocity -= 0.15; 
             }
             if (carGroup.position.y <= 0) {
                 carGroup.position.y = 0;
                 verticalVelocity = 0;
             }
 
-            // --- CÂMERA DINÂMICA (Atrás do carro) ---
-            const relativeOffset = new THREE.Vector3(0, 15, -40); // Câmera no -Z
+            const relativeOffset = new THREE.Vector3(0, 15, -40);
             const cameraOffset = relativeOffset.applyMatrix4(carGroup.matrixWorld);
             camera.position.lerp(cameraOffset, 0.15);
             camera.lookAt(carGroup.position);
 
-            // --- CRONÔMETRO E VOLTAS LÓGICO ---
             let currentTime = (Date.now() - lapStartTime) / 1000;
             if(!isFirstLap) timeDisplay.textContent = currentTime.toFixed(2);
 
-            // O array tem 400 pontos. O fim da volta é o final do array.
             if (closestIndex > 380) nearEnd = true;
             
             if (nearEnd && closestIndex < 20 && distToCenter < roadWidth) {
                 if (!isFirstLap) {
                     if (currentTime <= TARGET_TIME) {
-                        openPortfolio(`TEMPO BATIDO
+                        openPortfolio(`TEMPO BATIDO: ${currentTime.toFixed(2)}s! ACESSO CONCEDIDO.`);
+                    } else {
+                        timeDisplay.style.color = "#ff0000";
+                        setTimeout(() => timeDisplay.style.color = "#fff", 1000);
+                    }
+                }
+                isFirstLap = false; lapStartTime = Date.now();
+                nearEnd = false;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        function openPortfolio(msg) {
+            gameActive = false;
+            document.getElementById('win-message').innerText = msg;
+            portfolioOverlay.style.display = 'flex';
+            document.getElementById('game-ui').style.display = 'none';
+            document.getElementById('instructions').style.display = 'none';
+            document.getElementById('skip-btn').style.display = 'none';
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
+</body>
+</html>
