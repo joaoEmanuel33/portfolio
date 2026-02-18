@@ -14,284 +14,282 @@
         #game-ui {
             position: absolute; top: 20px; left: 20px; color: #0ff;
             font-family: 'Orbitron', sans-serif; z-index: 10;
-            text-shadow: 0 0 10px #0ff; pointer-events: none;
+            text-shadow: 0 0 10px #0ff;
         }
-        .timer-box { font-size: 1.5rem; margin-bottom: 10px; }
-        .target-time { color: #ff0055; font-size: 1rem; }
+        .timer-box { font-size: 1.8rem; margin-bottom: 5px; }
+        .target-time { color: #ff3366; font-size: 1rem; margin-bottom: 15px; }
+        
         #instructions {
-            position: absolute; bottom: 20px; width: 100%; text-align: center;
+            position: absolute; bottom: 30px; width: 100%; text-align: center;
             color: #fff; font-family: 'Orbitron', sans-serif; font-size: 1.2rem;
             text-shadow: 0 0 5px #0ff; pointer-events: none;
         }
 
+        #skip-btn {
+            position: absolute; top: 20px; right: 20px; z-index: 10;
+            background: rgba(255, 0, 85, 0.2); border: 1px solid #ff0055;
+            color: #ff0055; padding: 10px 20px; font-family: 'Orbitron', sans-serif;
+            cursor: pointer; border-radius: 5px; transition: 0.3s;
+        }
+        #skip-btn:hover { background: #ff0055; color: #fff; box-shadow: 0 0 15px #ff0055; }
+
         /* --- OVERLAY DO PORTFÓLIO --- */
         #portfolio-overlay {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(5, 10, 20, 0.95); backdrop-filter: blur(15px);
-            z-index: 100; display: none; /* Escondido por padrão */
+            background: rgba(5, 10, 15, 0.95); backdrop-filter: blur(10px);
+            z-index: 100; display: none;
             flex-direction: column; align-items: center; justify-content: flex-start;
             padding: 60px 20px; overflow-y: auto; color: #fff;
-            animation: fadeIn 1s ease-out;
+            animation: fadeIn 0.8s ease-out forwards;
         }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
         .success-message {
-            font-family: 'Orbitron', sans-serif; color: #0ff; font-size: 2rem;
-            margin-bottom: 20px; text-shadow: 0 0 20px #0ff;
+            font-family: 'Orbitron', sans-serif; color: #0ff; font-size: 1.5rem;
+            margin-bottom: 30px; text-shadow: 0 0 15px #0ff; letter-spacing: 2px;
         }
+        header { text-align: center; margin-bottom: 40px; }
         header h1 { font-size: 3rem; margin-bottom: 10px; }
-        header p { color: #aaa; font-size: 1.2rem; margin-bottom: 50px; }
+        header p { color: #aaa; font-size: 1.2rem; }
 
-        .skills-section h2, .projects-section h2 {
-            font-family: 'Orbitron', sans-serif; border-bottom: 2px solid #0ff;
-            display: inline-block; margin-bottom: 30px; padding-bottom: 10px;
-        }
         .skills-container { display: flex; gap: 30px; margin-bottom: 60px; flex-wrap: wrap; justify-content: center; }
         .skill-card {
-            background: rgba(255,255,255,0.05); padding: 30px; border-radius: 12px;
-            border: 1px solid #333; width: 250px; text-align: center;
+            background: rgba(255,255,255,0.03); padding: 30px; border-radius: 8px;
+            border: 1px solid #333; width: 300px; text-align: center;
         }
-        .skill-card h3 { font-size: 1.8rem; margin-bottom: 10px; }
+        .skill-card h3 { font-size: 1.8rem; margin-bottom: 15px; }
         .java-skill { color: #f89820; }
         .html-skill { color: #e34f26; }
 
-        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; width: 100%; max-width: 900px; }
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; width: 100%; max-width: 950px; }
         .project-card {
-            background: linear-gradient(45deg, #111, #222); height: 180px;
-            border-radius: 12px; display: flex; align-items: center; justify-content: center;
-            border: 1px dashed #444; font-weight: 600; cursor: pointer; transition: 0.3s;
+            background: #111; height: 160px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; text-align: center; padding: 20px;
+            border: 1px solid #333; font-weight: 600; transition: 0.3s;
         }
-        .project-card:hover { border-color: #0ff; color: #0ff; box-shadow: 0 0 15px rgba(0, 255, 255, 0.3); }
+        .project-card:hover { border-color: #0ff; background: #1a1a1a; box-shadow: 0 5px 15px rgba(0, 255, 255, 0.1); transform: translateY(-5px); }
     </style>
 </head>
 <body>
 
     <div id="game-ui">
-        <div class="timer-box">Tempo: <span id="current-time">0.00</span>s</div>
-        <div class="target-time">Bata 15.00s para desbloquear o portfólio!</div>
-        <div class="timer-box" style="margin-top: 10px; font-size: 1rem;">Melhor Volta: <span id="best-time">--</span></div>
+        <div class="timer-box">Volta: <span id="current-time">0.00</span>s</div>
+        <div class="target-time">Meta: Bater 15.00s</div>
     </div>
-    <div id="instructions">Use as Setas ou W,A,S,D para pilotar. Fique no asfalto!</div>
+    <button id="skip-btn" onclick="openPortfolio('ACESSO LIBERADO (MODO DESENVOLVEDOR)')">Pular Desafio</button>
+    <div id="instructions">Setas ou WASD para pilotar. Use as zebras, mas evite os muros!</div>
 
     <canvas id="game-canvas"></canvas>
 
     <div id="portfolio-overlay">
-        <div class="success-message">ACESSO CONCEDIDO: TEMPO BATIDO!</div>
+        <div class="success-message" id="win-message">NOVO RECORDE! ACESSO CONCEDIDO.</div>
         <header>
             <h1>Meu Portfólio</h1>
             <p>Desenvolvedor Focado em Performance | Java & HTML</p>
         </header>
-
-        <section class="skills-section">
-            <h2>Habilidades Principais</h2>
-            <div class="skills-container">
-                <div class="skill-card">
-                    <h3 class="java-skill">JAVA</h3>
-                    <p>Backend robusto, APIs de alta performance e lógica complexa.</p>
-                </div>
-                <div class="skill-card">
-                    <h3 class="html-skill">HTML</h3>
-                    <p>Estruturação semântica moderna, acessibilidade e SEO.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="projects-section">
-            <h2>Projetos Realizados</h2>
-            <div class="projects-grid">
-                <div class="project-card">Projeto Sistema de Gestão (Java)</div>
-                <div class="project-card">Dashboard Analítico (Web)</div>
-                <div class="project-card">API RESTful de Vendas</div>
-            </div>
-        </section>
+        <div class="skills-container">
+            <div class="skill-card"><h3 class="java-skill">JAVA</h3><p>Backend robusto, APIs e POO.</p></div>
+            <div class="skill-card"><h3 class="html-skill">HTML</h3><p>Estruturação semântica limpa e SEO.</p></div>
+        </div>
+        <div class="projects-grid">
+            <div class="project-card">Sistema de Gestão Interna (Java Spring)</div>
+            <div class="project-card">Dashboard Financeiro (Web Semântica)</div>
+            <div class="project-card">API RESTful de Logística</div>
+        </div>
     </div>
-
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <script>
-        // --- CONFIGURAÇÃO ---
-        const TARGET_TIME = 15.00; 
+        const TARGET_TIME = 15.00;
         let gameActive = true;
         let lapStartTime = Date.now();
-        let bestLapTime = Infinity;
         let isFirstLap = true;
-        
-        // Checkpoints para garantir que o jogador dê a volta completa (anti-cheat)
-        let checkpoints = [false, false, false, false]; 
+        let cpLeft = false, cpTop = false, cpRight = false;
+        let prevCarX = 0;
 
         const timeDisplay = document.getElementById('current-time');
-        const bestTimeDisplay = document.getElementById('best-time');
         const portfolioOverlay = document.getElementById('portfolio-overlay');
 
-        // --- SETUP 3D ---
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x050505, 0.0015);
+        scene.fog = new THREE.FogExp2(0x050505, 0.001);
 
         const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 3000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('game-canvas'), antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.setClearColor(0x050505);
 
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.3);
-        scene.add(ambientLight);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.4));
         const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        dirLight.position.set(0, 500, 0);
+        dirLight.position.set(0, 500, 100);
         scene.add(dirLight);
 
-        // --- GERADOR DA PISTA DE CORRIDA (CANVAS TEXTURE) ---
+        // --- GERADOR DA PISTA ---
         function createCircuitTexture() {
             const canvas = document.createElement('canvas');
             canvas.width = 2048; canvas.height = 2048;
             const ctx = canvas.getContext('2d');
             
-            // Fundo escuro (grama/vazio)
             ctx.fillStyle = '#0a0a0a'; 
             ctx.fillRect(0,0,2048,2048);
-
-            const cx = 1024, cy = 1024;
-            const rx = 650, ry = 400; // Oval dimensions
+            const cx = 1024, cy = 1024, rx = 650, ry = 400;
 
             function drawOval(rX, rY, width, color, dash = []) {
-                ctx.beginPath();
-                ctx.ellipse(cx, cy, rX, rY, 0, 0, Math.PI * 2);
-                ctx.lineWidth = width;
-                ctx.strokeStyle = color;
-                ctx.setLineDash(dash);
-                ctx.stroke();
+                ctx.beginPath(); ctx.ellipse(cx, cy, rX, rY, 0, 0, Math.PI * 2);
+                ctx.lineWidth = width; ctx.strokeStyle = color; ctx.setLineDash(dash); ctx.stroke();
             }
 
-            // 1. Zebras (Fundo vermelho, traços brancos)
-            drawOval(rx, ry, 220, '#ff0000');
-            drawOval(rx, ry, 220, '#ffffff', [50, 50]);
+            drawOval(rx, ry, 220, '#ff0000'); // Zebra Vermelha
+            drawOval(rx, ry, 220, '#ffffff', [40, 40]); // Zebra Branca
+            drawOval(rx, ry, 180, '#222222', []); // Asfalto
 
-            // 2. Asfalto Principal
-            drawOval(rx, ry, 180, '#2a2a2a', []);
-
-            // 3. Linha de Largada/Chegada (Quadriculada)
             ctx.fillStyle = '#ffffff';
             for(let i = 0; i < 180; i += 20) {
                 for(let j = 0; j < 60; j += 20) {
-                    if ((i/20 + j/20) % 2 === 0) {
-                        ctx.fillRect(cx - 30 + j, cy + ry - 90 + i, 20, 20);
-                    }
+                    if ((i/20 + j/20) % 2 === 0) ctx.fillRect(cx - 30 + j, cy + ry - 90 + i, 20, 20);
                 }
             }
             return new THREE.CanvasTexture(canvas);
         }
 
-        const trackGeometry = new THREE.PlaneGeometry(3000, 3000);
-        const trackMaterial = new THREE.MeshPhongMaterial({ map: createCircuitTexture(), shininess: 10 });
-        const track = new THREE.Mesh(trackGeometry, trackMaterial);
+        const trackGeo = new THREE.PlaneGeometry(3000, 3000);
+        const trackMat = new THREE.MeshPhongMaterial({ map: createCircuitTexture(), shininess: 10 });
+        const track = new THREE.Mesh(trackGeo, trackMat);
         track.rotation.x = -Math.PI / 2;
         scene.add(track);
 
-        // --- O CARRINHO DE F1 GENÉRICO ---
+        // --- BARREIRAS FÍSICAS E VISUAIS (NOVAS) ---
+        class BarrierCurve extends THREE.Curve {
+            constructor(rx, rz) { super(); this.rx = rx; this.rz = rz; }
+            getPoint(t, optionalTarget = new THREE.Vector3()) {
+                // Aumentando a altura da parede (Y = 4)
+                return optionalTarget.set(this.rx * Math.cos(2 * Math.PI * t), 4, this.rz * Math.sin(2 * Math.PI * t));
+            }
+        }
+        
+        // Paredes com visual estilo "Grid Neon"
+        const barrierMat = new THREE.MeshStandardMaterial({ 
+            color: 0x00ffff, wireframe: true, emissive: 0x0055ff, emissiveIntensity: 0.8 
+        });
+        
+        // Raio das paredes baseado nas medidas da pista (X: 952 centro, Z: 586 centro)
+        const innerWall = new THREE.Mesh(new THREE.TubeGeometry(new BarrierCurve(740, 380), 100, 8, 4, true), barrierMat);
+        const outerWall = new THREE.Mesh(new THREE.TubeGeometry(new BarrierCurve(1160, 780), 100, 8, 4, true), barrierMat);
+        scene.add(innerWall); scene.add(outerWall);
+
+
+        // --- O CARRO DE F1 ---
         const carGroup = new THREE.Group();
+        const redMat = new THREE.MeshPhongMaterial({ color: 0xcc0000 });
+        const blackMat = new THREE.MeshPhongMaterial({ color: 0x111111 });
 
-        // Chassi
-        const bodyGeo = new THREE.BoxGeometry(4, 1.5, 10);
-        const bodyMat = new THREE.MeshPhongMaterial({ color: 0x00ffcc }); // Ciano brilhante
-        const carBody = new THREE.Mesh(bodyGeo, bodyMat);
-        carBody.position.y = 1;
-        carGroup.add(carBody);
+        const chassis = new THREE.Mesh(new THREE.BoxGeometry(3, 1, 8), redMat); chassis.position.y = 1;
+        const nose = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.8, 3), redMat); nose.position.set(0, 0.9, 5.5);
+        const cockpit = new THREE.Mesh(new THREE.BoxGeometry(2, 0.8, 3), blackMat); cockpit.position.set(0, 1.8, -1);
+        const frontWing = new THREE.Mesh(new THREE.BoxGeometry(5, 0.2, 1.5), blackMat); frontWing.position.set(0, 0.6, 6.5);
+        const rearWing = new THREE.Mesh(new THREE.BoxGeometry(5, 0.2, 1.5), blackMat); rearWing.position.set(0, 2.5, -3.5);
+        
+        carGroup.add(chassis, nose, cockpit, frontWing, rearWing);
 
-        // Aerofólios
-        const wingMat = new THREE.MeshPhongMaterial({ color: 0x222222 });
-        const frontWing = new THREE.Mesh(new THREE.BoxGeometry(8, 0.5, 2), wingMat); frontWing.position.set(0, 0.5, 5);
-        const rearWing = new THREE.Mesh(new THREE.BoxGeometry(8, 0.5, 2), wingMat); rearWing.position.set(0, 2.5, -4.5);
-        carGroup.add(frontWing); carGroup.add(rearWing);
+        const wheelGeo = new THREE.CylinderGeometry(1.2, 1.2, 1, 16);
+        const wheelMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.9 });
+        function createWheel(x, z) {
+            const w = new THREE.Mesh(wheelGeo, wheelMat);
+            w.rotation.z = Math.PI / 2; w.position.set(x, 1.2, z); carGroup.add(w);
+        }
+        createWheel(2.2, 4.5); createWheel(-2.2, 4.5); createWheel(2.2, -3); createWheel(-2.2, -3);
 
-        // Posição Inicial (Na linha de largada, virado para a esquerda)
         carGroup.position.set(0, 0, 580); 
         carGroup.rotation.y = -Math.PI / 2;
         scene.add(carGroup);
 
-        // --- FÍSICA E CONTROLES ---
+        // --- FÍSICA E COLISÃO ---
         let speed = 0, angle = -Math.PI / 2, steering = 0;
         const keys = {};
         document.addEventListener('keydown', (e) => keys[e.code] = true);
         document.addEventListener('keyup', (e) => keys[e.code] = false);
 
-        // --- LOOP PRINCIPAL ---
         function animate() {
             if (!gameActive) return;
             requestAnimationFrame(animate);
 
-            // 1. Controles
+            // 1. Aceleração pura
             let acceleration = 0;
-            if (keys['ArrowUp'] || keys['KeyW']) acceleration = 0.15;
-            if (keys['ArrowDown'] || keys['KeyS']) acceleration = -0.1;
-
+            if (keys['ArrowUp'] || keys['KeyW']) acceleration = 0.22;
+            if (keys['ArrowDown'] || keys['KeyS']) acceleration = -0.15;
+            
             if (keys['ArrowLeft'] || keys['KeyA']) steering = 1;
             else if (keys['ArrowRight'] || keys['KeyD']) steering = -1;
             else steering = 0;
 
-            // 2. Física e Punição de Sair da Pista
-            // Equação da elipse para saber se está na pista
-            let roadFactor = Math.pow(carGroup.position.x / 950, 2) + Math.pow(carGroup.position.z / 580, 2);
-            let onTrack = roadFactor > 0.7 && roadFactor < 1.35;
-            
-            let currentFriction = onTrack ? 0.98 : 0.85; // Grama te freia fortemente
-            let currentMaxSpeed = onTrack ? 6 : 2;       // Velocidade máxima menor fora da pista
-
             speed += acceleration;
-            speed *= currentFriction;
-            speed = Math.max(-currentMaxSpeed/2, Math.min(currentMaxSpeed, speed));
+            speed *= 0.98; // Atrito constante e amigável (sem punição de grama)
+            speed = Math.max(-4, Math.min(10, speed)); // Velocidade máxima aumentada para 10
 
             if(Math.abs(speed) > 0.1) {
-                angle += steering * 0.04 * (speed > 0 ? 1 : -1);
+                angle += steering * 0.035 * (speed > 0 ? 1 : -1);
             }
 
-            carGroup.position.x -= Math.sin(angle) * speed;
-            carGroup.position.z -= Math.cos(angle) * speed;
+            // Calculando o próximo passo (antes de mover o carro de fato)
+            let nextX = carGroup.position.x - Math.sin(angle) * speed;
+            let nextZ = carGroup.position.z - Math.cos(angle) * speed;
+
+            // 2. Sistema de Colisão com as Paredes
+            // O centro da pista seria ~1.0. 
+            // Limite interno ajustado para ~0.55, limite externo ~1.55
+            let colisionFactor = Math.pow(nextX / 952, 2) + Math.pow(nextZ / 586, 2);
+
+            if (colisionFactor < 0.58 || colisionFactor > 1.50) {
+                // BATEU NA PAREDE! O carro quica para trás e perde velocidade.
+                speed *= -0.6; 
+                // Não atualizamos X e Z, impedindo o carro de atravessar o muro.
+            } else {
+                // Caminho livre, move o carro
+                carGroup.position.x = nextX;
+                carGroup.position.z = nextZ;
+            }
             carGroup.rotation.y = angle;
 
             // 3. Câmera
-            const relativeOffset = new THREE.Vector3(0, 20, 40);
+            const relativeOffset = new THREE.Vector3(0, 15, 35);
             const cameraOffset = relativeOffset.applyMatrix4(carGroup.matrixWorld);
             camera.position.lerp(cameraOffset, 0.15);
             camera.lookAt(carGroup.position);
 
-            // 4. Lógica de Volta (Anti-Cheat)
+            // 4. Cronômetro e Anti-cheat
             let currentTime = (Date.now() - lapStartTime) / 1000;
             if(!isFirstLap) timeDisplay.textContent = currentTime.toFixed(2);
 
-            // Checando em qual quadrante da pista o carro está usando o ângulo central
-            let trackAngle = Math.atan2(carGroup.position.z, carGroup.position.x);
-            
-            if (trackAngle > 1.0 && trackAngle < 2.0) checkpoints[0] = true; // Baixo (Largada)
-            if (trackAngle > 2.5 || trackAngle < -2.5) if(checkpoints[0]) checkpoints[1] = true; // Esquerda
-            if (trackAngle < -1.0 && trackAngle > -2.0) if(checkpoints[1]) checkpoints[2] = true; // Cima
-            if (trackAngle > -0.5 && trackAngle < 0.5) if(checkpoints[2]) checkpoints[3] = true; // Direita
+            let px = carGroup.position.x;
+            let pz = carGroup.position.z;
 
-            // Cruzou a largada novamente com todos os checkpoints feitos?
-            if (checkpoints[3] && trackAngle > 1.0 && trackAngle < 1.5) {
+            if (px < -500) cpLeft = true;
+            if (cpLeft && pz < -300) cpTop = true;
+            if (cpTop && px > 500) cpRight = true;
+
+            if (cpRight && pz > 300 && prevCarX > 0 && px <= 0) {
                 if (!isFirstLap) {
-                    if (currentTime < bestLapTime) {
-                        bestLapTime = currentTime;
-                        bestTimeDisplay.textContent = bestLapTime.toFixed(2);
-                        
-                        // VITÓRIA!
-                        if (bestLapTime <= TARGET_TIME) {
-                            openPortfolio();
-                        }
+                    if (currentTime <= TARGET_TIME) {
+                        openPortfolio(`TEMPO BATIDO: ${currentTime.toFixed(2)}s! ACESSO CONCEDIDO.`);
+                    } else {
+                        timeDisplay.style.color = "#ff0000";
+                        setTimeout(() => timeDisplay.style.color = "#0ff", 1000);
                     }
                 }
-                // Reseta a volta
-                isFirstLap = false;
-                lapStartTime = Date.now();
-                checkpoints = [true, false, false, false]; 
+                isFirstLap = false; lapStartTime = Date.now();
+                cpLeft = false; cpTop = false; cpRight = false; 
             }
-
+            prevCarX = px;
             renderer.render(scene, camera);
         }
 
-        function openPortfolio() {
+        function openPortfolio(msg) {
             gameActive = false;
+            document.getElementById('win-message').innerText = msg;
             portfolioOverlay.style.display = 'flex';
             document.getElementById('game-ui').style.display = 'none';
             document.getElementById('instructions').style.display = 'none';
+            document.getElementById('skip-btn').style.display = 'none';
         }
 
         animate();
