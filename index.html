@@ -3,246 +3,319 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Portfólio | Java e HTML</title>
+    <title>Speed Coder | O Desafio do Portfólio</title>
     <style>
-        /* RESET E FONTES */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+        /* --- RESET E FONTES --- */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { overflow: hidden; font-family: 'Inter', sans-serif; background: #000; }
+
+        /* --- UI DO JOGO --- */
+        #game-ui {
+            position: absolute; top: 20px; left: 20px; color: #0ff;
+            font-family: 'Orbitron', sans-serif; z-index: 10;
+            text-shadow: 0 0 10px #0ff; pointer-events: none;
+        }
+        .timer-box { font-size: 1.5rem; margin-bottom: 10px; }
+        .target-time { color: #ff0055; font-size: 1rem; }
+        #instructions {
+            position: absolute; bottom: 20px; width: 100%; text-align: center;
+            color: #fff; font-family: 'Orbitron', sans-serif; font-size: 1.2rem;
+            text-shadow: 0 0 5px #0ff; pointer-events: none;
         }
 
-        body {
-            background-color: #f4f4f4; /* Fundo cinza bem claro igual à imagem */
-            color: #333;
-            padding-bottom: 50px;
+        /* --- OVERLAY DO PORTFÓLIO (INICIALMENTE ESCONDIDO) --- */
+        #portfolio-overlay {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(5, 10, 20, 0.95); backdrop-filter: blur(15px);
+            z-index: 100; display: none; /* Escondido por padrão */
+            flex-direction: column; align-items: center; justify-content: flex-start;
+            padding: 60px 20px; overflow-y: auto; color: #fff;
+            animation: fadeIn 1s ease-out;
         }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* HEADER SUPERIOR (Navegação) */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 5%;
-            background-color: #fff;
-            border-bottom: 1px solid #ddd;
+        /* --- ESTILOS DO PORTFÓLIO --- */
+        .success-message {
+            font-family: 'Orbitron', sans-serif; color: #0ff; font-size: 2rem;
+            margin-bottom: 20px; text-shadow: 0 0 20px #0ff;
         }
-        .nav-logo { font-weight: 600; color: #555; letter-spacing: 1px; }
-        .search-icon { font-size: 1.2rem; cursor: pointer; color: #555; }
+        header h1 { font-size: 3rem; margin-bottom: 10px; }
+        header p { color: #aaa; font-size: 1.2rem; margin-bottom: 50px; }
 
-        /* CABEÇALHO PRINCIPAL E VELOCÍMETRO */
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 60px 5%;
-            max-width: 1200px;
-            margin: 0 auto;
-            flex-wrap: wrap;
-            gap: 40px;
+        .skills-section h2, .projects-section h2 {
+            font-family: 'Orbitron', sans-serif; border-bottom: 2px solid #0ff;
+            display: inline-block; margin-bottom: 30px; padding-bottom: 10px;
         }
-        
-        .header-text h1 {
-            font-size: 2.8rem;
-            color: #222;
-            margin-bottom: 10px;
+        .skills-container { display: flex; gap: 30px; margin-bottom: 60px; }
+        .skill-card {
+            background: rgba(255,255,255,0.05); padding: 30px; border-radius: 12px;
+            border: 1px solid #333; width: 250px; text-align: center;
         }
-        .header-text p {
-            font-size: 1.1rem;
-            color: #666;
-            margin-bottom: 30px;
-        }
-        .tag-btn {
-            background-color: #333;
-            color: #fff;
-            padding: 10px 25px;
-            border: none;
-            border-radius: 4px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        .tag-btn:hover { background-color: #555; }
+        .skill-card h3 { font-size: 1.8rem; margin-bottom: 10px; }
+        .java-skill { color: #f89820; }
+        .html-skill { color: #e34f26; }
 
-        /* VELOCÍMETRO (FEITO EM CSS) */
-        .speedometer-container {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            text-align: center;
-            width: 220px;
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; width: 100%; max-width: 900px; }
+        .project-card {
+            background: linear-gradient(45deg, #111, #222); height: 180px;
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            border: 1px dashed #444; font-weight: 600; cursor: pointer; transition: 0.3s;
         }
-        .speedometer-title {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: #888;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-        .gauge {
-            width: 160px;
-            height: 80px;
-            /* Degradê simulando as cores do velocímetro (Verde, Laranja, Vermelho) */
-            background: conic-gradient(from 270deg at 50% 100%, #10b981 0deg, #f59e0b 90deg, #ef4444 180deg);
-            border-top-left-radius: 160px;
-            border-top-right-radius: 160px;
-            position: relative;
-            margin: 0 auto;
-        }
-        /* Furo no meio para fazer o arco */
-        .gauge::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 50px;
-            background-color: #fff;
-            border-top-left-radius: 100px;
-            border-top-right-radius: 100px;
-        }
-        /* A agulha */
-        .needle {
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            width: 4px;
-            height: 65px;
-            background-color: #333;
-            transform-origin: bottom center;
-            transform: rotate(-30deg); /* Posição da agulha. Mude os graus para mover */
-            border-radius: 4px;
-            z-index: 2;
-        }
-        /* Base da agulha */
-        .needle::after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: -4px;
-            width: 12px;
-            height: 12px;
-            background-color: #333;
-            border-radius: 50%;
-        }
-
-        /* SEÇÕES E CARDS (GRID) */
-        main {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 5%;
-        }
-        
-        section { margin-bottom: 50px; }
-        
-        .section-title {
-            font-size: 1.4rem;
-            color: #444;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background-color: #fff;
-            padding: 25px;
-            border-radius: 6px;
-            border: 1px solid #eaeaea;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.08);
-        }
-        .card h3 {
-            font-size: 1.2rem;
-            color: #222;
-            margin-bottom: 8px;
-        }
-        .card p {
-            font-size: 0.95rem;
-            color: #666;
-            line-height: 1.5;
-        }
-
-        /* RESPONSIVIDADE */
-        @media (max-width: 768px) {
-            header { flex-direction: column; align-items: flex-start; }
-            .speedometer-container { margin-top: 20px; }
-        }
+        .project-card:hover { border-color: #0ff; color: #0ff; box-shadow: 0 0 15px rgba(0, 255, 255, 0.3); }
     </style>
 </head>
 <body>
 
-    <nav>
-        <div class="nav-logo">HEADER</div>
-        <div class="search-icon">🔍</div>
-    </nav>
+    <div id="game-ui">
+        <div class="timer-box">Tempo: <span id="current-time">0.00</span>s</div>
+        <div class="target-time">Bata 15.00s para desbloquear o portfólio!</div>
+        <div class="timer-box" style="margin-top: 10px; font-size: 1rem;">Melhor Volta: <span id="best-time">--</span></div>
+    </div>
+    <div id="instructions">Use as Setas ou W,A,S,D para pilotar</div>
 
-    <header>
-        <div class="header-text">
+    <canvas id="game-canvas"></canvas>
+
+    <div id="portfolio-overlay">
+        <div class="success-message">NOVO RECORDE! ACESSO CONCEDIDO.</div>
+        <header>
             <h1>Meu Portfólio</h1>
-            <p>Desenvolvedor Java e HTML</p>
-            <button class="tag-btn">HTML</button>
-        </div>
-        
-        <div class="speedometer-container">
-            <div class="speedometer-title">Código Level</div>
-            <div class="gauge">
-                <div class="needle"></div>
-            </div>
-        </div>
-    </header>
+            <p>Desenvolvedor Focado em Performance | Java & HTML</p>
+        </header>
 
-    <main>
-        <section>
-            <h2 class="section-title">Minhas Habilidades</h2>
-            <div class="grid-container">
-                <div class="card">
-                    <h3>Java</h3>
-                    <p>Desenvolvimento Backend, APIs e lógica de negócios robusta.</p>
+        <section class="skills-section">
+            <h2>Habilidades Principais</h2>
+            <div class="skills-container">
+                <div class="skill-card">
+                    <h3 class="java-skill">JAVA</h3>
+                    <p>Backend robusto, APIs de alta performance e lógica complexa.</p>
                 </div>
-                <div class="card">
-                    <h3>HTML</h3>
-                    <p>Estruturação semântica, acessibilidade e SEO.</p>
+                <div class="skill-card">
+                    <h3 class="html-skill">HTML</h3>
+                    <p>Estruturação semântica moderna, acessibilidade e SEO.</p>
                 </div>
             </div>
         </section>
 
-        <section>
-            <h2 class="section-title">Meus Projetos</h2>
-            <div class="grid-container">
-                <div class="card">
-                    <h3>Projeto 1</h3>
-                    <p>Descrição focada no que você construiu usando Java e HTML.</p>
-                </div>
-                <div class="card">
-                    <h3>Projeto 2</h3>
-                    <p>Descrição de um sistema web completo e responsivo.</p>
-                </div>
-                <div class="card">
-                    <h3>Projeto 3</h3>
-                    <p>Descrição de uma API de integração para banco de dados.</p>
-                </div>
-                <div class="card">
-                    <h3>Projeto 4</h3>
-                    <p>Descrição de uma página construída puramente em HTML semântico.</p>
-                </div>
+        <section class="projects-section">
+            <h2>Projetos Realizados</h2>
+            <div class="projects-grid">
+                <div class="project-card">Projeto Sistema de Gestão (Java)</div>
+                <div class="project-card">Dashboard Analítico (Web)</div>
+                <div class="project-card">API RESTful de Vendas</div>
             </div>
         </section>
-    </main>
+    </div>
 
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <script>
+        // --- CONFIGURAÇÃO DO JOGO ---
+        const TARGET_TIME = 15.00; // Tempo alvo para abrir o portfólio
+        let gameActive = true;
+        let startTime = Date.now();
+        let lapStartTime = Date.now();
+        let best LapTime = Infinity;
+        const timeDisplay = document.getElementById('current-time');
+        const bestTimeDisplay = document.getElementById('best-time');
+        const portfolioOverlay = document.getElementById('portfolio-overlay');
+
+        // --- THREE.JS SETUP ---
+        const scene = new THREE.Scene();
+        scene.fog = new THREE.FogExp2(0x000000, 0.002); // Neblina futurista
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('game-canvas'), antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000); // Fundo preto
+
+        // --- LUZES FUTURISTAS ---
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+        scene.add(ambientLight);
+        // Luz direcional azul/roxa para dar o tom cyberpunk
+        const dirLight = new THREE.DirectionalLight(0x0066ff, 0.8);
+        dirLight.position.set(100, 100, 50);
+        scene.add(dirLight);
+        const hemiLight = new THREE.HemisphereLight(0xff0055, 0x0000ff, 0.3);
+        scene.add(hemiLight);
+
+        // --- A PISTA E O CHÃO ---
+        // Criando uma textura procedural para o chão (grid + zebras)
+        function createTrackTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 512; canvas.height = 512;
+            const context = canvas.getContext('2d');
+            
+            // Fundo preto
+            context.fillStyle = '#000'; context.fillRect(0,0,512,512);
+            
+            // Grid neon
+            context.strokeStyle = '#0044ff'; context.lineWidth = 1;
+            for(let i=0; i<512; i+=64) {
+                context.beginPath(); context.moveTo(i,0); context.lineTo(i,512); context.stroke();
+                context.beginPath(); context.moveTo(0,i); context.lineTo(512,i); context.stroke();
+            }
+
+            // Zebras laterais (vermelho e branco)
+            context.fillStyle = '#ff0000';
+            for(let i=0; i<512; i+=64) { context.fillRect(0, i, 32, 32); context.fillRect(480, i+32, 32, 32); }
+            context.fillStyle = '#ffffff';
+            for(let i=0; i<512; i+=64) { context.fillRect(0, i+32, 32, 32); context.fillRect(480, i, 32, 32); }
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.wrapS = THREE.RepeatWrapping; texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.set(20, 20); // Repete a textura várias vezes
+            return texture;
+        }
+
+        const trackGeometry = new THREE.PlaneGeometry(2000, 2000);
+        const trackMaterial = new THREE.MeshPhongMaterial({ 
+            map: createTrackTexture(), 
+            shininess: 50
+        });
+        const track = new THREE.Mesh(trackGeometry, trackMaterial);
+        track.rotation.x = -Math.PI / 2; // Deita o plano
+        scene.add(track);
+
+        // Linha de chegada (visual)
+        const finishLineGeo = new THREE.PlaneGeometry(180, 20);
+        const finishLineMat = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+        const finishLine = new THREE.Mesh(finishLineGeo, finishLineMat);
+        finishLine.rotation.x = -Math.PI / 2;
+        finishLine.position.set(0, 0.1, -100); // Posição Z inicial
+        scene.add(finishLine);
+
+        // --- O CARRO (F1 Simples de Blocos) ---
+        const carGroup = new THREE.Group();
+
+        // Corpo principal
+        const bodyGeo = new THREE.BoxGeometry(4, 2, 10);
+        const bodyMat = new THREE.MeshPhongMaterial({ color: 0xff0000 }); // Carro vermelho
+        const carBody = new THREE.Mesh(bodyGeo, bodyMat);
+        carBody.position.y = 1.5;
+        carGroup.add(carBody);
+
+        // Asas (dianteira e traseira)
+        const wingGeo = new THREE.BoxGeometry(8, 0.5, 2);
+        const wingMat = new THREE.MeshPhongMaterial({ color: 0xffffff });
+        const frontWing = new THREE.Mesh(wingGeo, wingMat); frontWing.position.set(0, 1, 5);
+        const rearWing = new THREE.Mesh(wingGeo, wingMat); rearWing.position.set(0, 3, -4.5);
+        carGroup.add(frontWing); carGroup.add(rearWing);
+
+        // Rodas (Cilindros)
+        const wheelGeo = new THREE.CylinderGeometry(1.5, 1.5, 1, 32);
+        const wheelMat = new THREE.MeshStandardMaterial({ color: 0x333333 });
+        function addWheel(x, z) {
+            const wheel = new THREE.Mesh(wheelGeo, wheelMat);
+            wheel.rotation.z = Math.PI / 2; wheel.position.set(x, 1.5, z);
+            carGroup.add(wheel);
+        }
+        addWheel(3, 3.5); addWheel(-3, 3.5); // Dianteiras
+        addWheel(3, -3.5); addWheel(-3, -3.5); // Traseiras
+
+        carGroup.position.set(0, 0, 0);
+        scene.add(carGroup);
+
+        // --- FÍSICA ARCADE SIMPLES ---
+        let speed = 0, angle = 0, acceleration = 0, steering = 0;
+        const maxSpeed = 8; const turnSpeed = 0.03; const friction = 0.98;
+
+        // Controles
+        const keys = {};
+        document.addEventListener('keydown', (e) => keys[e.code] = true);
+        document.addEventListener('keyup', (e) => keys[e.code] = false);
+
+        // --- LOOP DO JOGO ---
+        function animate() {
+            if (!gameActive) return; // Para o jogo se o portfólio abrir
+
+            requestAnimationFrame(animate);
+
+            // 1. Input e Física
+            if (keys['ArrowUp'] || keys['KeyW']) acceleration = 0.2;
+            else if (keys['ArrowDown'] || keys['KeyS']) acceleration = -0.2;
+            else acceleration = 0;
+
+            if (keys['ArrowLeft'] || keys['KeyA']) steering = 1;
+            else if (keys['ArrowRight'] || keys['KeyD']) steering = -1;
+            else steering = 0;
+
+            speed += acceleration;
+            speed *= friction; // Atrito para parar o carro
+            speed = Math.max(-maxSpeed/2, Math.min(maxSpeed, speed)); // Limita a velocidade
+
+            // Só vira se estiver em movimento
+            if(Math.abs(speed) > 0.1) {
+                angle += steering * turnSpeed * (speed > 0 ? 1 : -1);
+            }
+
+            // Move o carro baseado no ângulo e velocidade
+            carGroup.position.x -= Math.sin(angle) * speed;
+            carGroup.position.z -= Math.cos(angle) * speed;
+            carGroup.rotation.y = angle;
+
+            // 2. Câmera Segue o Carro
+            // Posição ideal da câmera (atrás e acima do carro)
+            const relativeCameraOffset = new THREE.Vector3(0, 15, 30);
+            const cameraOffset = relativeCameraOffset.applyMatrix4(carGroup.matrixWorld);
+            // Interpolação suave (lerp) para a câmera não ficar tremendo
+            camera.position.lerp(cameraOffset, 0.1);
+            camera.lookAt(carGroup.position);
+
+            // 3. Lógica de Volta e Tempo
+            let currentTime = (Date.now() - lapStartTime) / 1000;
+            timeDisplay.textContent = currentTime.toFixed(2);
+
+            // Checagem de linha de chegada simples (passou de Z=-100 para Z positivo)
+            // Verifica se está perto do centro da pista (X entre -90 e 90) e passou a linha Z
+            if (carGroup.position.z > finishLine.position.z && carGroup.position.z < finishLine.position.z + 5 && Math.abs(carGroup.position.x) < 90 && speed > 0) {
+                
+                // Volta completada!
+                if (currentTime < bestLapTime && currentTime > 1) { // > 1s para evitar bug de largada
+                    bestLapTime = currentTime;
+                    bestTimeDisplay.textContent = bestLapTime.toFixed(2);
+                    
+                    // CHECAGEM DA VITÓRIA
+                    if (bestLapTime <= TARGET_TIME) {
+                        openPortfolio();
+                    }
+                }
+                // Reseta o tempo da volta (se não venceu)
+                if(gameActive && currentTime > 1) {
+                   lapStartTime = Date.now();
+                   // Reseta posição do carro para evitar triggers múltiplos
+                   carGroup.position.z = finishLine.position.z - 10; 
+                }
+            }
+            
+            // Se sair muito da pista, reseta
+            if(Math.abs(carGroup.position.x) > 900 || Math.abs(carGroup.position.z) > 900) {
+                 carGroup.position.set(0,0, finishLine.position.z - 50);
+                 angle = 0; speed = 0;
+            }
+
+
+            renderer.render(scene, camera);
+        }
+
+        // Função para abrir o portfólio
+        function openPortfolio() {
+            gameActive = false; // Para o loop do jogo
+            portfolioOverlay.style.display = 'flex';
+            document.getElementById('game-ui').style.display = 'none';
+            document.getElementById('instructions').style.display = 'none';
+        }
+
+        // Inicia o jogo
+        animate();
+
+        // Responsividade
+        window.addEventListener('resize', () => {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        });
+    </script>
 </body>
 </html>
