@@ -3,281 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfólio | Estado de Foco</title>
+    <title>Meu Portfólio | Java e HTML</title>
     <style>
-        /* RESET E FONTES ESTÓICAS */
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400&display=swap');
+        /* RESET E FONTES */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
         
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
-            background-color: #010404; /* Fundo abissal */
-            color: #d1e8e8; /* Azul gelo bem claro */
-            font-family: 'Montserrat', sans-serif;
-            overflow-x: hidden;
-            font-weight: 200;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
         }
 
-        /* CANVAS BACKGROUND */
-        #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; width: 100vw; height: 100vh; }
-
-        /* CABEÇALHO - VIBE AGARTHA */
-        header { 
-            text-align: center; 
-            padding: 25vh 20px 15vh; 
-            text-transform: uppercase; 
-            letter-spacing: 5px;
-        }
-        h1 { 
-            font-family: 'Cinzel', serif; 
-            font-size: 3.5rem; 
-            font-weight: 400;
-            color: #fff;
-            text-shadow: 0 0 20px rgba(163, 230, 235, 0.2);
-            margin-bottom: 15px;
-        }
-        p.subtitle { 
-            font-size: 1rem; 
-            letter-spacing: 3px; 
-            color: #8aa6a6; 
+        body {
+            background-color: #f4f4f4; /* Fundo cinza bem claro igual à imagem */
+            color: #333;
+            padding-bottom: 50px;
         }
 
-        /* SEÇÕES GERAIS */
-        section { 
-            padding: 60px 20px; 
-            max-width: 1100px; 
-            margin: 0 auto; 
-            text-align: center; 
-        }
-        h2 { 
-            font-family: 'Cinzel', serif; 
-            font-size: 2rem; 
-            margin-bottom: 50px; 
-            color: #e0f2f2;
-            letter-spacing: 2px;
-            font-weight: 400;
-        }
-
-        /* CARDS DE HABILIDADE (VIDRO FOSCO / GELO) */
-        .skills-container { 
-            display: flex; 
-            justify-content: center; 
-            gap: 30px; 
-            flex-wrap: wrap; 
-        }
-        .skill-card {
-            background: rgba(10, 25, 25, 0.4);
-            border: 1px solid rgba(163, 230, 235, 0.1);
-            padding: 50px 30px;
-            border-radius: 4px; /* Bordas mais retas, sérias */
-            width: 320px;
-            backdrop-filter: blur(15px);
-            /* Transição muito lenta = baixo cortisol */
-            transition: all 0.8s ease; 
-        }
-        .skill-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(163, 230, 235, 0.4);
-            background: rgba(10, 25, 25, 0.7);
-            box-shadow: 0 10px 40px rgba(10, 30, 30, 0.8);
-        }
-        .skill-card h3 { 
-            font-family: 'Cinzel', serif; 
-            font-size: 1.8rem; 
-            margin-bottom: 15px; 
-            color: #fff;
-        }
-        .skill-card p {
-            line-height: 1.6;
-            color: #a3c2c2;
-            font-size: 0.9rem;
-        }
-
-        /* GRID DE PROJETOS */
-        .projects-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 20px; 
-        }
-        .project-card {
-            height: 250px;
-            background: rgba(5, 12, 12, 0.6);
-            border-radius: 4px;
+        /* HEADER SUPERIOR (Navegação) */
+        nav {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            border: 1px solid rgba(163, 230, 235, 0.05);
-            transition: all 0.8s ease;
-            cursor: pointer;
+            padding: 20px 5%;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
         }
-        .project-card:hover { 
-            background: rgba(15, 35, 35, 0.8); 
-            border-color: rgba(163, 230, 235, 0.3); 
-            letter-spacing: 2px;
+        .nav-logo { font-weight: 600; color: #555; letter-spacing: 1px; }
+        .search-icon { font-size: 1.2rem; cursor: pointer; color: #555; }
+
+        /* CABEÇALHO PRINCIPAL E VELOCÍMETRO */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 60px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: 40px;
         }
-        .project-title {
-            font-family: 'Cinzel', serif;
-            font-size: 1.2rem;
-            color: #fff;
+        
+        .header-text h1 {
+            font-size: 2.8rem;
+            color: #222;
             margin-bottom: 10px;
         }
-        .project-desc {
+        .header-text p {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .tag-btn {
+            background-color: #333;
+            color: #fff;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .tag-btn:hover { background-color: #555; }
+
+        /* VELOCÍMETRO (FEITO EM CSS) */
+        .speedometer-container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            text-align: center;
+            width: 220px;
+        }
+        .speedometer-title {
             font-size: 0.8rem;
-            color: #6d8c8c;
+            font-weight: 700;
+            color: #888;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+        .gauge {
+            width: 160px;
+            height: 80px;
+            /* Degradê simulando as cores do velocímetro (Verde, Laranja, Vermelho) */
+            background: conic-gradient(from 270deg at 50% 100%, #10b981 0deg, #f59e0b 90deg, #ef4444 180deg);
+            border-top-left-radius: 160px;
+            border-top-right-radius: 160px;
+            position: relative;
+            margin: 0 auto;
+        }
+        /* Furo no meio para fazer o arco */
+        .gauge::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 50px;
+            background-color: #fff;
+            border-top-left-radius: 100px;
+            border-top-right-radius: 100px;
+        }
+        /* A agulha */
+        .needle {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            height: 65px;
+            background-color: #333;
+            transform-origin: bottom center;
+            transform: rotate(-30deg); /* Posição da agulha. Mude os graus para mover */
+            border-radius: 4px;
+            z-index: 2;
+        }
+        /* Base da agulha */
+        .needle::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: -4px;
+            width: 12px;
+            height: 12px;
+            background-color: #333;
+            border-radius: 50%;
         }
 
+        /* SEÇÕES E CARDS (GRID) */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 5%;
+        }
+        
+        section { margin-bottom: 50px; }
+        
+        .section-title {
+            font-size: 1.4rem;
+            color: #444;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 6px;
+            border: 1px solid #eaeaea;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.08);
+        }
+        .card h3 {
+            font-size: 1.2rem;
+            color: #222;
+            margin-bottom: 8px;
+        }
+        .card p {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* RESPONSIVIDADE */
+        @media (max-width: 768px) {
+            header { flex-direction: column; align-items: flex-start; }
+            .speedometer-container { margin-top: 20px; }
+        }
     </style>
 </head>
 <body>
 
-    <canvas id="bg-canvas"></canvas>
+    <nav>
+        <div class="nav-logo">HEADER</div>
+        <div class="search-icon">🔍</div>
+    </nav>
 
     <header>
-        <h1>Mente Inabalável</h1>
-        <p class="subtitle">Arquitetura de Software & Foco Profundo</p>
+        <div class="header-text">
+            <h1>Meu Portfólio</h1>
+            <p>Desenvolvedor Java e HTML</p>
+            <button class="tag-btn">HTML</button>
+        </div>
+        
+        <div class="speedometer-container">
+            <div class="speedometer-title">Código Level</div>
+            <div class="gauge">
+                <div class="needle"></div>
+            </div>
+        </div>
     </header>
 
-    <section id="habilidades">
-        <h2>Fundações do Sistema</h2>
-        <div class="skills-container">
-            <div class="skill-card">
-                <h3>JAVA</h3>
-                <p>O alicerce. Estruturas robustas, tipagem estática e orientação a objetos. Construído para suportar pressão sem ceder.</p>
+    <main>
+        <section>
+            <h2 class="section-title">Minhas Habilidades</h2>
+            <div class="grid-container">
+                <div class="card">
+                    <h3>Java</h3>
+                    <p>Desenvolvimento Backend, APIs e lógica de negócios robusta.</p>
+                </div>
+                <div class="card">
+                    <h3>HTML</h3>
+                    <p>Estruturação semântica, acessibilidade e SEO.</p>
+                </div>
             </div>
-            <div class="skill-card">
-                <h3>HTML</h3>
-                <p>A semântica primordial. Estruturação limpa e clara. A ordem necessária antes que qualquer design seja aplicado.</p>
+        </section>
+
+        <section>
+            <h2 class="section-title">Meus Projetos</h2>
+            <div class="grid-container">
+                <div class="card">
+                    <h3>Projeto 1</h3>
+                    <p>Descrição focada no que você construiu usando Java e HTML.</p>
+                </div>
+                <div class="card">
+                    <h3>Projeto 2</h3>
+                    <p>Descrição de um sistema web completo e responsivo.</p>
+                </div>
+                <div class="card">
+                    <h3>Projeto 3</h3>
+                    <p>Descrição de uma API de integração para banco de dados.</p>
+                </div>
+                <div class="card">
+                    <h3>Projeto 4</h3>
+                    <p>Descrição de uma página construída puramente em HTML semântico.</p>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
-    <section id="projetos">
-        <h2>Arquivos Antigos</h2>
-        <div class="projects-grid">
-            <div class="project-card">
-                <div class="project-title">Sistema Hyperborea</div>
-                <div class="project-desc">Backend construído em Java</div>
-            </div>
-            <div class="project-card">
-                <div class="project-title">Protocolo Estóico</div>
-                <div class="project-desc">Estruturação semântica avançada</div>
-            </div>
-            <div class="project-card">
-                <div class="project-title">Ruínas de Agartha</div>
-                <div class="project-desc">Exploração em Three.js</div>
-            </div>
-        </div>
-    </section>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    
-    <script>
-        // CONFIGURAÇÃO BÁSICA
-        const scene = new THREE.Scene();
-        // Neblina densa e escura para dar a sensação de profundidade subterrânea
-        scene.fog = new THREE.FogExp2(0x010404, 0.0015); 
-
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg-canvas'), alpha: true, antialias: true });
-        renderer.setPixelRatio(window.devicePixelRatio);
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.position.z = 100;
-
-        // O CRISTAL CENTRAL (O "Sol" de Agartha)
-        // Um icosaedro em wireframe (linhas) passando uma vibe de geometria sagrada/antiga
-        const geometry = new THREE.IcosahedronGeometry(30, 0);
-        const material = new THREE.MeshBasicMaterial({ 
-            color: 0xa3e6eb, // Ciano gelado
-            wireframe: true,
-            transparent: true,
-            opacity: 0.15
-        });
-        const crystal = new THREE.Mesh(geometry, material);
-        scene.add(crystal);
-
-        // PARTÍCULAS (Neve / Poeira Mística caindo MUITO devagar)
-        const particlesGeometry = new THREE.BufferGeometry();
-        const particlesCount = 1500;
-        const posArray = new Float32Array(particlesCount * 3);
-
-        for(let i = 0; i < particlesCount * 3; i++) {
-            // Espalhando as partículas em um raio grande
-            posArray[i] = (Math.random() - 0.5) * 400;
-        }
-
-        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-        
-        // Material das partículas em formato circular
-        const canvas = document.createElement('canvas');
-        canvas.width = 16; canvas.height = 16;
-        const ctx = canvas.getContext('2d');
-        ctx.beginPath();
-        ctx.arc(8, 8, 8, 0, Math.PI * 2);
-        ctx.fillStyle = "white";
-        ctx.fill();
-        const particleTexture = new THREE.CanvasTexture(canvas);
-
-        const particlesMaterial = new THREE.PointsMaterial({
-            size: 0.8,
-            map: particleTexture,
-            transparent: true,
-            opacity: 0.6,
-            color: 0xc4e5e8,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false
-        });
-
-        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
-        scene.add(particlesMesh);
-
-        // MOUSE INTERACTION (Interação sutil)
-        let mouseX = 0;
-        let mouseY = 0;
-        document.addEventListener('mousemove', (event) => {
-            mouseX = event.clientX / window.innerWidth - 0.5;
-            mouseY = event.clientY / window.innerHeight - 0.5;
-        });
-
-        // LOOP DE ANIMAÇÃO "LOW CORTISOL"
-        const clock = new THREE.Clock();
-
-        function animate() {
-            requestAnimationFrame(animate);
-            const elapsedTime = clock.getElapsedTime();
-
-            // Rotação do cristal extremanente lenta e constante
-            crystal.rotation.y = elapsedTime * 0.05;
-            crystal.rotation.x = elapsedTime * 0.02;
-
-            // Movimento sutil da câmera baseado no mouse (calmo, sem solavancos)
-            camera.position.x += (mouseX * 20 - camera.position.x) * 0.02;
-            camera.position.y += (-mouseY * 20 - camera.position.y) * 0.02;
-            camera.lookAt(scene.position);
-
-            // As partículas flutuam lentamente para cima
-            const positions = particlesMesh.geometry.attributes.position.array;
-            for(let i = 1; i < particlesCount * 3; i += 3) {
-                positions[i] += 0.05; // Velocidade lenta para cima
-                if(positions[i] > 200) {
-                    positions[i] = -200; // Reseta no fundo
-                }
-            }
-            particlesMesh.geometry.attributes.position.needsUpdate = true;
-            
-            // Leve rotação das partículas como um todo
-            particlesMesh.rotation.y = elapsedTime * 0.02;
-
-            renderer.render(scene, camera);
-        }
-        animate();
-
-        // RESPONSIVIDADE
-        window.addEventListener('resize', () => {
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-        });
-    </script>
 </body>
 </html>
