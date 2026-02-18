@@ -3,63 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfólio Padawan | Java & HTML</title>
+    <title>Portfólio | Estado de Foco</title>
     <style>
-        /* RESET E FONTES */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', Courier, monospace; }
-        body { background-color: #050505; color: #fff; overflow-x: hidden; }
+        /* RESET E FONTES ESTÓICAS */
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Montserrat:wght@200;400&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            background-color: #010404; /* Fundo abissal */
+            color: #d1e8e8; /* Azul gelo bem claro */
+            font-family: 'Montserrat', sans-serif;
+            overflow-x: hidden;
+            font-weight: 200;
+        }
 
-        /* FIRULAS DE FUNDO E CANVAS THREE.JS */
+        /* CANVAS BACKGROUND */
         #bg-canvas { position: fixed; top: 0; left: 0; z-index: -1; width: 100vw; height: 100vh; }
 
-        /* CABEÇALHO NEON */
-        header { text-align: center; padding: 20vh 20px; text-transform: uppercase; }
-        h1 { font-size: 4rem; text-shadow: 0 0 10px #0066ff, 0 0 20px #0066ff, 0 0 40px #0066ff; animation: pulsar 2s infinite alternate; }
-        p.subtitle { font-size: 1.5rem; margin-top: 10px; color: #ccc; }
-
-        @keyframes pulsar {
-            0% { text-shadow: 0 0 10px #0066ff, 0 0 20px #0066ff; }
-            100% { text-shadow: 0 0 20px #0066ff, 0 0 40px #0066ff, 0 0 60px #0066ff; }
+        /* CABEÇALHO - VIBE AGARTHA */
+        header { 
+            text-align: center; 
+            padding: 25vh 20px 15vh; 
+            text-transform: uppercase; 
+            letter-spacing: 5px;
+        }
+        h1 { 
+            font-family: 'Cinzel', serif; 
+            font-size: 3.5rem; 
+            font-weight: 400;
+            color: #fff;
+            text-shadow: 0 0 20px rgba(163, 230, 235, 0.2);
+            margin-bottom: 15px;
+        }
+        p.subtitle { 
+            font-size: 1rem; 
+            letter-spacing: 3px; 
+            color: #8aa6a6; 
         }
 
-        /* SEÇÃO DE HABILIDADES */
-        section { padding: 80px 20px; max-width: 1000px; margin: 0 auto; text-align: center; }
-        h2 { font-size: 2.5rem; margin-bottom: 40px; color: #fff; text-shadow: 0 0 10px #fff; }
+        /* SEÇÕES GERAIS */
+        section { 
+            padding: 60px 20px; 
+            max-width: 1100px; 
+            margin: 0 auto; 
+            text-align: center; 
+        }
+        h2 { 
+            font-family: 'Cinzel', serif; 
+            font-size: 2rem; 
+            margin-bottom: 50px; 
+            color: #e0f2f2;
+            letter-spacing: 2px;
+            font-weight: 400;
+        }
 
-        .skills-container { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
+        /* CARDS DE HABILIDADE (VIDRO FOSCO / GELO) */
+        .skills-container { 
+            display: flex; 
+            justify-content: center; 
+            gap: 30px; 
+            flex-wrap: wrap; 
+        }
         .skill-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid #333;
-            padding: 40px;
-            border-radius: 15px;
-            width: 300px;
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+            background: rgba(10, 25, 25, 0.4);
+            border: 1px solid rgba(163, 230, 235, 0.1);
+            padding: 50px 30px;
+            border-radius: 4px; /* Bordas mais retas, sérias */
+            width: 320px;
+            backdrop-filter: blur(15px);
+            /* Transição muito lenta = baixo cortisol */
+            transition: all 0.8s ease; 
         }
         .skill-card:hover {
-            transform: translateY(-15px) scale(1.05);
-            border-color: #0066ff;
-            box-shadow: 0 15px 30px rgba(0, 102, 255, 0.3);
+            transform: translateY(-10px);
+            border-color: rgba(163, 230, 235, 0.4);
+            background: rgba(10, 25, 25, 0.7);
+            box-shadow: 0 10px 40px rgba(10, 30, 30, 0.8);
         }
-        .skill-card h3 { font-size: 2rem; margin-bottom: 10px; }
-        .java-text { color: #f89820; }
-        .html-text { color: #e34f26; }
+        .skill-card h3 { 
+            font-family: 'Cinzel', serif; 
+            font-size: 1.8rem; 
+            margin-bottom: 15px; 
+            color: #fff;
+        }
+        .skill-card p {
+            line-height: 1.6;
+            color: #a3c2c2;
+            font-size: 0.9rem;
+        }
 
-        /* SEÇÃO DE PROJETOS */
-        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        /* GRID DE PROJETOS */
+        .projects-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px; 
+        }
         .project-card {
-            height: 200px;
-            background: linear-gradient(45deg, #0a0a0a, #1a1a1a);
-            border-radius: 10px;
+            height: 250px;
+            background: rgba(5, 12, 12, 0.6);
+            border-radius: 4px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-            border: 1px dashed #333;
-            transition: 0.3s;
+            border: 1px solid rgba(163, 230, 235, 0.05);
+            transition: all 0.8s ease;
             cursor: pointer;
         }
-        .project-card:hover { background: #0066ff; color: #fff; border: none; font-weight: bold; box-shadow: 0 0 20px #0066ff; }
+        .project-card:hover { 
+            background: rgba(15, 35, 35, 0.8); 
+            border-color: rgba(163, 230, 235, 0.3); 
+            letter-spacing: 2px;
+        }
+        .project-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+        .project-desc {
+            font-size: 0.8rem;
+            color: #6d8c8c;
+        }
 
     </style>
 </head>
@@ -68,105 +134,140 @@
     <canvas id="bg-canvas"></canvas>
 
     <header>
-        <h1>Construindo com a Força</h1>
-        <p class="subtitle">Padawan em Treinamento | Desenvolvedor Web</p>
+        <h1>Mente Inabalável</h1>
+        <p class="subtitle">Arquitetura de Software & Foco Profundo</p>
     </header>
 
     <section id="habilidades">
-        <h2>Minhas Habilidades Jedi</h2>
+        <h2>Fundações do Sistema</h2>
         <div class="skills-container">
             <div class="skill-card">
-                <h3 class="java-text">JAVA</h3>
-                <p>Onde reside a verdadeira Força do backend. Lógica robusta e orientação a objetos para sistemas seguros.</p>
+                <h3>JAVA</h3>
+                <p>O alicerce. Estruturas robustas, tipagem estática e orientação a objetos. Construído para suportar pressão sem ceder.</p>
             </div>
             <div class="skill-card">
-                <h3 class="html-text">HTML</h3>
-                <p>A estrutura do meu código. Mantém tudo montado e no lugar certo para resistir ao lado sombrio dos bugs.</p>
+                <h3>HTML</h3>
+                <p>A semântica primordial. Estruturação limpa e clara. A ordem necessária antes que qualquer design seja aplicado.</p>
             </div>
         </div>
     </section>
 
     <section id="projetos">
-        <h2>Meus Desafios de Padawan</h2>
+        <h2>Arquivos Antigos</h2>
         <div class="projects-grid">
-            <div class="project-card">Projeto 1: O Despertar do Código</div>
-            <div class="project-card">Projeto 2: A Ameaça dos Bugs</div>
-            <div class="project-card">Projeto 3: O Retorno do Deploy</div>
+            <div class="project-card">
+                <div class="project-title">Sistema Hyperborea</div>
+                <div class="project-desc">Backend construído em Java</div>
+            </div>
+            <div class="project-card">
+                <div class="project-title">Protocolo Estóico</div>
+                <div class="project-desc">Estruturação semântica avançada</div>
+            </div>
+            <div class="project-card">
+                <div class="project-title">Ruínas de Agartha</div>
+                <div class="project-desc">Exploração em Three.js</div>
+            </div>
         </div>
     </section>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <script>
-        // CONFIGURAÇÃO BÁSICA DO THREE.JS
+        // CONFIGURAÇÃO BÁSICA
         const scene = new THREE.Scene();
-        // Ajustei o "fog" (neblina) para dar mais profundidade, as estrelas somem suavemente ao longe
-        scene.fog = new THREE.FogExp2(0x000000, 0.001); 
+        // Neblina densa e escura para dar a sensação de profundidade subterrânea
+        scene.fog = new THREE.FogExp2(0x010404, 0.0015); 
 
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
-        const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg-canvas'), alpha: true });
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg-canvas'), alpha: true, antialias: true });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.position.z = 1000; // Câmera mais longe para vermos mais estrelas
+        camera.position.z = 100;
 
-        // --- NOVA FUNÇÃO: CRIA A TEXTURA DE CÍRCULO ---
-        function createCircleTexture() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 64; canvas.height = 64;
-            const ctx = canvas.getContext('2d');
-            ctx.beginPath();
-            ctx.arc(32, 32, 30, 0, 2 * Math.PI); // Desenha um círculo branco
-            ctx.fillStyle = '#ffffff';
-            ctx.fill();
-            return new THREE.CanvasTexture(canvas);
-        }
-        const circleTexture = createCircleTexture();
-        // ---------------------------------------------
-
-
-        // FIRULA: CAMPO DE ESTRELAS ARREDONDADAS
-        const starGeometry = new THREE.BufferGeometry();
-        
-        // Usamos a textura criada acima no material
-        const starMaterial = new THREE.PointsMaterial({
-            color: 0xffffff, 
-            size: 2.5, // Aumentei o tamanho pois o círculo parece menor que o quadrado
-            map: circleTexture, // APLICA A BOLINHA
-            transparent: true,  // Importante: deixa os cantos do quadrado invisíveis
-            alphaTest: 0.5      // Ajuda a renderizar bordas suaves
+        // O CRISTAL CENTRAL (O "Sol" de Agartha)
+        // Um icosaedro em wireframe (linhas) passando uma vibe de geometria sagrada/antiga
+        const geometry = new THREE.IcosahedronGeometry(30, 0);
+        const material = new THREE.MeshBasicMaterial({ 
+            color: 0xa3e6eb, // Ciano gelado
+            wireframe: true,
+            transparent: true,
+            opacity: 0.15
         });
-        
-        const starVertices = [];
-        
-        // Espalhando 8000 estrelas em um espaço maior
-        for(let i=0; i<8000; i++) {
-            const x = (Math.random() - 0.5) * 3000; // Espaço mais amplo
-            const y = (Math.random() - 0.5) * 3000;
-            const z = (Math.random() - 0.5) * 3000;
-            starVertices.push(x, y, z);
-        }
-        
-        starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-        const stars = new THREE.Points(starGeometry, starMaterial);
-        scene.add(stars);
+        const crystal = new THREE.Mesh(geometry, material);
+        scene.add(crystal);
 
-        // ANIMAÇÃO CONSTANTE (Viagem no Hiperespaço)
+        // PARTÍCULAS (Neve / Poeira Mística caindo MUITO devagar)
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 1500;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for(let i = 0; i < particlesCount * 3; i++) {
+            // Espalhando as partículas em um raio grande
+            posArray[i] = (Math.random() - 0.5) * 400;
+        }
+
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        
+        // Material das partículas em formato circular
+        const canvas = document.createElement('canvas');
+        canvas.width = 16; canvas.height = 16;
+        const ctx = canvas.getContext('2d');
+        ctx.beginPath();
+        ctx.arc(8, 8, 8, 0, Math.PI * 2);
+        ctx.fillStyle = "white";
+        ctx.fill();
+        const particleTexture = new THREE.CanvasTexture(canvas);
+
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.8,
+            map: particleTexture,
+            transparent: true,
+            opacity: 0.6,
+            color: 0xc4e5e8,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+
+        const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+
+        // MOUSE INTERACTION (Interação sutil)
+        let mouseX = 0;
+        let mouseY = 0;
+        document.addEventListener('mousemove', (event) => {
+            mouseX = event.clientX / window.innerWidth - 0.5;
+            mouseY = event.clientY / window.innerHeight - 0.5;
+        });
+
+        // LOOP DE ANIMAÇÃO "LOW CORTISOL"
+        const clock = new THREE.Clock();
+
         function animate() {
             requestAnimationFrame(animate);
-            const positions = stars.geometry.attributes.position.array;
-            
-            for(let i = 2; i < positions.length; i += 3) {
-                positions[i] += 5; // Aumentei a velocidade da nave
-                
-                // Se a estrela passar da câmera, ela volta lá para o fundo (loop infinito)
-                if (positions[i] > 1000) {
-                    positions[i] = -2000;
+            const elapsedTime = clock.getElapsedTime();
+
+            // Rotação do cristal extremanente lenta e constante
+            crystal.rotation.y = elapsedTime * 0.05;
+            crystal.rotation.x = elapsedTime * 0.02;
+
+            // Movimento sutil da câmera baseado no mouse (calmo, sem solavancos)
+            camera.position.x += (mouseX * 20 - camera.position.x) * 0.02;
+            camera.position.y += (-mouseY * 20 - camera.position.y) * 0.02;
+            camera.lookAt(scene.position);
+
+            // As partículas flutuam lentamente para cima
+            const positions = particlesMesh.geometry.attributes.position.array;
+            for(let i = 1; i < particlesCount * 3; i += 3) {
+                positions[i] += 0.05; // Velocidade lenta para cima
+                if(positions[i] > 200) {
+                    positions[i] = -200; // Reseta no fundo
                 }
             }
-            stars.geometry.attributes.position.needsUpdate = true;
+            particlesMesh.geometry.attributes.position.needsUpdate = true;
             
-            // Rotação bem suave da nave
-            stars.rotation.z += 0.0002;
+            // Leve rotação das partículas como um todo
+            particlesMesh.rotation.y = elapsedTime * 0.02;
+
             renderer.render(scene, camera);
         }
         animate();
