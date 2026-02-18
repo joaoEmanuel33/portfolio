@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfólio Épico | Java & HTML</title>
+    <title>Portfólio Padawan | Java & HTML</title>
     <style>
         /* RESET E FONTES */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', Courier, monospace; }
@@ -14,17 +14,17 @@
 
         /* CABEÇALHO NEON */
         header { text-align: center; padding: 20vh 20px; text-transform: uppercase; }
-        h1 { font-size: 4rem; text-shadow: 0 0 10px #0ff, 0 0 20px #0ff, 0 0 40px #0ff; animation: pulsar 2s infinite alternate; }
+        h1 { font-size: 4rem; text-shadow: 0 0 10px #0066ff, 0 0 20px #0066ff, 0 0 40px #0066ff; animation: pulsar 2s infinite alternate; }
         p.subtitle { font-size: 1.5rem; margin-top: 10px; color: #ccc; }
 
         @keyframes pulsar {
-            0% { text-shadow: 0 0 10px #0ff, 0 0 20px #0ff; }
-            100% { text-shadow: 0 0 20px #0ff, 0 0 40px #0ff, 0 0 60px #0ff; }
+            0% { text-shadow: 0 0 10px #0066ff, 0 0 20px #0066ff; }
+            100% { text-shadow: 0 0 20px #0066ff, 0 0 40px #0066ff, 0 0 60px #0066ff; }
         }
 
-        /* SEÇÃO DE HABILIDADES (DESTAQUE PARA JAVA E HTML) */
+        /* SEÇÃO DE HABILIDADES */
         section { padding: 80px 20px; max-width: 1000px; margin: 0 auto; text-align: center; }
-        h2 { font-size: 2.5rem; margin-bottom: 40px; color: #ff0055; text-shadow: 0 0 10px #ff0055; }
+        h2 { font-size: 2.5rem; margin-bottom: 40px; color: #fff; text-shadow: 0 0 10px #fff; }
 
         .skills-container { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; }
         .skill-card {
@@ -32,14 +32,14 @@
             border: 2px solid #333;
             padding: 40px;
             border-radius: 15px;
-            width: 250px;
+            width: 300px;
             backdrop-filter: blur(10px);
             transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
         }
         .skill-card:hover {
             transform: translateY(-15px) scale(1.05);
-            border-color: #0ff;
-            box-shadow: 0 15px 30px rgba(0, 255, 255, 0.3);
+            border-color: #0066ff;
+            box-shadow: 0 15px 30px rgba(0, 102, 255, 0.3);
         }
         .skill-card h3 { font-size: 2rem; margin-bottom: 10px; }
         .java-text { color: #f89820; }
@@ -49,17 +49,17 @@
         .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .project-card {
             height: 200px;
-            background: linear-gradient(45deg, #111, #222);
+            background: linear-gradient(45deg, #0a0a0a, #1a1a1a);
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
-            border: 1px dashed #555;
+            border: 1px dashed #333;
             transition: 0.3s;
             cursor: pointer;
         }
-        .project-card:hover { background: #0ff; color: #000; border: none; font-weight: bold; }
+        .project-card:hover { background: #0066ff; color: #fff; border: none; font-weight: bold; box-shadow: 0 0 20px #0066ff; }
 
     </style>
 </head>
@@ -68,30 +68,30 @@
     <canvas id="bg-canvas"></canvas>
 
     <header>
-        <h1>Bem-vindo ao Meu Universo</h1>
-        <p class="subtitle">Desenvolvedor Focado em Alta Performance</p>
+        <h1>Construindo com a Força</h1>
+        <p class="subtitle">Padawan em Treinamento | Desenvolvedor Web</p>
     </header>
 
     <section id="habilidades">
-        <h2>Minhas Armas Principais</h2>
+        <h2>Minhas Habilidades Jedi</h2>
         <div class="skills-container">
             <div class="skill-card">
                 <h3 class="java-text">JAVA</h3>
-                <p>Lógica robusta, orientação a objetos e backend indestrutível como um T-Rex.</p>
+                <p>Onde reside a verdadeira Força do backend. Lógica robusta e orientação a objetos para sistemas seguros.</p>
             </div>
             <div class="skill-card">
                 <h3 class="html-text">HTML</h3>
-                <p>A espinha dorsal da web. Estrutura semântica rápida como um jato supersônico.</p>
+                <p>A estrutura do meu código. Mantém tudo montado e no lugar certo para resistir ao lado sombrio dos bugs.</p>
             </div>
         </div>
     </section>
 
     <section id="projetos">
-        <h2>Meus Projetos Épicos</h2>
+        <h2>Meus Desafios de Padawan</h2>
         <div class="projects-grid">
-            <div class="project-card">Espaço para o Projeto 1</div>
-            <div class="project-card">Espaço para o Projeto 2</div>
-            <div class="project-card">Espaço para o Projeto 3</div>
+            <div class="project-card">Projeto 1: O Despertar do Código</div>
+            <div class="project-card">Projeto 2: A Ameaça dos Bugs</div>
+            <div class="project-card">Projeto 3: O Retorno do Deploy</div>
         </div>
     </section>
 
@@ -100,84 +100,83 @@
     <script>
         // CONFIGURAÇÃO BÁSICA DO THREE.JS
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        // Ajustei o "fog" (neblina) para dar mais profundidade, as estrelas somem suavemente ao longe
+        scene.fog = new THREE.FogExp2(0x000000, 0.001); 
+
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 2000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.querySelector('#bg-canvas'), alpha: true });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.position.z = 30;
+        camera.position.z = 1000; // Câmera mais longe para vermos mais estrelas
 
-        // 1. FIRULA: PARTICULAS VOANDO (TIPO HIPERESPAÇO)
+        // --- NOVA FUNÇÃO: CRIA A TEXTURA DE CÍRCULO ---
+        function createCircleTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 64; canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            ctx.beginPath();
+            ctx.arc(32, 32, 30, 0, 2 * Math.PI); // Desenha um círculo branco
+            ctx.fillStyle = '#ffffff';
+            ctx.fill();
+            return new THREE.CanvasTexture(canvas);
+        }
+        const circleTexture = createCircleTexture();
+        // ---------------------------------------------
+
+
+        // FIRULA: CAMPO DE ESTRELAS ARREDONDADAS
         const starGeometry = new THREE.BufferGeometry();
-        const starMaterial = new THREE.PointsMaterial({color: 0xffffff});
+        
+        // Usamos a textura criada acima no material
+        const starMaterial = new THREE.PointsMaterial({
+            color: 0xffffff, 
+            size: 2.5, // Aumentei o tamanho pois o círculo parece menor que o quadrado
+            map: circleTexture, // APLICA A BOLINHA
+            transparent: true,  // Importante: deixa os cantos do quadrado invisíveis
+            alphaTest: 0.5      // Ajuda a renderizar bordas suaves
+        });
+        
         const starVertices = [];
-        for(let i=0; i<5000; i++) {
-            const x = (Math.random() - 0.5) * 200;
-            const y = (Math.random() - 0.5) * 200;
-            const z = (Math.random() - 0.5) * 200;
+        
+        // Espalhando 8000 estrelas em um espaço maior
+        for(let i=0; i<8000; i++) {
+            const x = (Math.random() - 0.5) * 3000; // Espaço mais amplo
+            const y = (Math.random() - 0.5) * 3000;
+            const z = (Math.random() - 0.5) * 3000;
             starVertices.push(x, y, z);
         }
+        
         starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
         const stars = new THREE.Points(starGeometry, starMaterial);
         scene.add(stars);
 
-        // 2. FIRULA: UM SABRE DE LUZ 3D COM THREE.JS NATIVO
-        const saberGeometry = new THREE.CylinderGeometry(0.5, 0.5, 15, 32);
-        const saberMaterial = new THREE.MeshStandardMaterial({ 
-            color: 0x00ff00, 
-            emissive: 0x00ff00, 
-            emissiveIntensity: 2 
-        });
-        const lightsaber = new THREE.Mesh(saberGeometry, saberMaterial);
-        lightsaber.position.set(10, 0, -10);
-        lightsaber.rotation.z = Math.PI / 4;
-        scene.add(lightsaber);
-
-        // LUZES PARA O SABRE E FUTUROS MODELOS
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
-        const pointLight = new THREE.PointLight(0xffffff, 1);
-        pointLight.position.set(10, 10, 10);
-        scene.add(pointLight);
-
-        // ANIMAÇÃO CONSTANTE (RENDER LOOP)
+        // ANIMAÇÃO CONSTANTE (Viagem no Hiperespaço)
         function animate() {
             requestAnimationFrame(animate);
-
-            // Gira o sabre de luz
-            lightsaber.rotation.x += 0.01;
-            lightsaber.rotation.y += 0.01;
-
-            // Move as estrelas para dar sensação de movimento de um jato
-            stars.rotation.x += 0.002;
-            stars.rotation.y += 0.001;
-
+            const positions = stars.geometry.attributes.position.array;
+            
+            for(let i = 2; i < positions.length; i += 3) {
+                positions[i] += 5; // Aumentei a velocidade da nave
+                
+                // Se a estrela passar da câmera, ela volta lá para o fundo (loop infinito)
+                if (positions[i] > 1000) {
+                    positions[i] = -2000;
+                }
+            }
+            stars.geometry.attributes.position.needsUpdate = true;
+            
+            // Rotação bem suave da nave
+            stars.rotation.z += 0.0002;
             renderer.render(scene, camera);
         }
         animate();
 
-        // RESPONSIVIDADE (Ajusta o canvas se a tela mudar de tamanho)
+        // RESPONSIVIDADE
         window.addEventListener('resize', () => {
             renderer.setSize(window.innerWidth, window.innerHeight);
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
         });
-
-        /* =========================================================
-        COMO ADICIONAR SEU DINOSSAURO, JATO OU CARRO DE CORRIDA:
-        =========================================================
-        Para carregar modelos reais (.gltf ou .glb baixados do Sketchfab, por exemplo), 
-        você precisará adicionar o GLTFLoader. Exemplo de código:
-
-        // No HTML, importe o GLTFLoader:
-        // <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"><\/script>
-
-        // No JS:
-        // const loader = new THREE.GLTFLoader();
-        // loader.load('caminho/para/seu/trex.glb', function (gltf) {
-        //     scene.add(gltf.scene);
-        //     gltf.scene.position.set(-10, -5, -15);
-        // });
-        */
     </script>
 </body>
 </html>
