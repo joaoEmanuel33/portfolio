@@ -8,30 +8,30 @@
         /* --- RESET E FONTES --- */
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { overflow: hidden; font-family: 'Inter', sans-serif; background: #000; }
+        body { overflow: hidden; font-family: 'Inter', sans-serif; background: #87CEEB; } /* Fundo Céu */
 
         /* --- UI DO JOGO --- */
         #game-ui {
-            position: absolute; top: 20px; left: 20px; color: #0ff;
+            position: absolute; top: 20px; left: 20px; color: #fff;
             font-family: 'Orbitron', sans-serif; z-index: 10;
-            text-shadow: 0 0 10px #0ff;
+            text-shadow: 0 0 10px #000;
         }
-        .timer-box { font-size: 1.8rem; margin-bottom: 5px; }
-        .target-time { color: #ff3366; font-size: 1rem; margin-bottom: 15px; }
+        .timer-box { font-size: 2rem; margin-bottom: 5px; }
+        .target-time { color: #ffeb3b; font-size: 1.1rem; margin-bottom: 15px; font-weight: bold; }
         
         #instructions {
             position: absolute; bottom: 30px; width: 100%; text-align: center;
             color: #fff; font-family: 'Orbitron', sans-serif; font-size: 1.2rem;
-            text-shadow: 0 0 5px #0ff; pointer-events: none;
+            text-shadow: 0 2px 5px #000; pointer-events: none;
         }
 
         #skip-btn {
             position: absolute; top: 20px; right: 20px; z-index: 10;
-            background: rgba(255, 0, 85, 0.2); border: 1px solid #ff0055;
-            color: #ff0055; padding: 10px 20px; font-family: 'Orbitron', sans-serif;
+            background: rgba(0, 0, 0, 0.5); border: 1px solid #fff;
+            color: #fff; padding: 10px 20px; font-family: 'Orbitron', sans-serif;
             cursor: pointer; border-radius: 5px; transition: 0.3s;
         }
-        #skip-btn:hover { background: #ff0055; color: #fff; box-shadow: 0 0 15px #ff0055; }
+        #skip-btn:hover { background: #fff; color: #000; }
 
         /* --- OVERLAY DO PORTFÓLIO --- */
         #portfolio-overlay {
@@ -58,8 +58,6 @@
             border: 1px solid #333; width: 300px; text-align: center;
         }
         .skill-card h3 { font-size: 1.8rem; margin-bottom: 15px; }
-        .java-skill { color: #f89820; }
-        .html-skill { color: #e34f26; }
 
         .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; width: 100%; max-width: 950px; }
         .project-card {
@@ -67,17 +65,17 @@
             display: flex; align-items: center; justify-content: center; text-align: center; padding: 20px;
             border: 1px solid #333; font-weight: 600; transition: 0.3s;
         }
-        .project-card:hover { border-color: #0ff; background: #1a1a1a; box-shadow: 0 5px 15px rgba(0, 255, 255, 0.1); transform: translateY(-5px); }
+        .project-card:hover { border-color: #0ff; background: #1a1a1a; transform: translateY(-5px); }
     </style>
 </head>
 <body>
 
     <div id="game-ui">
         <div class="timer-box">Volta: <span id="current-time">0.00</span>s</div>
-        <div class="target-time">Meta: Bater 15.00s</div>
+        <div class="target-time">Meta: Bater 40.00s</div>
     </div>
     <button id="skip-btn" onclick="openPortfolio('ACESSO LIBERADO (MODO DESENVOLVEDOR)')">Pular Desafio</button>
-    <div id="instructions">Setas ou WASD para pilotar. Use as zebras, mas evite os muros!</div>
+    <div id="instructions">Setas ou WASD para pilotar. Cuidado com as Sausage Curbs na chicane!</div>
 
     <canvas id="game-canvas"></canvas>
 
@@ -88,8 +86,8 @@
             <p>Desenvolvedor Focado em Performance | Java & HTML</p>
         </header>
         <div class="skills-container">
-            <div class="skill-card"><h3 class="java-skill">JAVA</h3><p>Backend robusto, APIs e POO.</p></div>
-            <div class="skill-card"><h3 class="html-skill">HTML</h3><p>Estruturação semântica limpa e SEO.</p></div>
+            <div class="skill-card"><h3 style="color:#f89820;">JAVA</h3><p>Backend robusto, APIs e POO.</p></div>
+            <div class="skill-card"><h3 style="color:#e34f26;">HTML</h3><p>Estruturação semântica limpa e SEO.</p></div>
         </div>
         <div class="projects-grid">
             <div class="project-card">Sistema de Gestão Interna (Java Spring)</div>
@@ -101,110 +99,167 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <script>
-        const TARGET_TIME = 15.00;
+        const TARGET_TIME = 40.00;
         let gameActive = true;
         let lapStartTime = Date.now();
         let isFirstLap = true;
-        let cpLeft = false, cpTop = false, cpRight = false;
-        let prevCarX = 0;
+        let nearEnd = false;
 
         const timeDisplay = document.getElementById('current-time');
         const portfolioOverlay = document.getElementById('portfolio-overlay');
 
+        // --- SETUP 3D COM SOMBRAS ---
         const scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x050505, 0.001);
+        scene.background = new THREE.Color(0x87CEEB); // Céu azul
+        scene.fog = new THREE.FogExp2(0x87CEEB, 0.0005);
 
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 3000);
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 5000);
+        
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('game-canvas'), antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(0x050505);
+        renderer.shadowMap.enabled = true; // ATIVANDO SOMBRAS
+        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-        scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+        // Iluminação
+        scene.add(new THREE.AmbientLight(0xffffff, 0.5));
         const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        dirLight.position.set(0, 500, 100);
+        dirLight.position.set(500, 1000, 500);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.width = 2048;
+        dirLight.shadow.mapSize.height = 2048;
+        dirLight.shadow.camera.left = -1500;
+        dirLight.shadow.camera.right = 1500;
+        dirLight.shadow.camera.top = 1500;
+        dirLight.shadow.camera.bottom = -1500;
         scene.add(dirLight);
 
-        // --- GERADOR DA PISTA ---
-        function createCircuitTexture() {
-            const canvas = document.createElement('canvas');
-            canvas.width = 2048; canvas.height = 2048;
-            const ctx = canvas.getContext('2d');
+        // --- O CENÁRIO (CHÃO PARA NÃO FLUTUAR) ---
+        const groundGeo = new THREE.PlaneGeometry(10000, 10000);
+        const groundMat = new THREE.MeshLambertMaterial({ color: 0x2d4c1e }); // Verde grama
+        const ground = new THREE.Mesh(groundGeo, groundMat);
+        ground.rotation.x = -Math.PI / 2;
+        ground.receiveShadow = true;
+        scene.add(ground);
+
+        // --- O CIRCUITO (CURVAS, RETAS E CHICANE) ---
+        // Desenhando o traçado real
+        const trackCurve = new THREE.CatmullRomCurve3([
+            new THREE.Vector3(0, 0, 500),      // Reta principal (Largada)
+            new THREE.Vector3(500, 0, 500),    // Curva 1 rápida
+            new THREE.Vector3(900, 0, 100),    // Curva 2 longa
+            new THREE.Vector3(400, 0, -300),   // Mergulho
+            new THREE.Vector3(0, 0, -100),     // Chicane Entrada (Forte)
+            new THREE.Vector3(-100, 0, -250),  // Chicane Meio
+            new THREE.Vector3(0, 0, -400),     // Chicane Saída
+            new THREE.Vector3(-300, 0, -600),  // Grampo longo
+            new THREE.Vector3(-800, 0, -200),  // Reta oposta
+            new THREE.Vector3(-700, 0, 400),   // Última curva
+            new THREE.Vector3(-300, 0, 500)    // Retorno pra reta
+        ], true);
+
+        // Pista Asfalto
+        const roadWidth = 55;
+        const roadGeo = new THREE.TubeGeometry(trackCurve, 300, roadWidth, 8, true);
+        roadGeo.scale(1, 0.02, 1); // Achata o tubo para virar uma fita plana
+        const roadMat = new THREE.MeshPhongMaterial({ color: 0x222222 });
+        const road = new THREE.Mesh(roadGeo, roadMat);
+        road.position.y = 0.5; // Um pouquinho acima da grama
+        road.receiveShadow = true;
+        scene.add(road);
+
+        // Zebras (Curbs) Laterais
+        const curbWidth = 62;
+        const curbGeo = new THREE.TubeGeometry(trackCurve, 300, curbWidth, 8, true);
+        curbGeo.scale(1, 0.015, 1);
+        
+        // Criando textura listrada para a zebra via Canvas
+        const curbCanvas = document.createElement('canvas');
+        curbCanvas.width = 128; curbCanvas.height = 128;
+        const cCtx = curbCanvas.getContext('2d');
+        cCtx.fillStyle = '#ff0000'; cCtx.fillRect(0,0,128,128);
+        cCtx.fillStyle = '#ffffff'; cCtx.fillRect(0,0,64,128);
+        const curbTex = new THREE.CanvasTexture(curbCanvas);
+        curbTex.wrapS = THREE.RepeatWrapping; curbTex.wrapT = THREE.RepeatWrapping;
+        curbTex.repeat.set(300, 1);
+
+        const curbMat = new THREE.MeshLambertMaterial({ map: curbTex });
+        const curb = new THREE.Mesh(curbGeo, curbMat);
+        curb.position.y = 0.4;
+        curb.receiveShadow = true;
+        scene.add(curb);
+
+        // Linha de Largada
+        const startLine = new THREE.Mesh(new THREE.PlaneGeometry(roadWidth * 2.2, 20), new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true}));
+        startLine.rotation.x = -Math.PI / 2;
+        startLine.position.copy(trackCurve.getPointAt(0));
+        startLine.position.y = 0.6;
+        scene.add(startLine);
+
+        // --- SAUSAGE CURBS (O TERROR DOS PILOTOS) ---
+        const sausages = [];
+        const sausageGeo = new THREE.CapsuleGeometry(3, 15, 4, 8);
+        const sausageMat = new THREE.MeshLambertMaterial({ color: 0xffd700 }); // Amarelo
+        
+        // Posicionando nas chicanes (descobrindo o u na curva)
+        const chicanePoints = [0.42, 0.45, 0.48]; 
+        chicanePoints.forEach((u, index) => {
+            const point = trackCurve.getPointAt(u);
+            const tangent = trackCurve.getTangentAt(u);
+            const normal = new THREE.Vector3(-tangent.z, 0, tangent.x).normalize();
             
-            ctx.fillStyle = '#0a0a0a'; 
-            ctx.fillRect(0,0,2048,2048);
-            const cx = 1024, cy = 1024, rx = 650, ry = 400;
-
-            function drawOval(rX, rY, width, color, dash = []) {
-                ctx.beginPath(); ctx.ellipse(cx, cy, rX, rY, 0, 0, Math.PI * 2);
-                ctx.lineWidth = width; ctx.strokeStyle = color; ctx.setLineDash(dash); ctx.stroke();
-            }
-
-            drawOval(rx, ry, 220, '#ff0000'); // Zebra Vermelha
-            drawOval(rx, ry, 220, '#ffffff', [40, 40]); // Zebra Branca
-            drawOval(rx, ry, 180, '#222222', []); // Asfalto
-
-            ctx.fillStyle = '#ffffff';
-            for(let i = 0; i < 180; i += 20) {
-                for(let j = 0; j < 60; j += 20) {
-                    if ((i/20 + j/20) % 2 === 0) ctx.fillRect(cx - 30 + j, cy + ry - 90 + i, 20, 20);
-                }
-            }
-            return new THREE.CanvasTexture(canvas);
-        }
-
-        const trackGeo = new THREE.PlaneGeometry(3000, 3000);
-        const trackMat = new THREE.MeshPhongMaterial({ map: createCircuitTexture(), shininess: 10 });
-        const track = new THREE.Mesh(trackGeo, trackMat);
-        track.rotation.x = -Math.PI / 2;
-        scene.add(track);
-
-        // --- BARREIRAS FÍSICAS E VISUAIS (NOVAS) ---
-        class BarrierCurve extends THREE.Curve {
-            constructor(rx, rz) { super(); this.rx = rx; this.rz = rz; }
-            getPoint(t, optionalTarget = new THREE.Vector3()) {
-                // Aumentando a altura da parede (Y = 4)
-                return optionalTarget.set(this.rx * Math.cos(2 * Math.PI * t), 4, this.rz * Math.sin(2 * Math.PI * t));
-            }
-        }
-        
-        // Paredes com visual estilo "Grid Neon"
-        const barrierMat = new THREE.MeshStandardMaterial({ 
-            color: 0x00ffff, wireframe: true, emissive: 0x0055ff, emissiveIntensity: 0.8 
+            const sausage = new THREE.Mesh(sausageGeo, sausageMat);
+            sausage.rotation.z = Math.PI / 2; // Deita a capsula
+            // Alterna lados da pista
+            const side = index % 2 === 0 ? 1 : -1;
+            sausage.position.copy(point).add(normal.multiplyScalar(side * (roadWidth - 10)));
+            sausage.position.y = 2; // Altura da zebra
+            sausage.castShadow = true;
+            sausages.push(sausage);
+            scene.add(sausage);
         });
-        
-        // Raio das paredes baseado nas medidas da pista (X: 952 centro, Z: 586 centro)
-        const innerWall = new THREE.Mesh(new THREE.TubeGeometry(new BarrierCurve(740, 380), 100, 8, 4, true), barrierMat);
-        const outerWall = new THREE.Mesh(new THREE.TubeGeometry(new BarrierCurve(1160, 780), 100, 8, 4, true), barrierMat);
-        scene.add(innerWall); scene.add(outerWall);
 
+        // Pontos lógicos para o Anti-Cheat e Checkpoints
+        const logicPoints = trackCurve.getSpacedPoints(400);
 
-        // --- O CARRO DE F1 ---
+        // --- O CARRO F1 (CORRIGIDO PARA FRENTE) ---
         const carGroup = new THREE.Group();
         const redMat = new THREE.MeshPhongMaterial({ color: 0xcc0000 });
         const blackMat = new THREE.MeshPhongMaterial({ color: 0x111111 });
 
+        // Importante: No 3D puro, o Z positivo é para onde a matemática pura manda ele se angle for 0.
         const chassis = new THREE.Mesh(new THREE.BoxGeometry(3, 1, 8), redMat); chassis.position.y = 1;
+        // Bico agora aponta pro +Z (Frente real)
         const nose = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.8, 3), redMat); nose.position.set(0, 0.9, 5.5);
         const cockpit = new THREE.Mesh(new THREE.BoxGeometry(2, 0.8, 3), blackMat); cockpit.position.set(0, 1.8, -1);
         const frontWing = new THREE.Mesh(new THREE.BoxGeometry(5, 0.2, 1.5), blackMat); frontWing.position.set(0, 0.6, 6.5);
         const rearWing = new THREE.Mesh(new THREE.BoxGeometry(5, 0.2, 1.5), blackMat); rearWing.position.set(0, 2.5, -3.5);
         
+        // Sombras
+        chassis.castShadow = true; nose.castShadow = true; cockpit.castShadow = true; 
+        frontWing.castShadow = true; rearWing.castShadow = true;
+
         carGroup.add(chassis, nose, cockpit, frontWing, rearWing);
 
         const wheelGeo = new THREE.CylinderGeometry(1.2, 1.2, 1, 16);
         const wheelMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.9 });
         function createWheel(x, z) {
             const w = new THREE.Mesh(wheelGeo, wheelMat);
-            w.rotation.z = Math.PI / 2; w.position.set(x, 1.2, z); carGroup.add(w);
+            w.rotation.z = Math.PI / 2; w.position.set(x, 1.2, z); 
+            w.castShadow = true; carGroup.add(w);
         }
         createWheel(2.2, 4.5); createWheel(-2.2, 4.5); createWheel(2.2, -3); createWheel(-2.2, -3);
 
-        carGroup.position.set(0, 0, 580); 
-        carGroup.rotation.y = -Math.PI / 2;
+        // Largada: Posição 0 da curva
+        carGroup.position.copy(logicPoints[0]);
+        // Direcionando para a reta
+        const startTangent = trackCurve.getTangentAt(0);
+        let angle = Math.atan2(startTangent.x, startTangent.z);
+        carGroup.rotation.y = angle;
+        
         scene.add(carGroup);
 
-        // --- FÍSICA E COLISÃO ---
-        let speed = 0, angle = -Math.PI / 2, steering = 0;
+        // --- FÍSICA CORRIGIDA ---
+        let speed = 0, steering = 0, verticalVelocity = 0;
         const keys = {};
         document.addEventListener('keydown', (e) => keys[e.code] = true);
         document.addEventListener('keyup', (e) => keys[e.code] = false);
@@ -213,92 +268,86 @@
             if (!gameActive) return;
             requestAnimationFrame(animate);
 
-            // 1. Aceleração pura
+            // Aceleração Real (Soma positiva vai pra frente)
             let acceleration = 0;
-            if (keys['ArrowUp'] || keys['KeyW']) acceleration = 0.22;
-            if (keys['ArrowDown'] || keys['KeyS']) acceleration = -0.15;
+            if (keys['ArrowUp'] || keys['KeyW']) acceleration = 0.25;
+            if (keys['ArrowDown'] || keys['KeyS']) acceleration = -0.15; // Freio/Ré
             
             if (keys['ArrowLeft'] || keys['KeyA']) steering = 1;
             else if (keys['ArrowRight'] || keys['KeyD']) steering = -1;
             else steering = 0;
 
             speed += acceleration;
-            speed *= 0.98; // Atrito constante e amigável (sem punição de grama)
-            speed = Math.max(-4, Math.min(10, speed)); // Velocidade máxima aumentada para 10
+            speed *= 0.985; // Atrito aerodinâmico
+            speed = Math.max(-4, Math.min(12, speed)); // Top speed maior
 
+            // Curvar apenas se estiver em movimento
             if(Math.abs(speed) > 0.1) {
+                // Ao dar ré, a direção inverte naturalmente
                 angle += steering * 0.035 * (speed > 0 ? 1 : -1);
             }
 
-            // Calculando o próximo passo (antes de mover o carro de fato)
-            let nextX = carGroup.position.x - Math.sin(angle) * speed;
-            let nextZ = carGroup.position.z - Math.cos(angle) * speed;
+            // O SEGREDINHO DA RÉ: A soma (+ ao invés de -) faz ele andar pra frente onde o bico aponta!
+            let nextX = carGroup.position.x + Math.sin(angle) * speed;
+            let nextZ = carGroup.position.z + Math.cos(angle) * speed;
 
-            // 2. Sistema de Colisão com as Paredes
-            // O centro da pista seria ~1.0. 
-            // Limite interno ajustado para ~0.55, limite externo ~1.55
-            let colisionFactor = Math.pow(nextX / 952, 2) + Math.pow(nextZ / 586, 2);
+            // --- SISTEMA DE PISTA E COLISÃO UNIVERSAL ---
+            // Descobre qual o ponto da pista mais próximo do carro
+            let minSquareDist = Infinity;
+            let closestIndex = 0;
+            for(let i = 0; i < logicPoints.length; i++) {
+                let dx = logicPoints[i].x - nextX;
+                let dz = logicPoints[i].z - nextZ;
+                let sq = dx*dx + dz*dz;
+                if(sq < minSquareDist) {
+                    minSquareDist = sq;
+                    closestIndex = i;
+                }
+            }
 
-            if (colisionFactor < 0.58 || colisionFactor > 1.50) {
-                // BATEU NA PAREDE! O carro quica para trás e perde velocidade.
-                speed *= -0.6; 
-                // Não atualizamos X e Z, impedindo o carro de atravessar o muro.
+            let distToCenter = Math.sqrt(minSquareDist);
+
+            // Bateu no muro invisível de contenção?
+            if (distToCenter > roadWidth + 8) {
+                speed *= -0.5; // Quica
             } else {
-                // Caminho livre, move o carro
                 carGroup.position.x = nextX;
                 carGroup.position.z = nextZ;
             }
             carGroup.rotation.y = angle;
 
-            // 3. Câmera
-            const relativeOffset = new THREE.Vector3(0, 15, 35);
+            // --- FÍSICA DOS SAUSAGE CURBS (PULO) ---
+            sausages.forEach(sau => {
+                if (carGroup.position.distanceTo(sau.position) < 18) {
+                    verticalVelocity = 2.5; // Faz o carro voar
+                    speed *= 0.9; // Perde velocidade na pancada
+                }
+            });
+
+            // Gravidade e Pulo
+            carGroup.position.y += verticalVelocity;
+            if (carGroup.position.y > 0) {
+                verticalVelocity -= 0.15; // Puxa pra baixo
+            }
+            if (carGroup.position.y <= 0) {
+                carGroup.position.y = 0;
+                verticalVelocity = 0;
+            }
+
+            // --- CÂMERA DINÂMICA (Atrás do carro) ---
+            const relativeOffset = new THREE.Vector3(0, 15, -40); // Câmera no -Z
             const cameraOffset = relativeOffset.applyMatrix4(carGroup.matrixWorld);
             camera.position.lerp(cameraOffset, 0.15);
             camera.lookAt(carGroup.position);
 
-            // 4. Cronômetro e Anti-cheat
+            // --- CRONÔMETRO E VOLTAS LÓGICO ---
             let currentTime = (Date.now() - lapStartTime) / 1000;
             if(!isFirstLap) timeDisplay.textContent = currentTime.toFixed(2);
 
-            let px = carGroup.position.x;
-            let pz = carGroup.position.z;
-
-            if (px < -500) cpLeft = true;
-            if (cpLeft && pz < -300) cpTop = true;
-            if (cpTop && px > 500) cpRight = true;
-
-            if (cpRight && pz > 300 && prevCarX > 0 && px <= 0) {
+            // O array tem 400 pontos. O fim da volta é o final do array.
+            if (closestIndex > 380) nearEnd = true;
+            
+            if (nearEnd && closestIndex < 20 && distToCenter < roadWidth) {
                 if (!isFirstLap) {
                     if (currentTime <= TARGET_TIME) {
-                        openPortfolio(`TEMPO BATIDO: ${currentTime.toFixed(2)}s! ACESSO CONCEDIDO.`);
-                    } else {
-                        timeDisplay.style.color = "#ff0000";
-                        setTimeout(() => timeDisplay.style.color = "#0ff", 1000);
-                    }
-                }
-                isFirstLap = false; lapStartTime = Date.now();
-                cpLeft = false; cpTop = false; cpRight = false; 
-            }
-            prevCarX = px;
-            renderer.render(scene, camera);
-        }
-
-        function openPortfolio(msg) {
-            gameActive = false;
-            document.getElementById('win-message').innerText = msg;
-            portfolioOverlay.style.display = 'flex';
-            document.getElementById('game-ui').style.display = 'none';
-            document.getElementById('instructions').style.display = 'none';
-            document.getElementById('skip-btn').style.display = 'none';
-        }
-
-        animate();
-
-        window.addEventListener('resize', () => {
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-        });
-    </script>
-</body>
-</html>
+                        openPortfolio(`TEMPO BATIDO
