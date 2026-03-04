@@ -54,15 +54,17 @@
 
     <div id="garage-menu">
         <h1>Garagem</h1>
-        <p>Escolha a pintura da sua máquina antes de ir para a pista.</p>
+        <p>Assine com a sua equipe favorita para a temporada!</p>
         <div class="color-grid">
-            <button class="color-btn active" onclick="selectColor(this, 0x0055ff, 0x111111)">Azul</button>
-            <button class="color-btn" onclick="selectColor(this, 0xaaaaaa, 0x111111)">Cinza</button>
-            <button class="color-btn" onclick="selectColor(this, 0xffffff, 0x0055ff)">Branco c/ Azul</button>
-            <button class="color-btn" onclick="selectColor(this, 0xff1493, 0x0055ff)">Rosa c/ Azul</button>
-            <button class="color-btn" onclick="selectColor(this, 0x00ff00, 0x111111)">Verde</button>
-            <button class="color-btn" onclick="selectColor(this, 0xffffff, 0x111111)">Branco</button>
-            <button class="color-btn" onclick="selectColor(this, 0xaaaaaa, 0xcc0000)">Cinza c/ Vermelho</button>
+            <button class="color-btn active" onclick="selectColor(this, 0x0055ff, 0x111111)">RedBurro</button>
+            <button class="color-btn" onclick="selectColor(this, 0xaaaaaa, 0x111111)">MecaBenz</button>
+            <button class="color-btn" onclick="selectColor(this, 0xcc0000, 0x111111)">Ferrado</button>
+            <button class="color-btn" onclick="selectColor(this, 0xffffff, 0x0055ff)">BullsRacing</button>
+            <button class="color-btn" onclick="selectColor(this, 0xff1493, 0x0055ff)">Alpistes</button>
+            <button class="color-btn" onclick="selectColor(this, 0x00ff00, 0x111111)">Fernando Martin</button>
+            <button class="color-btn" onclick="selectColor(this, 0xaaaaaa, 0xcc0000)">Haudi</button>
+            <button class="color-btn" onclick="selectColor(this, 0xffffff, 0x111111)">Cadilata</button>
+            <button class="color-btn" onclick="selectColor(this, 0xffffff, 0xcc0000)">Raas</button>
         </div>
         <button id="start-race-btn" onclick="startCountdown()">Ir para o Grid</button>
     </div>
@@ -105,7 +107,6 @@
         let raceStarted = false;
         let lapStartTime = 0;
         
-        // Variáveis de Checkpoint para garantir que a volta foi completada
         let passedHalfway = false; 
         let nearEnd = false;
         
@@ -229,30 +230,42 @@
         let playerCarData, playerCar;
         const aiCars = [];
 
+        // Cores oficiais das equipes oponentes
+        const aiLiveries = [
+            { p: 0x0055ff, s: 0x111111 }, // RedBurro
+            { p: 0xaaaaaa, s: 0x111111 }, // MecaBenz
+            { p: 0xcc0000, s: 0x111111 }, // Ferrado
+            { p: 0xffffff, s: 0x0055ff }, // BullsRacing
+            { p: 0xff1493, s: 0x0055ff }, // Alpistes
+            { p: 0x00ff00, s: 0x111111 }, // Fernando Martin
+            { p: 0xaaaaaa, s: 0xcc0000 }, // Haudi
+            { p: 0xffffff, s: 0x111111 }, // Cadilata
+            { p: 0xffffff, s: 0xcc0000 }  // Raas
+        ];
+
         function initCars() {
             if(playerCar) scene.remove(playerCar);
             aiCars.forEach(ai => scene.remove(ai.mesh));
             aiCars.length = 0;
 
-            // JOGADOR - Larga no final do grid e alinhado para frente
+            // JOGADOR - Larga em último lugar (10º)
             playerCarData = createCarModel(playerPrimaryColor, playerSecondaryColor); 
             playerCar = playerCarData.group;
             
-            const playerStartProgress = 0.945; // 0.945 fica atrás de todos os IAs
+            const playerStartProgress = 0.950; // Bem atrás do pelotão
             const playerPt = trackCurve.getPointAt(playerStartProgress);
             const playerTangent = trackCurve.getTangentAt(playerStartProgress);
             
             playerCar.position.copy(playerPt); 
             playerCar.position.y = 1.2; 
-            playerCar.rotation.y = Math.atan2(playerTangent.x, playerTangent.z); // Rotação corrigida!
+            playerCar.rotation.y = Math.atan2(playerTangent.x, playerTangent.z);
             scene.add(playerCar);
 
-            // OPONENTES - Largam na frente do jogador
-            const aiColors = [0x00008b, 0x00ff00, 0xffa500, 0xffffff, 0x800080, 0x00ffff, 0xff1493, 0xffff00, 0xa52a2a, 0x808080];
-            for(let i=0; i<10; i++) {
-                const isMax = (i === 0);
-                const carColor = isMax ? 0x00008b : aiColors[i]; 
-                const aiData = createCarModel(carColor, 0x111111);
+            // 9 OPONENTES (O grid das equipes oficiais)
+            for(let i=0; i<9; i++) {
+                const isLeader = (i === 0);
+                const livery = aiLiveries[i]; 
+                const aiData = createCarModel(livery.p, livery.s);
                 const aiCar = aiData.group;
                 
                 let startProgress = 0.995 - (i * 0.005); 
@@ -270,7 +283,7 @@
 
                 aiCars.push({
                     mesh: aiCar, progress: startProgress,
-                    speed: isMax ? 0.00080 : (0.00065 + Math.random() * 0.0001), 
+                    speed: isLeader ? 0.00080 : (0.00065 + Math.random() * 0.0001), 
                     offset: offsetLateral
                 });
             }
@@ -302,6 +315,7 @@
             let count = 3;
             countUI.innerText = count;
             
+            // Largada rápida! Intervalo de apenas 600ms em vez de 1000ms
             let interval = setInterval(() => {
                 count--;
                 if(count > 0) {
@@ -314,10 +328,10 @@
                     raceStarted = true;
                     gameActive = true;
                     lapStartTime = Date.now();
-                    passedHalfway = false; // Reseta checkpoint
+                    passedHalfway = false;
                     nearEnd = false;
                 }
-            }, 1000);
+            }, 600); 
             
             gameActive = true; 
         }
@@ -425,13 +439,9 @@
                 let currentTime = (Date.now() - lapStartTime) / 1000;
                 timeDisplay.textContent = currentTime.toFixed(2);
 
-                // Verifica se passou da metade da pista (checkpoint)
                 if (closestIndex > 400 && closestIndex < 600) passedHalfway = true;
-                
-                // Verifica se está chegando perto do fim
                 if (closestIndex > 980) nearEnd = true;
                 
-                // Se chegou no fim, E passou pela metade da pista, E está dentro do traçado
                 if (nearEnd && passedHalfway && closestIndex < 20 && distToCenter < roadWidth) {
                     if (currentTime <= TARGET_TIME) {
                         openPortfolio(`TEMPO BATIDO: ${currentTime.toFixed(2)}s! ACESSO CONCEDIDO.`);
