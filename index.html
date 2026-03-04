@@ -8,7 +8,7 @@
         /* --- RESET E FONTES --- */
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { overflow: hidden; font-family: 'Inter', sans-serif; background: #87CEEB; } /* Fundo Céu */
+        body { overflow: hidden; font-family: 'Inter', sans-serif; background: #87CEEB; }
 
         /* --- UI DO JOGO --- */
         #game-ui {
@@ -72,34 +72,17 @@
 
     <div id="game-ui">
         <div class="timer-box">Volta: <span id="current-time">0.00</span>s</div>
-        <div class="target-time">Meta: Bater 40.00s</div>
+        <div class="target-time">Meta: Bater 90.00s</div>
     </div>
     <button id="skip-btn" onclick="openPortfolio('ACESSO LIBERADO (MODO DESENVOLVEDOR)')">Pular Desafio</button>
-    <div id="instructions">Setas ou WASD para pilotar. Cuidado com as Sausage Curbs na chicane!</div>
+    <div id="instructions">Setas ou WASD para pilotar. Atenção na chicane!</div>
 
     <canvas id="game-canvas"></canvas>
-
-    <div id="portfolio-overlay">
-        <div class="success-message" id="win-message">NOVO RECORDE! ACESSO CONCEDIDO.</div>
-        <header>
-            <h1>Meu Portfólio</h1>
-            <p>Desenvolvedor Focado em Performance | Java & HTML</p>
-        </header>
-        <div class="skills-container">
-            <div class="skill-card"><h3 style="color:#f89820;">JAVA</h3><p>Backend robusto, APIs e POO.</p></div>
-            <div class="skill-card"><h3 style="color:#e34f26;">HTML</h3><p>Estruturação semântica limpa e SEO.</p></div>
-        </div>
-        <div class="projects-grid">
-            <div class="project-card">Sistema de Gestão Interna (Java Spring)</div>
-            <div class="project-card">Dashboard Financeiro (Web Semântica)</div>
-            <div class="project-card">API RESTful de Logística</div>
-        </div>
-    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     
     <script>
-        const TARGET_TIME = 40.00;
+        const TARGET_TIME = 90.00;
         let gameActive = true;
         let lapStartTime = Date.now();
         let isFirstLap = true;
@@ -110,65 +93,64 @@
 
         // --- SETUP 3D COM SOMBRAS ---
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x87CEEB); // Céu azul
-        scene.fog = new THREE.FogExp2(0x87CEEB, 0.0005);
+        scene.background = new THREE.Color(0x87CEEB); 
+        scene.fog = new THREE.FogExp2(0x87CEEB, 0.0003); // Nevoeiro mais leve pra ver mais longe
 
-        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 5000);
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 8000);
         
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('game-canvas'), antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-        // Iluminação
         scene.add(new THREE.AmbientLight(0xffffff, 0.5));
         const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
         dirLight.position.set(500, 1000, 500);
         dirLight.castShadow = true;
         dirLight.shadow.mapSize.width = 2048;
         dirLight.shadow.mapSize.height = 2048;
-        dirLight.shadow.camera.left = -1500;
-        dirLight.shadow.camera.right = 1500;
-        dirLight.shadow.camera.top = 1500;
-        dirLight.shadow.camera.bottom = -1500;
+        dirLight.shadow.camera.left = -2000;
+        dirLight.shadow.camera.right = 2000;
+        dirLight.shadow.camera.top = 2000;
+        dirLight.shadow.camera.bottom = -2000;
         scene.add(dirLight);
 
         // --- O CENÁRIO (GRAMA) ---
-        const groundGeo = new THREE.PlaneGeometry(10000, 10000);
+        const groundGeo = new THREE.PlaneGeometry(20000, 20000);
         const groundMat = new THREE.MeshLambertMaterial({ color: 0x2d4c1e }); 
         const ground = new THREE.Mesh(groundGeo, groundMat);
         ground.rotation.x = -Math.PI / 2;
         ground.receiveShadow = true;
         scene.add(ground);
 
-        // --- O CIRCUITO ---
+        // --- O CIRCUITO (MAIOR) ---
+        const scale = 2.5; // Fator de aumento da pista
         const trackCurve = new THREE.CatmullRomCurve3([
-            new THREE.Vector3(0, 0, 500),      
-            new THREE.Vector3(500, 0, 500),    
-            new THREE.Vector3(900, 0, 100),    
-            new THREE.Vector3(400, 0, -300),   
-            new THREE.Vector3(0, 0, -100),     
-            new THREE.Vector3(-100, 0, -250),  
-            new THREE.Vector3(0, 0, -400),     
-            new THREE.Vector3(-300, 0, -600),  
-            new THREE.Vector3(-800, 0, -200),  
-            new THREE.Vector3(-700, 0, 400),   
-            new THREE.Vector3(-300, 0, 500)    
+            new THREE.Vector3(0, 0, 500 * scale),      
+            new THREE.Vector3(500 * scale, 0, 500 * scale),    
+            new THREE.Vector3(900 * scale, 0, 100 * scale),    
+            new THREE.Vector3(400 * scale, 0, -300 * scale),   
+            new THREE.Vector3(0, 0, -100 * scale),     
+            new THREE.Vector3(-100 * scale, 0, -250 * scale),  
+            new THREE.Vector3(0, 0, -400 * scale),     
+            new THREE.Vector3(-300 * scale, 0, -600 * scale),  
+            new THREE.Vector3(-800 * scale, 0, -200 * scale),  
+            new THREE.Vector3(-700 * scale, 0, 400 * scale),   
+            new THREE.Vector3(-300 * scale, 0, 500 * scale)    
         ], true);
 
-        // Pista
-        const roadWidth = 55;
-        const roadGeo = new THREE.TubeGeometry(trackCurve, 300, roadWidth, 8, true);
+        const roadWidth = 60; // Raio do tubo da pista
+        const roadGeo = new THREE.TubeGeometry(trackCurve, 500, roadWidth, 8, true);
         roadGeo.scale(1, 0.02, 1);
         const roadMat = new THREE.MeshPhongMaterial({ color: 0x222222 });
         const road = new THREE.Mesh(roadGeo, roadMat);
-        road.position.y = 0.5; 
+        road.position.y = 0.5; // Altura da pista
         road.receiveShadow = true;
         scene.add(road);
 
-        // Zebras (Curbs) Laterais
-        const curbWidth = 62;
-        const curbGeo = new THREE.TubeGeometry(trackCurve, 300, curbWidth, 8, true);
+        // Zebras Laterais
+        const curbWidth = 68;
+        const curbGeo = new THREE.TubeGeometry(trackCurve, 500, curbWidth, 8, true);
         curbGeo.scale(1, 0.015, 1);
         
         const curbCanvas = document.createElement('canvas');
@@ -178,24 +160,26 @@
         cCtx.fillStyle = '#ffffff'; cCtx.fillRect(0,0,64,128);
         const curbTex = new THREE.CanvasTexture(curbCanvas);
         curbTex.wrapS = THREE.RepeatWrapping; curbTex.wrapT = THREE.RepeatWrapping;
-        curbTex.repeat.set(300, 1);
+        curbTex.repeat.set(500, 1);
 
         const curbMat = new THREE.MeshLambertMaterial({ map: curbTex });
         const curb = new THREE.Mesh(curbGeo, curbMat);
-        curb.position.y = 0.4;
+        curb.position.y = 0.45;
         curb.receiveShadow = true;
         scene.add(curb);
 
-        // Linha de Largada
-        const startLine = new THREE.Mesh(new THREE.PlaneGeometry(roadWidth * 2.2, 20), new THREE.MeshBasicMaterial({color: 0xffffff, wireframe: true}));
+        // LINHA DE CHEGADA (CORRIGIDA)
+        const startLine = new THREE.Mesh(
+            new THREE.PlaneGeometry(roadWidth * 2.2, 15), 
+            new THREE.MeshBasicMaterial({color: 0xffffff})
+        );
         startLine.rotation.x = -Math.PI / 2;
         startLine.position.copy(trackCurve.getPointAt(0));
-        startLine.position.y = 0.6;
+        startLine.position.y = 0.7; // Acima da pista para não conflitar as texturas
         scene.add(startLine);
 
-        // --- SAUSAGE CURBS (CORRIGIDOS PARA EVITAR CRASH) ---
+        // --- SAUSAGE CURBS (FORA DA PISTA) ---
         const sausages = [];
-        // Solução: Trocando CapsuleGeometry por CylinderGeometry para evitar problemas com a versão do Three.js
         const sausageGeo = new THREE.CylinderGeometry(2.5, 2.5, 14, 12);
         const sausageMat = new THREE.MeshLambertMaterial({ color: 0xffd700 }); 
         
@@ -209,15 +193,15 @@
             sausage.rotation.z = Math.PI / 2; 
             
             const side = index % 2 === 0 ? 1 : -1;
-            sausage.position.copy(point).add(normal.multiplyScalar(side * (roadWidth - 10)));
-            sausage.position.y = 2; 
+            // Deslocando para as bordas (roadWidth + 5 garante que ficam no limite da pista)
+            sausage.position.copy(point).add(normal.multiplyScalar(side * (roadWidth + 5)));
+            sausage.position.y = 1.5; 
             sausage.castShadow = true;
             sausages.push(sausage);
             scene.add(sausage);
         });
 
-        // Pontos lógicos da pista
-        const logicPoints = trackCurve.getSpacedPoints(400);
+        const logicPoints = trackCurve.getSpacedPoints(600);
 
         // --- O CARRO F1 ---
         const carGroup = new THREE.Group();
@@ -235,23 +219,34 @@
 
         carGroup.add(chassis, nose, cockpit, frontWing, rearWing);
 
+        // RODAS - Sistema separado para animação
         const wheelGeo = new THREE.CylinderGeometry(1.2, 1.2, 1, 16);
         const wheelMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.9 });
-        function createWheel(x, z) {
-            const w = new THREE.Mesh(wheelGeo, wheelMat);
-            w.rotation.z = Math.PI / 2; w.position.set(x, 1.2, z); 
-            w.castShadow = true; carGroup.add(w);
-        }
-        createWheel(2.2, 4.5); createWheel(-2.2, 4.5); createWheel(2.2, -3); createWheel(-2.2, -3);
+        
+        // Rodas Traseiras (Fixas)
+        const wheelRL = new THREE.Mesh(wheelGeo, wheelMat); wheelRL.rotation.z = Math.PI/2; wheelRL.position.set(-2.5, 1.2, -3); wheelRL.castShadow = true; carGroup.add(wheelRL);
+        const wheelRR = new THREE.Mesh(wheelGeo, wheelMat); wheelRR.rotation.z = Math.PI/2; wheelRR.position.set(2.5, 1.2, -3); wheelRR.castShadow = true; carGroup.add(wheelRR);
+
+        // Rodas Dianteiras (Articuladas)
+        const frontLeftGroup = new THREE.Group(); frontLeftGroup.position.set(-2.5, 1.2, 4.5);
+        const wheelFL = new THREE.Mesh(wheelGeo, wheelMat); wheelFL.rotation.z = Math.PI/2; wheelFL.castShadow = true; frontLeftGroup.add(wheelFL);
+        carGroup.add(frontLeftGroup);
+
+        const frontRightGroup = new THREE.Group(); frontRightGroup.position.set(2.5, 1.2, 4.5);
+        const wheelFR = new THREE.Mesh(wheelGeo, wheelMat); wheelFR.rotation.z = Math.PI/2; wheelFR.castShadow = true; frontRightGroup.add(wheelFR);
+        carGroup.add(frontRightGroup);
 
         carGroup.position.copy(logicPoints[0]);
+        // Colocando o carro na altura correta para não afundar (Y = 0.5 da pista)
+        carGroup.position.y = 0.5; 
+
         const startTangent = trackCurve.getTangentAt(0);
         let angle = Math.atan2(startTangent.x, startTangent.z);
         carGroup.rotation.y = angle;
         
         scene.add(carGroup);
 
-        // --- FÍSICA ---
+        // --- FÍSICA E CONTROLES ---
         let speed = 0, steering = 0, verticalVelocity = 0;
         const keys = {};
         document.addEventListener('keydown', (e) => keys[e.code] = true);
@@ -262,19 +257,25 @@
             requestAnimationFrame(animate);
 
             let acceleration = 0;
-            if (keys['ArrowUp'] || keys['KeyW']) acceleration = 0.25;
-            if (keys['ArrowDown'] || keys['KeyS']) acceleration = -0.15; 
+            // Aceleração e Velocidade reduzidas
+            if (keys['ArrowUp'] || keys['KeyW']) acceleration = 0.12; 
+            if (keys['ArrowDown'] || keys['KeyS']) acceleration = -0.08; 
             
             if (keys['ArrowLeft'] || keys['KeyA']) steering = 1;
             else if (keys['ArrowRight'] || keys['KeyD']) steering = -1;
             else steering = 0;
 
+            // Animação das Rodas Dianteiras
+            const maxTurnAngle = 0.5; // Radianos
+            frontLeftGroup.rotation.y = steering * maxTurnAngle;
+            frontRightGroup.rotation.y = steering * maxTurnAngle;
+
             speed += acceleration;
-            speed *= 0.985; 
-            speed = Math.max(-4, Math.min(12, speed)); 
+            speed *= 0.985; // Atrito
+            speed = Math.max(-2, Math.min(8.5, speed)); // Limitador de velocidade mais realista
 
             if(Math.abs(speed) > 0.1) {
-                angle += steering * 0.035 * (speed > 0 ? 1 : -1);
+                angle += steering * 0.030 * (speed > 0 ? 1 : -1);
             }
 
             let nextX = carGroup.position.x + Math.sin(angle) * speed;
@@ -295,30 +296,33 @@
             let distToCenter = Math.sqrt(minSquareDist);
 
             if (distToCenter > roadWidth + 8) {
-                speed *= -0.5; 
+                speed *= -0.5; // Grama / Barreira invisível
             } else {
                 carGroup.position.x = nextX;
                 carGroup.position.z = nextZ;
             }
             carGroup.rotation.y = angle;
 
+            // Pulo nas Salsichas
             sausages.forEach(sau => {
                 if (carGroup.position.distanceTo(sau.position) < 18) {
-                    verticalVelocity = 2.5; 
+                    verticalVelocity = 1.8; 
                     speed *= 0.9; 
                 }
             });
 
+            // Gravidade ajustada para o limite da pista
             carGroup.position.y += verticalVelocity;
-            if (carGroup.position.y > 0) {
+            if (carGroup.position.y > 0.5) {
                 verticalVelocity -= 0.15; 
             }
-            if (carGroup.position.y <= 0) {
-                carGroup.position.y = 0;
+            if (carGroup.position.y <= 0.5) {
+                carGroup.position.y = 0.5;
                 verticalVelocity = 0;
             }
 
-            const relativeOffset = new THREE.Vector3(0, 15, -40);
+            // Câmera um pouco mais distante para acomodar a proporção da pista
+            const relativeOffset = new THREE.Vector3(0, 20, -50);
             const cameraOffset = relativeOffset.applyMatrix4(carGroup.matrixWorld);
             camera.position.lerp(cameraOffset, 0.15);
             camera.lookAt(carGroup.position);
@@ -326,7 +330,7 @@
             let currentTime = (Date.now() - lapStartTime) / 1000;
             if(!isFirstLap) timeDisplay.textContent = currentTime.toFixed(2);
 
-            if (closestIndex > 380) nearEnd = true;
+            if (closestIndex > 580) nearEnd = true;
             
             if (nearEnd && closestIndex < 20 && distToCenter < roadWidth) {
                 if (!isFirstLap) {
