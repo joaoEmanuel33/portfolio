@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Speed Coder | GP Híbrido</title>
+    <title>Speed Coder | GP Híbrido Completo</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -16,19 +16,47 @@
         #skip-btn { position: absolute; top: 20px; right: 20px; z-index: 10; background: rgba(0, 0, 0, 0.5); border: 1px solid #fff; color: #fff; padding: 10px 20px; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 5px; transition: 0.3s; }
         #skip-btn:hover { background: #fff; color: #000; }
 
+        /* --- OVERLAY DO PORTFÓLIO CONSERTADO --- */
         #portfolio-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(5, 10, 15, 0.95); backdrop-filter: blur(10px); z-index: 100; display: none; flex-direction: column; align-items: center; justify-content: flex-start; padding: 60px 20px; overflow-y: auto; color: #fff; animation: fadeIn 0.8s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        .success-message { font-family: 'Orbitron', sans-serif; color: #0ff; font-size: 1.5rem; margin-bottom: 30px; text-shadow: 0 0 15px #0ff; letter-spacing: 2px; }
+        .success-message { font-family: 'Orbitron', sans-serif; color: #0ff; font-size: 1.5rem; margin-bottom: 30px; text-shadow: 0 0 15px #0ff; letter-spacing: 2px; text-align: center; }
+        header { text-align: center; margin-bottom: 40px; }
+        header h1 { font-size: 3rem; margin-bottom: 10px; font-family: 'Orbitron', sans-serif; color: #ffeb3b; }
+        header p { color: #aaa; font-size: 1.2rem; }
+        .skills-container { display: flex; gap: 30px; margin-bottom: 60px; flex-wrap: wrap; justify-content: center; }
+        .skill-card { background: rgba(255,255,255,0.05); padding: 30px; border-radius: 8px; border: 1px solid #333; width: 250px; text-align: center; }
+        .skill-card h3 { font-size: 1.5rem; margin-bottom: 15px; color: #0ff; }
+        .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; width: 100%; max-width: 950px; }
+        .project-card { background: #111; height: 160px; border-radius: 8px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 20px; border: 1px solid #333; font-weight: 600; transition: 0.3s; cursor: pointer; }
+        .project-card:hover { border-color: #0ff; background: #1a1a1a; transform: translateY(-5px); }
     </style>
 </head>
 <body>
 
     <div id="game-ui">
         <div class="timer-box">Volta: <span id="current-time">0.00</span>s</div>
-        <div class="target-time">Meta: Bater 100.00s | Alcance o Max!</div>
+        <div class="target-time">Meta: 100.00s | Cuidado com as batidas!</div>
     </div>
-    <button id="skip-btn" onclick="openPortfolio('ACESSO LIBERADO (MODO DESENVOLVEDOR)')">Pular Desafio</button>
-    <div id="instructions">Setas ou WASD para pilotar. Cuidado com o tráfego!</div>
+    <button id="skip-btn" onclick="openPortfolio('ACESSO LIBERADO PELO MODO DESENVOLVEDOR')">Pular Desafio</button>
+    <div id="instructions">Setas/WASD: Pilotar | Bata no Max Verstappen se quiser!</div>
+
+    <div id="portfolio-overlay">
+        <h2 class="success-message" id="win-message"></h2>
+        <header>
+            <h1>Meu Portfólio 3D</h1>
+            <p>Desenvolvedor Front-End | Criador de Experiências</p>
+        </header>
+        <div class="skills-container">
+            <div class="skill-card"><h3>JavaScript</h3><p>Lógica avançada e interatividade.</p></div>
+            <div class="skill-card"><h3>Three.js</h3><p>Gráficos 3D direto no navegador.</p></div>
+            <div class="skill-card"><h3>UI/UX</h3><p>Interfaces imersivas e dinâmicas.</p></div>
+        </div>
+        <div class="projects-grid">
+            <div class="project-card">Projeto E-commerce</div>
+            <div class="project-card">App de Gestão</div>
+            <div class="project-card">Dashboard Interativo</div>
+        </div>
+    </div>
 
     <canvas id="game-canvas"></canvas>
 
@@ -46,8 +74,9 @@
 
         // --- SETUP 3D ---
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x87CEEB); 
-        scene.fog = new THREE.FogExp2(0x87CEEB, 0.0001); // Neblina mais fraca para ver mais longe
+        // Um céu azul mais vibrante
+        scene.background = new THREE.Color(0x4ca1af); 
+        scene.fog = new THREE.FogExp2(0x4ca1af, 0.00008); 
 
         const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 20000);
         
@@ -57,15 +86,20 @@
 
         scene.add(new THREE.AmbientLight(0xffffff, 0.6));
         const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-        dirLight.position.set(500, 1000, 500);
+        dirLight.position.set(1000, 2000, 1000);
         dirLight.castShadow = true;
-        dirLight.shadow.mapSize.width = 2048;
-        dirLight.shadow.mapSize.height = 2048;
         dirLight.shadow.camera.left = -4000;
         dirLight.shadow.camera.right = 4000;
         dirLight.shadow.camera.top = 4000;
         dirLight.shadow.camera.bottom = -4000;
         scene.add(dirLight);
+
+        // --- O SOL NO CÉU ---
+        const sunGeo = new THREE.SphereGeometry(600, 32, 32);
+        const sunMat = new THREE.MeshBasicMaterial({ color: 0xffea00 });
+        const sun = new THREE.Mesh(sunGeo, sunMat);
+        sun.position.set(-4000, 1500, 8000); // Longe no horizonte
+        scene.add(sun);
 
         // --- GRAMA ---
         const groundGeo = new THREE.PlaneGeometry(50000, 50000);
@@ -101,59 +135,84 @@
         road.receiveShadow = true;
         scene.add(road);
 
-        // --- ARQUIBANCADA & PITLANE ---
-        // Pitlane (Concreto à direita da reta principal)
-        const pitlaneGeo = new THREE.PlaneGeometry(40, 800);
-        const pitlaneMat = new THREE.MeshLambertMaterial({ color: 0x555555 });
+        // --- AS ZEBRAS VOLTARAM ---
+        const curbWidth = 78;
+        const curbGeo = new THREE.TubeGeometry(trackCurve, 1000, curbWidth, 8, true);
+        curbGeo.scale(1, 0.015, 1);
+        
+        const curbCanvas = document.createElement('canvas');
+        curbCanvas.width = 128; curbCanvas.height = 128;
+        const cCtx = curbCanvas.getContext('2d');
+        cCtx.fillStyle = '#ff0000'; cCtx.fillRect(0,0,128,128); // Vermelho
+        cCtx.fillStyle = '#ffffff'; cCtx.fillRect(0,0,64,128);  // Branco
+        const curbTex = new THREE.CanvasTexture(curbCanvas);
+        curbTex.wrapS = THREE.RepeatWrapping; curbTex.wrapT = THREE.RepeatWrapping;
+        curbTex.repeat.set(1000, 1);
+
+        const curbMat = new THREE.MeshLambertMaterial({ map: curbTex });
+        const curb = new THREE.Mesh(curbGeo, curbMat);
+        curb.position.y = 0.45;
+        curb.receiveShadow = true;
+        scene.add(curb);
+
+        // --- CENÁRIO: ESTACIONAMENTO E ARQUIBANCADA ---
+        // Pitlane
+        const pitlaneGeo = new THREE.PlaneGeometry(50, 800);
+        const pitlaneMat = new THREE.MeshLambertMaterial({ color: 0x444444 });
         const pitlane = new THREE.Mesh(pitlaneGeo, pitlaneMat);
         pitlane.rotation.x = -Math.PI / 2;
-        pitlane.position.set(roadWidth + 30, 0.6, 900 * scale); // Ao lado da reta
-        pitlane.receiveShadow = true;
+        pitlane.position.set(roadWidth + 35, 0.6, 900 * scale); 
         scene.add(pitlane);
 
-        // Muro do Pitlane
-        const wallGeo = new THREE.BoxGeometry(5, 4, 800);
-        const wallMat = new THREE.MeshLambertMaterial({ color: 0xeeeeee });
-        const wall = new THREE.Mesh(wallGeo, wallMat);
-        wall.position.set(roadWidth + 5, 2, 900 * scale);
-        wall.castShadow = true;
-        scene.add(wall);
+        // Estacionamento de fundo
+        const parkingGeo = new THREE.PlaneGeometry(300, 600);
+        const parkingMat = new THREE.MeshLambertMaterial({ color: 0x333333 });
+        const parking = new THREE.Mesh(parkingGeo, parkingMat);
+        parking.rotation.x = -Math.PI / 2;
+        parking.position.set(-(roadWidth + 250), 0.2, 900 * scale);
+        scene.add(parking);
 
-        // Arquibancada Gigante (À esquerda da reta principal)
+        // Arquibancada Gigante (Com "parede" invisível na lógica para não atravessar)
         const grandStandGroup = new THREE.Group();
-        grandStandGroup.position.set(-(roadWidth + 40), 0, 900 * scale);
-        
-        for(let i=0; i<5; i++) {
-            const stepGeo = new THREE.BoxGeometry(20, (i+1)*5, 600);
-            const stepMat = new THREE.MeshLambertMaterial({ color: 0x888888 });
-            const step = new THREE.Mesh(stepGeo, stepMat);
-            step.position.set(-i*20, (i+1)*2.5, 0);
+        grandStandGroup.position.set(-(roadWidth + 50), 0, 900 * scale);
+        for(let i=0; i<6; i++) {
+            const step = new THREE.Mesh(new THREE.BoxGeometry(20, (i+1)*6, 600), new THREE.MeshLambertMaterial({ color: 0x888888 }));
+            step.position.set(-i*20, (i+1)*3, 0);
             step.castShadow = true;
             grandStandGroup.add(step);
-            
-            // Adicionando a plateia (pontos coloridos)
-            for(let j=0; j<80; j++) {
-                const person = new THREE.Mesh(
-                    new THREE.BoxGeometry(2, 2, 2),
-                    new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff })
-                );
-                person.position.set(-i*20, (i+1)*5 + 1, -280 + Math.random() * 560);
+            // Plateia colorida
+            for(let j=0; j<60; j++) {
+                const person = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff }));
+                person.position.set(-i*20, (i+1)*6 + 1.5, -280 + Math.random() * 560);
                 grandStandGroup.add(person);
             }
         }
         scene.add(grandStandGroup);
 
+        // --- CENÁRIO: POSTES DE LUZ ---
+        function createLightPole(x, z) {
+            const poleGroup = new THREE.Group();
+            const pole = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, 60), new THREE.MeshLambertMaterial({color: 0x777777}));
+            pole.position.y = 30;
+            const lamp = new THREE.Mesh(new THREE.BoxGeometry(15, 2, 5), new THREE.MeshBasicMaterial({color: 0xffffff}));
+            lamp.position.set(5, 60, 0);
+            poleGroup.add(pole, lamp);
+            poleGroup.position.set(x, 0, z);
+            scene.add(poleGroup);
+        }
+        // Colocando postes ao longo da reta
+        for(let z = 1800; z <= 3500; z += 300) {
+            createLightPole(roadWidth + 70, z); // Lado do pitlane
+        }
+
         // --- LINHA DE CHEGADA ---
-        const startLine = new THREE.Mesh(
-            new THREE.PlaneGeometry(roadWidth * 2.2, 25), 
-            new THREE.MeshBasicMaterial({color: 0xffffff})
-        );
+        const startLine = new THREE.Mesh(new THREE.PlaneGeometry(roadWidth * 2.2, 25), new THREE.MeshBasicMaterial({color: 0xffffff}));
         startLine.rotation.x = -Math.PI / 2;
         startLine.position.copy(trackCurve.getPointAt(0));
         startLine.position.y = 0.7; 
         scene.add(startLine);
 
-        // --- FUNÇÃO PARA CONSTRUIR CARROS ---
+        // --- CARROS E IA ---
         function createCarModel(primaryColor) {
             const group = new THREE.Group();
             const bodyMat = new THREE.MeshPhongMaterial({ color: primaryColor });
@@ -170,10 +229,8 @@
             const wRL = new THREE.Mesh(wGeo, wMat); wRL.rotation.z = Math.PI/2; wRL.position.set(-2.5, 1.2, -3); wRL.castShadow = true;
             const wRR = new THREE.Mesh(wGeo, wMat); wRR.rotation.z = Math.PI/2; wRR.position.set(2.5, 1.2, -3); wRR.castShadow = true;
             
-            // Rodas da frente separadas para virar (somente no carro do player, IAs vão fixas pra economizar processamento)
             const fL = new THREE.Group(); fL.position.set(-2.5, 1.2, 4.5);
             const wFL = new THREE.Mesh(wGeo, wMat); wFL.rotation.z = Math.PI/2; wFL.castShadow = true; fL.add(wFL);
-            
             const fR = new THREE.Group(); fR.position.set(2.5, 1.2, 4.5);
             const wFR = new THREE.Mesh(wGeo, wMat); wFR.rotation.z = Math.PI/2; wFR.castShadow = true; fR.add(wFR);
 
@@ -181,30 +238,24 @@
             return { group, frontLeft: fL, frontRight: fR };
         }
 
-        // --- CRIANDO O JOGADOR (VERMELHO) ---
-        const playerCarData = createCarModel(0xcc0000); // Ferrari style
+        const playerCarData = createCarModel(0xcc0000); 
         const playerCar = playerCarData.group;
-        playerCar.position.copy(trackCurve.getPointAt(0.98)); // Jogador larga um pouco atrás
+        playerCar.position.copy(trackCurve.getPointAt(0.98)); 
         playerCar.position.y = 0.5;
         scene.add(playerCar);
 
-        // --- CRIANDO OS OPONENTES (IA) ---
         const aiCars = [];
         const colors = [0x00008b, 0x00ff00, 0xffa500, 0xffffff, 0x800080, 0x00ffff, 0xff1493, 0xffff00, 0xa52a2a, 0x808080];
         
         for(let i=0; i<10; i++) {
-            // O primeiro oponente (index 0) será o Verstappen (Azul escuro), larga na frente
             const isMax = (i === 0);
             const carColor = isMax ? 0x00008b : colors[i]; 
             const aiData = createCarModel(carColor);
             const aiCar = aiData.group;
             
-            // Distribui eles no grid de largada
             let startProgress = 0.995 - (i * 0.005); 
             if(startProgress < 0) startProgress += 1;
-            
-            // Offset lateral para não largarem batendo
-            const offsetLateral = (i % 2 === 0) ? 15 : -15; 
+            const offsetLateral = (i % 2 === 0) ? 12 : -12; 
             
             const pt = trackCurve.getPointAt(startProgress);
             const tangent = trackCurve.getTangentAt(startProgress);
@@ -215,14 +266,12 @@
             scene.add(aiCar);
 
             aiCars.push({
-                mesh: aiCar,
-                progress: startProgress,
-                speed: isMax ? 0.00085 : (0.00075 + Math.random() * 0.00008), // Max é mais rápido
+                mesh: aiCar, progress: startProgress, 
+                speed: isMax ? 0.00080 : (0.00070 + Math.random() * 0.00008), 
                 offset: offsetLateral
             });
         }
 
-        // --- FÍSICA DO JOGADOR ---
         let speed = 0, steering = 0, angle = Math.atan2(trackCurve.getTangentAt(0).x, trackCurve.getTangentAt(0).z);
         playerCar.rotation.y = angle;
 
@@ -236,21 +285,28 @@
             if (!gameActive) return;
             requestAnimationFrame(animate);
 
-            // 1. ATUALIZA OS OPONENTES (IA)
+            // 1. Atualiza os oponentes
             aiCars.forEach(ai => {
                 ai.progress += ai.speed;
-                if(ai.progress > 1) ai.progress -= 1; // Volta a zero ao completar a volta
+                if(ai.progress > 1) ai.progress -= 1; 
                 
                 const pt = trackCurve.getPointAt(ai.progress);
                 const tangent = trackCurve.getTangentAt(ai.progress);
                 const normal = new THREE.Vector3(-tangent.z, 0, tangent.x).normalize();
                 
-                // Suaviza a IA fazendo as curvas e mantendo a rotação
                 ai.mesh.position.copy(pt).add(normal.multiplyScalar(ai.offset));
                 ai.mesh.rotation.y = Math.atan2(tangent.x, tangent.z);
+
+                // COLISÃO COM OUTROS CARROS
+                const distToAI = playerCar.position.distanceTo(ai.mesh.position);
+                if(distToAI < 8) {
+                    speed *= -0.5; // Bateu e quicou pra trás!
+                    playerCar.position.x -= Math.sin(angle) * 3;
+                    playerCar.position.z -= Math.cos(angle) * 3;
+                }
             });
 
-            // 2. ATUALIZA O JOGADOR
+            // 2. Física do Jogador
             let acceleration = 0;
             if (keys['ArrowUp'] || keys['KeyW']) acceleration = 0.16; 
             if (keys['ArrowDown'] || keys['KeyS']) acceleration = -0.15; 
@@ -259,17 +315,14 @@
             else if (keys['ArrowRight'] || keys['KeyD']) steering = -1;
             else steering = 0;
 
-            const maxTurnAngle = 0.45;
-            playerCarData.frontLeft.rotation.y = steering * maxTurnAngle;
-            playerCarData.frontRight.rotation.y = steering * maxTurnAngle;
+            playerCarData.frontLeft.rotation.y = steering * 0.45;
+            playerCarData.frontRight.rotation.y = steering * 0.45;
 
             speed += acceleration;
             speed *= 0.985; 
-            speed = Math.max(-2, Math.min(10.8, speed)); // Top speed
+            speed = Math.max(-3, Math.min(10.8, speed)); 
 
-            if(Math.abs(speed) > 0.1) {
-                angle += steering * 0.035 * (speed > 0 ? 1 : -1);
-            }
+            if(Math.abs(speed) > 0.1) angle += steering * 0.035 * (speed > 0 ? 1 : -1);
 
             let nextX = playerCar.position.x + Math.sin(angle) * speed;
             let nextZ = playerCar.position.z + Math.cos(angle) * speed;
@@ -285,24 +338,31 @@
                     closestIndex = i;
                 }
             }
-
             let distToCenter = Math.sqrt(minSquareDist);
 
-            if (distToCenter > roadWidth + 8) {
-                speed *= -0.5; // Bateu na grama
+            // COLISÃO COM O CENÁRIO / FORA DA PISTA
+            if (distToCenter > roadWidth + 20) {
+                // Bateu no muro/arquibancada
+                speed = 0; 
+                playerCar.position.x -= Math.sin(angle) * 2;
+                playerCar.position.z -= Math.cos(angle) * 2;
+            } else if (distToCenter > roadWidth) {
+                // Grama deixa lento
+                speed *= 0.8; 
+                playerCar.position.x = nextX;
+                playerCar.position.z = nextZ;
             } else {
                 playerCar.position.x = nextX;
                 playerCar.position.z = nextZ;
             }
             playerCar.rotation.y = angle;
 
-            // 3. ATUALIZA A CÂMERA
-            const relativeOffset = new THREE.Vector3(0, 20, -50);
-            const cameraOffset = relativeOffset.applyMatrix4(playerCar.matrixWorld);
+            // 3. Câmera
+            const cameraOffset = new THREE.Vector3(0, 20, -50).applyMatrix4(playerCar.matrixWorld);
             camera.position.lerp(cameraOffset, 0.15);
             camera.lookAt(playerCar.position);
 
-            // 4. LÓGICA DE VOLTA E CRONÔMETRO
+            // 4. Lógica de Tempo e Final
             let currentTime = (Date.now() - lapStartTime) / 1000;
             if(!isFirstLap) timeDisplay.textContent = currentTime.toFixed(2);
 
@@ -320,7 +380,6 @@
                 isFirstLap = false; lapStartTime = Date.now();
                 nearEnd = false;
             }
-
             renderer.render(scene, camera);
         }
 
