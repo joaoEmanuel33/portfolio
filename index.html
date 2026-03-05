@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Speed Coder | GP Híbrido Completo</title>
+    <title>Speed Coder | GP Nürburgring</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@400;600&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { overflow: hidden; font-family: 'Inter', sans-serif; background: #87CEEB; }
+        /* Clima de floresta nublada no background do body */
+        body { overflow: hidden; font-family: 'Inter', sans-serif; background: #2e4f3a; }
 
         #game-ui { position: absolute; top: 20px; left: 20px; color: #fff; font-family: 'Orbitron', sans-serif; z-index: 10; text-shadow: 0 0 10px #000; display: none; }
         .timer-box { font-size: 2rem; margin-bottom: 5px; }
@@ -118,73 +119,158 @@
 
         // --- SETUP 3D ---
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x4ca1af); 
-        scene.fog = new THREE.FogExp2(0x4ca1af, 0.00006); 
+        // Cores de floresta densa / montanha alemã
+        scene.background = new THREE.Color(0x2e4f3a); 
+        scene.fog = new THREE.FogExp2(0x2e4f3a, 0.00015); 
 
         const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 25000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('game-canvas'), antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.shadowMap.enabled = true;
 
-        scene.add(new THREE.AmbientLight(0xffffff, 0.6));
-        const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+        const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
         dirLight.position.set(1000, 2000, 1000);
         dirLight.castShadow = true;
         scene.add(dirLight);
 
-        const sun = new THREE.Mesh(new THREE.SphereGeometry(600, 32, 32), new THREE.MeshBasicMaterial({ color: 0xffea00 }));
-        sun.position.set(-4000, 1500, 8000); 
-        scene.add(sun);
-
-        // O chão continua no Y = 0 (nível do mar)
-        const ground = new THREE.Mesh(new THREE.PlaneGeometry(50000, 50000), new THREE.MeshLambertMaterial({ color: 0x2d4c1e }));
+        // O chão é o vale da floresta (Y=0)
+        const ground = new THREE.Mesh(new THREE.PlaneGeometry(50000, 50000), new THREE.MeshLambertMaterial({ color: 0x1e3626 }));
         ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
 
-        // --- CIRCUITO COM ALTITUDE (SPA STYLE) ---
+        // --- CIRCUITO COM ALTITUDE (SPA/NÜRBURGRING STYLE) ---
         const scale = 3.2; 
-        // Agora o Vector3 tem alturas diferentes no eixo Y (o valor do meio)
         const trackCurve = new THREE.CatmullRomCurve3([
-            new THREE.Vector3(0, 0, 900 * scale),             // LARGADA (Plana)
-            new THREE.Vector3(-300 * scale, 80 * scale, 400 * scale),  // Subida Forte
-            new THREE.Vector3(-100 * scale, 150 * scale, 100 * scale), // Topo da Montanha
-            new THREE.Vector3(-500 * scale, 120 * scale, -200 * scale), // Leve descida
-            new THREE.Vector3(-900 * scale, 60 * scale, -600 * scale), // Descida forte
-            new THREE.Vector3(-400 * scale, 20 * scale, -1000 * scale), // Vale
-            new THREE.Vector3(300 * scale, 10 * scale, -800 * scale),  // Quase plano
-            new THREE.Vector3(800 * scale, 30 * scale, -400 * scale),  // Subidinha
-            new THREE.Vector3(400 * scale, 60 * scale, -100 * scale),  // Outra montanha
-            new THREE.Vector3(800 * scale, 40 * scale, 150 * scale),   // Descendo
-            new THREE.Vector3(300 * scale, 10 * scale, 350 * scale),   // Chegando no plano
-            new THREE.Vector3(300 * scale, 0, 800 * scale)             // Reta final
+            new THREE.Vector3(0, 0, 900 * scale),             
+            new THREE.Vector3(-300 * scale, 80 * scale, 400 * scale),  
+            new THREE.Vector3(-100 * scale, 150 * scale, 100 * scale), 
+            new THREE.Vector3(-500 * scale, 120 * scale, -200 * scale), 
+            new THREE.Vector3(-900 * scale, 60 * scale, -600 * scale), 
+            new THREE.Vector3(-400 * scale, 20 * scale, -1000 * scale), 
+            new THREE.Vector3(300 * scale, 10 * scale, -800 * scale),  
+            new THREE.Vector3(800 * scale, 30 * scale, -400 * scale),  
+            new THREE.Vector3(400 * scale, 60 * scale, -100 * scale),  
+            new THREE.Vector3(800 * scale, 40 * scale, 150 * scale),   
+            new THREE.Vector3(300 * scale, 10 * scale, 350 * scale),   
+            new THREE.Vector3(300 * scale, 0, 800 * scale)             
         ], true);
 
+        const logicPoints = trackCurve.getSpacedPoints(1000);
         const roadWidth = 110; 
-        const road = new THREE.Mesh(new THREE.TubeGeometry(trackCurve, 1000, roadWidth, 8, true).scale(1, 0.05, 1), new THREE.MeshPhongMaterial({ color: 0x222222 }));
-        road.receiveShadow = true; scene.add(road);
 
+        // NOVA FUNÇÃO: Cria uma pista plana e perfeita que não achata a altura!
+        function createFlatTrackMesh(curve, width, material, yOffset) {
+            const segments = 1000;
+            const points = curve.getSpacedPoints(segments);
+            const geo = new THREE.BufferGeometry();
+            const verts = [];
+            const uvs = [];
+            const indices = [];
+
+            for(let i=0; i<segments; i++) {
+                const pt = points[i];
+                // Pega a direção da pista para saber onde é a lateral
+                const tangent = curve.getTangentAt(i/segments);
+                const normal = new THREE.Vector3(-tangent.z, 0, tangent.x).normalize();
+                
+                // Ponto Esquerdo e Direito
+                verts.push(pt.x + normal.x * width, pt.y + yOffset, pt.z + normal.z * width);
+                verts.push(pt.x - normal.x * width, pt.y + yOffset, pt.z - normal.z * width);
+                
+                uvs.push(0, i * 0.1); 
+                uvs.push(1, i * 0.1);
+            }
+
+            for(let i=0; i<segments; i++) {
+                const a = i * 2;
+                const b = i * 2 + 1;
+                const c = ((i + 1) % segments) * 2;
+                const d = ((i + 1) % segments) * 2 + 1;
+                
+                indices.push(a, b, d);
+                indices.push(a, d, c);
+            }
+
+            geo.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
+            geo.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+            geo.setIndex(indices);
+            geo.computeVertexNormals();
+            
+            const mesh = new THREE.Mesh(geo, material);
+            mesh.receiveShadow = true;
+            return mesh;
+        }
+
+        // Gera a pista principal preta
+        const roadMesh = createFlatTrackMesh(trackCurve, roadWidth, new THREE.MeshPhongMaterial({ color: 0x222222 }), 0);
+        scene.add(roadMesh);
+
+        // Gera as zebras (pouquinho mais largas e 0.5 abaixo para não piscar)
         const curbCanvas = document.createElement('canvas');
         curbCanvas.width = 128; curbCanvas.height = 128;
         const cCtx = curbCanvas.getContext('2d');
         cCtx.fillStyle = '#ff0000'; cCtx.fillRect(0,0,128,128);
         cCtx.fillStyle = '#ffffff'; cCtx.fillRect(0,0,64,128);
         const curbTex = new THREE.CanvasTexture(curbCanvas);
-        curbTex.wrapS = THREE.RepeatWrapping; curbTex.wrapT = THREE.RepeatWrapping; curbTex.repeat.set(1000, 1);
-        const curb = new THREE.Mesh(new THREE.TubeGeometry(trackCurve, 1000, roadWidth + 8, 8, true).scale(1, 0.04, 1), new THREE.MeshLambertMaterial({ map: curbTex }));
-        scene.add(curb);
+        curbTex.wrapS = THREE.RepeatWrapping; curbTex.wrapT = THREE.RepeatWrapping; 
+        
+        const curbMesh = createFlatTrackMesh(trackCurve, roadWidth + 12, new THREE.MeshLambertMaterial({ map: curbTex }), -0.5);
+        scene.add(curbMesh);
 
         // --- PILARES PARA SEGURAR A PISTA ---
         const pillarGeo = new THREE.CylinderGeometry(15, 15, 1, 16);
         const pillarMat = new THREE.MeshLambertMaterial({ color: 0x555555 });
-        for(let i=0; i<1000; i+=25) {
+        for(let i=0; i<1000; i+=20) {
             let pt = trackCurve.getPointAt(i/1000);
             if(pt.y > 15) {
                 let pillar = new THREE.Mesh(pillarGeo, pillarMat);
-                // Posiciona o pilar do chão até a pista
                 pillar.position.set(pt.x, pt.y / 2, pt.z);
-                pillar.scale.y = pt.y; // Estica ele até a altura exata
+                pillar.scale.y = pt.y; 
                 pillar.castShadow = true;
                 scene.add(pillar);
             }
+        }
+
+        // --- AMBIENTE: FLORESTA E MONTANHAS ---
+        // Árvores de Pinheiro (Floresta Negra)
+        function createPineTree() {
+            const tree = new THREE.Group();
+            const trunk = new THREE.Mesh(new THREE.CylinderGeometry(8, 12, 40), new THREE.MeshLambertMaterial({color: 0x3d2817}));
+            trunk.position.y = 20;
+            const leaves1 = new THREE.Mesh(new THREE.ConeGeometry(40, 100, 8), new THREE.MeshLambertMaterial({color: 0x1a3a22}));
+            leaves1.position.y = 80;
+            const leaves2 = new THREE.Mesh(new THREE.ConeGeometry(30, 80, 8), new THREE.MeshLambertMaterial({color: 0x1f472a}));
+            leaves2.position.y = 120;
+            tree.add(trunk, leaves1, leaves2);
+            return tree;
+        }
+
+        // Espalha árvores longe da pista
+        for(let i=0; i<400; i++) {
+            let x = (Math.random() - 0.5) * 12000;
+            let z = (Math.random() - 0.5) * 12000;
+            let tooClose = false;
+            for(let p of logicPoints) {
+                if(Math.hypot(p.x - x, p.z - z) < 250) { tooClose = true; break; }
+            }
+            if(!tooClose) {
+                let tree = createPineTree();
+                tree.position.set(x, 0, z);
+                scene.add(tree);
+            }
+        }
+
+        // Montanhas Gigantes no horizonte
+        for(let i=0; i<25; i++) {
+            const mGeo = new THREE.ConeGeometry(800 + Math.random()*1000, 1500 + Math.random()*2000, 4);
+            const mMat = new THREE.MeshLambertMaterial({color: 0x142b1a});
+            const mountain = new THREE.Mesh(mGeo, mMat);
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 5000 + Math.random() * 3000; 
+            mountain.position.set(Math.cos(angle)*dist, 0, Math.sin(angle)*dist);
+            // Corrige a altura da montanha para a base ficar no chão
+            mountain.position.y = mountain.geometry.parameters.height / 2;
+            scene.add(mountain);
         }
 
         // --- CONSTRUTOR DE CARROS ---
@@ -219,15 +305,15 @@
         const aiCars = [];
 
         const aiLiveries = [
-            { p: 0x0055ff, s: 0x111111 }, // RedBurro
-            { p: 0xaaaaaa, s: 0x111111 }, // MecaBenz
-            { p: 0xcc0000, s: 0x111111 }, // Ferrado
-            { p: 0xffffff, s: 0x0055ff }, // BullsRacing
-            { p: 0xff1493, s: 0x0055ff }, // Alpistes
-            { p: 0x00ff00, s: 0x111111 }, // Fernando Martin
-            { p: 0xaaaaaa, s: 0xcc0000 }, // Haudi
-            { p: 0xffffff, s: 0x111111 }, // Cadilata
-            { p: 0xffffff, s: 0xcc0000 }  // Raas
+            { p: 0x0055ff, s: 0x111111 }, 
+            { p: 0xaaaaaa, s: 0x111111 }, 
+            { p: 0xcc0000, s: 0x111111 }, 
+            { p: 0xffffff, s: 0x0055ff }, 
+            { p: 0xff1493, s: 0x0055ff }, 
+            { p: 0x00ff00, s: 0x111111 }, 
+            { p: 0xaaaaaa, s: 0xcc0000 }, 
+            { p: 0xffffff, s: 0x111111 }, 
+            { p: 0xffffff, s: 0xcc0000 }  
         ];
 
         function initCars() {
@@ -268,9 +354,8 @@
 
                 aiCars.push({
                     mesh: aiCar, progress: startProgress,
-                    // Vel máxima reduzida drasticamente para parear com o jogador!
                     maxSpeed: isLeader ? 0.00035 : (0.00030 + Math.random() * 0.00004), 
-                    currentSpeed: 0, // Largada devagar
+                    currentSpeed: 0, 
                     offset: offsetLateral
                 });
             }
@@ -344,7 +429,6 @@
         const keys = {};
         document.addEventListener('keydown', (e) => keys[e.code] = true);
         document.addEventListener('keyup', (e) => keys[e.code] = false);
-        const logicPoints = trackCurve.getSpacedPoints(1000);
 
         function animate() {
             requestAnimationFrame(animate);
@@ -363,9 +447,8 @@
             let angle = playerCar.rotation.y;
 
             if (raceStarted) {
-                // FÍSICA DA IA (Oponentes)
+                // FÍSICA DA IA
                 aiCars.forEach(ai => {
-                    // Largada lenta (Aceleração gradual)
                     if (ai.currentSpeed < ai.maxSpeed) {
                         ai.currentSpeed += 0.0000015; 
                     }
@@ -379,8 +462,6 @@
                     ai.mesh.position.copy(pt).add(normal.multiplyScalar(ai.offset));
                     ai.mesh.position.y = pt.y + 1.2; 
                     ai.mesh.rotation.y = Math.atan2(tangent.x, tangent.z);
-                    
-                    // Inclinação (Pitch) da IA nas subidas e descidas
                     ai.mesh.rotation.x = -Math.atan2(tangent.y, Math.sqrt(tangent.x*tangent.x + tangent.z*tangent.z));
 
                     if(playerCar.position.distanceTo(ai.mesh.position) < 8) {
@@ -414,7 +495,6 @@
                 for(let i = 0; i < logicPoints.length; i++) {
                     let dx = logicPoints[i].x - nextX; 
                     let dz = logicPoints[i].z - nextZ;
-                    // Ignora o eixo Y para não bugar a distância na montanha
                     let sq = dx*dx + dz*dz;
                     if(sq < minSquareDist) { minSquareDist = sq; closestIndex = i; }
                 }
@@ -431,7 +511,7 @@
                     playerCar.position.x = nextX; playerCar.position.z = nextZ;
                 }
                 
-                // Aplica Altitude e Inclinação no Carro do Jogador
+                // Aplica Altitude e Inclinação no Carro
                 playerCar.position.y = logicPoints[closestIndex].y + 1.2;
                 playerCar.rotation.y = angle;
                 
@@ -456,7 +536,6 @@
                 }
             }
 
-            // Câmera adaptada para não bugar nas subidas e descidas
             const yawMatrix = new THREE.Matrix4().makeRotationY(angle);
             const cameraOffset = new THREE.Vector3(0, 15, -45).applyMatrix4(yawMatrix);
             cameraOffset.add(playerCar.position);
