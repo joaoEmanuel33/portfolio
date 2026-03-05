@@ -76,7 +76,7 @@
         <div class="target-time">Meta: 100.00s | Complete 1 Volta!</div>
     </div>
     <button id="skip-btn" onclick="openPortfolio('ACESSO LIBERADO (PULOU O DESAFIO)')">Pular Desafio</button>
-    <div id="instructions">Setas/WASD: Pilotar | Não bata nos adversários!</div>
+    <div id="instructions">Setas/WASD: Pilotar | Acelere na largada!</div>
 
     <div id="portfolio-overlay">
         <h2 class="success-message" id="win-message"></h2>
@@ -119,10 +119,9 @@
         // --- SETUP 3D ---
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x4ca1af); 
-        scene.fog = new THREE.FogExp2(0x4ca1af, 0.00008); 
+        scene.fog = new THREE.FogExp2(0x4ca1af, 0.00006); 
 
-        // Ângulo de câmera ajustado para diminuir distorção de tamanho
-        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 20000);
+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 25000);
         const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('game-canvas'), antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         renderer.shadowMap.enabled = true;
@@ -137,29 +136,31 @@
         sun.position.set(-4000, 1500, 8000); 
         scene.add(sun);
 
+        // O chão continua no Y = 0 (nível do mar)
         const ground = new THREE.Mesh(new THREE.PlaneGeometry(50000, 50000), new THREE.MeshLambertMaterial({ color: 0x2d4c1e }));
         ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
 
+        // --- CIRCUITO COM ALTITUDE (SPA STYLE) ---
         const scale = 3.2; 
+        // Agora o Vector3 tem alturas diferentes no eixo Y (o valor do meio)
         const trackCurve = new THREE.CatmullRomCurve3([
-            new THREE.Vector3(0, 0, 900 * scale),             
-            new THREE.Vector3(-300 * scale, 0, 400 * scale),  
-            new THREE.Vector3(-100 * scale, 0, 100 * scale),  
-            new THREE.Vector3(-500 * scale, 0, -200 * scale), 
-            new THREE.Vector3(-900 * scale, 0, -600 * scale), 
-            new THREE.Vector3(-400 * scale, 0, -1000 * scale),
-            new THREE.Vector3(300 * scale, 0, -800 * scale),  
-            new THREE.Vector3(800 * scale, 0, -400 * scale),  
-            new THREE.Vector3(400 * scale, 0, -100 * scale),  
-            new THREE.Vector3(800 * scale, 0, 150 * scale),   
-            new THREE.Vector3(300 * scale, 0, 350 * scale),   
-            new THREE.Vector3(300 * scale, 0, 800 * scale)    
+            new THREE.Vector3(0, 0, 900 * scale),             // LARGADA (Plana)
+            new THREE.Vector3(-300 * scale, 80 * scale, 400 * scale),  // Subida Forte
+            new THREE.Vector3(-100 * scale, 150 * scale, 100 * scale), // Topo da Montanha
+            new THREE.Vector3(-500 * scale, 120 * scale, -200 * scale), // Leve descida
+            new THREE.Vector3(-900 * scale, 60 * scale, -600 * scale), // Descida forte
+            new THREE.Vector3(-400 * scale, 20 * scale, -1000 * scale), // Vale
+            new THREE.Vector3(300 * scale, 10 * scale, -800 * scale),  // Quase plano
+            new THREE.Vector3(800 * scale, 30 * scale, -400 * scale),  // Subidinha
+            new THREE.Vector3(400 * scale, 60 * scale, -100 * scale),  // Outra montanha
+            new THREE.Vector3(800 * scale, 40 * scale, 150 * scale),   // Descendo
+            new THREE.Vector3(300 * scale, 10 * scale, 350 * scale),   // Chegando no plano
+            new THREE.Vector3(300 * scale, 0, 800 * scale)             // Reta final
         ], true);
 
-        // Pista alargada de 70 para 110!
         const roadWidth = 110; 
-        const road = new THREE.Mesh(new THREE.TubeGeometry(trackCurve, 1000, roadWidth, 8, true).scale(1, 0.02, 1), new THREE.MeshPhongMaterial({ color: 0x222222 }));
-        road.position.y = 0.5; road.receiveShadow = true; scene.add(road);
+        const road = new THREE.Mesh(new THREE.TubeGeometry(trackCurve, 1000, roadWidth, 8, true).scale(1, 0.05, 1), new THREE.MeshPhongMaterial({ color: 0x222222 }));
+        road.receiveShadow = true; scene.add(road);
 
         const curbCanvas = document.createElement('canvas');
         curbCanvas.width = 128; curbCanvas.height = 128;
@@ -168,8 +169,23 @@
         cCtx.fillStyle = '#ffffff'; cCtx.fillRect(0,0,64,128);
         const curbTex = new THREE.CanvasTexture(curbCanvas);
         curbTex.wrapS = THREE.RepeatWrapping; curbTex.wrapT = THREE.RepeatWrapping; curbTex.repeat.set(1000, 1);
-        const curb = new THREE.Mesh(new THREE.TubeGeometry(trackCurve, 1000, roadWidth + 8, 8, true).scale(1, 0.015, 1), new THREE.MeshLambertMaterial({ map: curbTex }));
-        curb.position.y = 0.45; scene.add(curb);
+        const curb = new THREE.Mesh(new THREE.TubeGeometry(trackCurve, 1000, roadWidth + 8, 8, true).scale(1, 0.04, 1), new THREE.MeshLambertMaterial({ map: curbTex }));
+        scene.add(curb);
+
+        // --- PILARES PARA SEGURAR A PISTA ---
+        const pillarGeo = new THREE.CylinderGeometry(15, 15, 1, 16);
+        const pillarMat = new THREE.MeshLambertMaterial({ color: 0x555555 });
+        for(let i=0; i<1000; i+=25) {
+            let pt = trackCurve.getPointAt(i/1000);
+            if(pt.y > 15) {
+                let pillar = new THREE.Mesh(pillarGeo, pillarMat);
+                // Posiciona o pilar do chão até a pista
+                pillar.position.set(pt.x, pt.y / 2, pt.z);
+                pillar.scale.y = pt.y; // Estica ele até a altura exata
+                pillar.castShadow = true;
+                scene.add(pillar);
+            }
+        }
 
         // --- CONSTRUTOR DE CARROS ---
         function createCarModel(primary, secondary) {
@@ -227,7 +243,7 @@
             const playerTangent = trackCurve.getTangentAt(playerStartProgress);
             
             playerCar.position.copy(playerPt); 
-            playerCar.position.y = 1.2; 
+            playerCar.position.y = playerPt.y + 1.2; 
             playerCar.rotation.y = Math.atan2(playerTangent.x, playerTangent.z);
             scene.add(playerCar);
 
@@ -239,7 +255,6 @@
                 
                 let startProgress = 0.995 - (i * 0.005); 
                 if(startProgress < 0) startProgress += 1;
-                // Ajustei o offset lateral para aproveitar a pista mais larga
                 const offsetLateral = (i % 2 === 0) ? 18 : -18; 
                 
                 const pt = trackCurve.getPointAt(startProgress);
@@ -247,13 +262,15 @@
                 const normal = new THREE.Vector3(-tangent.z, 0, tangent.x).normalize();
                 
                 aiCar.position.copy(pt).add(normal.multiplyScalar(offsetLateral));
-                aiCar.position.y = 1.2; 
+                aiCar.position.y = pt.y + 1.2; 
                 aiCar.rotation.y = Math.atan2(tangent.x, tangent.z);
                 scene.add(aiCar);
 
                 aiCars.push({
                     mesh: aiCar, progress: startProgress,
-                    speed: isLeader ? 0.00080 : (0.00065 + Math.random() * 0.0001), 
+                    // Vel máxima reduzida drasticamente para parear com o jogador!
+                    maxSpeed: isLeader ? 0.00035 : (0.00030 + Math.random() * 0.00004), 
+                    currentSpeed: 0, // Largada devagar
                     offset: offsetLateral
                 });
             }
@@ -274,29 +291,26 @@
             document.getElementById('game-ui').style.display = 'block';
             document.getElementById('instructions').style.display = 'block';
             document.getElementById('skip-btn').style.display = 'block';
-            
-            // Força o cronômetro a exibir 0.00 durante a contagem
             timeDisplay.textContent = "0.00";
             
             const countUI = document.getElementById('countdown-ui');
             countUI.style.display = 'block';
             
-            // Posiciona a câmera atrás do carro na largada
-            const cameraOffset = new THREE.Vector3(0, 15, -45).applyMatrix4(playerCar.matrixWorld);
+            const yawMatrix = new THREE.Matrix4().makeRotationY(playerCar.rotation.y);
+            const cameraOffset = new THREE.Vector3(0, 15, -45).applyMatrix4(yawMatrix);
+            cameraOffset.add(playerCar.position);
             camera.position.copy(cameraOffset);
             camera.lookAt(playerCar.position);
 
             let count = 3;
             countUI.innerText = count;
             
-            // Tempo da luz ajustado para 1000ms (mais devagar)
             let interval = setInterval(() => {
                 count--;
                 if(count > 0) {
                     countUI.innerText = count;
                 } else if(count === 0) {
                     countUI.innerText = "GO!";
-                    // O tempo real de corrida SÓ INICIA AQUI!
                     lapStartTime = Date.now();
                     raceStarted = true;
                     passedHalfway = false;
@@ -306,7 +320,6 @@
                     countUI.style.display = 'none';
                 }
             }, 1000); 
-            
             gameActive = true; 
         }
 
@@ -340,7 +353,7 @@
                     const time = Date.now() * 0.0005;
                     camera.position.x = playerCar.position.x + Math.sin(time) * 40;
                     camera.position.z = playerCar.position.z + Math.cos(time) * 40;
-                    camera.position.y = 20;
+                    camera.position.y = playerCar.position.y + 20;
                     camera.lookAt(playerCar.position);
                     renderer.render(scene, camera);
                 }
@@ -350,8 +363,13 @@
             let angle = playerCar.rotation.y;
 
             if (raceStarted) {
+                // FÍSICA DA IA (Oponentes)
                 aiCars.forEach(ai => {
-                    ai.progress += ai.speed;
+                    // Largada lenta (Aceleração gradual)
+                    if (ai.currentSpeed < ai.maxSpeed) {
+                        ai.currentSpeed += 0.0000015; 
+                    }
+                    ai.progress += ai.currentSpeed;
                     if(ai.progress > 1) ai.progress -= 1; 
                     
                     const pt = trackCurve.getPointAt(ai.progress);
@@ -359,8 +377,11 @@
                     const normal = new THREE.Vector3(-tangent.z, 0, tangent.x).normalize();
                     
                     ai.mesh.position.copy(pt).add(normal.multiplyScalar(ai.offset));
-                    ai.mesh.position.y = 1.2; 
+                    ai.mesh.position.y = pt.y + 1.2; 
                     ai.mesh.rotation.y = Math.atan2(tangent.x, tangent.z);
+                    
+                    // Inclinação (Pitch) da IA nas subidas e descidas
+                    ai.mesh.rotation.x = -Math.atan2(tangent.y, Math.sqrt(tangent.x*tangent.x + tangent.z*tangent.z));
 
                     if(playerCar.position.distanceTo(ai.mesh.position) < 8) {
                         speed *= -0.4; 
@@ -369,6 +390,7 @@
                     }
                 });
 
+                // FÍSICA DO JOGADOR
                 let acceleration = 0;
                 if (keys['ArrowUp'] || keys['KeyW']) acceleration = 0.16; 
                 if (keys['ArrowDown'] || keys['KeyS']) acceleration = -0.15; 
@@ -390,7 +412,9 @@
 
                 let minSquareDist = Infinity; let closestIndex = 0;
                 for(let i = 0; i < logicPoints.length; i++) {
-                    let dx = logicPoints[i].x - nextX; let dz = logicPoints[i].z - nextZ;
+                    let dx = logicPoints[i].x - nextX; 
+                    let dz = logicPoints[i].z - nextZ;
+                    // Ignora o eixo Y para não bugar a distância na montanha
                     let sq = dx*dx + dz*dz;
                     if(sq < minSquareDist) { minSquareDist = sq; closestIndex = i; }
                 }
@@ -406,10 +430,15 @@
                 } else {
                     playerCar.position.x = nextX; playerCar.position.z = nextZ;
                 }
+                
+                // Aplica Altitude e Inclinação no Carro do Jogador
+                playerCar.position.y = logicPoints[closestIndex].y + 1.2;
                 playerCar.rotation.y = angle;
-                playerCar.position.y = 1.2; 
+                
+                let playerTangent = trackCurve.getTangentAt(closestIndex / 1000);
+                playerCar.rotation.x = -Math.atan2(playerTangent.y, Math.sqrt(playerTangent.x*playerTangent.x + playerTangent.z*playerTangent.z));
 
-                // Lógica de Tempo e Checkpoint
+                // Cronômetro
                 let currentTime = (Date.now() - lapStartTime) / 1000;
                 timeDisplay.textContent = currentTime.toFixed(2);
 
@@ -427,8 +456,11 @@
                 }
             }
 
-            // Câmera um pouco mais baixa e mais longe para melhorar a proporção visual dos carros
-            const cameraOffset = new THREE.Vector3(0, 15, -45).applyMatrix4(playerCar.matrixWorld);
+            // Câmera adaptada para não bugar nas subidas e descidas
+            const yawMatrix = new THREE.Matrix4().makeRotationY(angle);
+            const cameraOffset = new THREE.Vector3(0, 15, -45).applyMatrix4(yawMatrix);
+            cameraOffset.add(playerCar.position);
+            
             camera.position.lerp(cameraOffset, 0.15);
             camera.lookAt(playerCar.position);
 
