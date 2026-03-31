@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -8,29 +7,29 @@
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@400;600&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { overflow: hidden; font-family: 'Inter', sans-serif; background: #111; user-select: none; }
-
+ 
         #game-ui { position: absolute; top: 20px; left: 20px; color: #fff; font-family: 'Orbitron', sans-serif; z-index: 10; text-shadow: 0 0 10px #000; display: none; }
         .timer-box { font-size: 2.5rem; margin-bottom: 5px; color: #0f0; }
-
+ 
         #minimap-container { position: absolute; top: 20px; right: 20px; width: 200px; height: 200px; background: rgba(0,0,0,0.6); border: 2px solid #555; border-radius: 10px; z-index: 10; display: none; overflow: hidden; }
         #minimap { width: 100%; height: 100%; display: block; }
-
+ 
         #telemetry { position: absolute; bottom: 30px; right: 30px; text-align: right; color: #fff; font-family: 'Orbitron', sans-serif; z-index: 10; display: none; background: rgba(0,0,0,0.6); padding: 15px; border-radius: 10px; border: 2px solid #555; }
         #speed-display { font-size: 3.5rem; font-weight: bold; color: #0ff; text-shadow: 0 0 10px #0ff; }
-
+ 
         .status-row { display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-bottom: 5px; }
         #gear-display { font-size: 2.5rem; color: #ffeb3b; font-weight: bold; }
         .indicator { font-size: 1.2rem; color: #555; font-weight: bold; border: 2px solid #555; padding: 2px 8px; border-radius: 5px; transition: 0.2s; }
         .drs-active { color: #0f0 !important; border-color: #0f0 !important; text-shadow: 0 0 10px #0f0; box-shadow: 0 0 5px #0f0; }
-
+ 
         #instructions { position: absolute; bottom: 30px; left: 30px; color: #fff; font-family: 'Orbitron', sans-serif; font-size: 1.1rem; text-shadow: 0 2px 5px #000; display: none; }
         .highlight { color: #ffeb3b; font-weight: bold; }
-
+ 
         /* Driver info HUD */
         #driver-hud { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); display: none; font-family: 'Orbitron', sans-serif; z-index: 10; text-align: center; pointer-events: none; }
         #driver-name-hud { font-size: 1.1rem; color: #ffeb3b; text-shadow: 0 0 10px #000; font-weight: 700; letter-spacing: 2px; }
         #driver-team-hud { font-size: 0.75rem; color: #aaa; letter-spacing: 3px; }
-
+ 
         /* Driver selection screen */
         #driver-select-screen {
             display: none; position: fixed; inset: 0;
@@ -62,7 +61,7 @@
         .ds-driver-num { font-size: 1.3rem; display: block; margin-bottom: 3px; }
         .ds-back { display: block; margin: 28px auto 0; padding: 12px 40px; background: transparent; border: 2px solid #555; color: #888; font-family: 'Orbitron', sans-serif; font-size: 0.9rem; border-radius: 8px; cursor: pointer; transition: 0.2s; }
         .ds-back:hover { border-color: #0ff; color: #0ff; }
-
+ 
         /* ══════════════════════════════════
            GARAGE MENU — LAYOUT SHOWROOM
         ══════════════════════════════════ */
@@ -73,7 +72,7 @@
             font-family: 'Orbitron', sans-serif; color: #fff;
             overflow: hidden;
         }
-
+ 
         /* Painel esquerdo — controles */
         #garage-left {
             width: 400px; min-width: 340px;
@@ -85,7 +84,7 @@
             overflow-y: auto;
             gap: 0;
         }
-
+ 
         /* Painel direito — showroom 3D */
         #garage-right {
             flex: 1; position: relative;
@@ -93,14 +92,14 @@
             align-items: center; justify-content: flex-end;
             padding-bottom: 24px;
         }
-
+ 
         #showroom-canvas {
             position: absolute; inset: 0;
             width: 100%; height: 100%;
             cursor: grab;
         }
         #showroom-canvas:active { cursor: grabbing; }
-
+ 
         /* Overlay de nome da equipe no showroom */
         #showroom-team-name {
             position: relative; z-index: 5;
@@ -115,7 +114,7 @@
             font-size: 0.7rem; color: #555; letter-spacing: 3px;
             margin-top: 6px; font-family: 'Inter', sans-serif;
         }
-
+ 
         /* Reflective floor line under car */
         #showroom-reflection {
             position: absolute; bottom: 90px; left: 50%;
@@ -124,7 +123,7 @@
             background: radial-gradient(ellipse, rgba(0,220,255,0.18) 0%, transparent 70%);
             pointer-events: none; z-index: 4;
         }
-
+ 
         h1 {
             font-size: 2.4rem; color: #0ff;
             text-shadow: 0 0 20px #0ff;
@@ -169,15 +168,15 @@
             transition: 0.25s; box-shadow: 0 0 24px rgba(0,200,255,0.5);
         }
         #start-race-btn:hover { background: #fff; transform: scale(1.02); }
-
+ 
         #countdown-ui { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 12rem; color: #ffeb3b; font-family: 'Orbitron', sans-serif; font-weight: bold; text-shadow: 0 0 50px #ffeb3b; z-index: 150; display: none; }
-
+ 
         #game-messages { position: fixed; top: 120px; left: 50%; transform: translateX(-50%); text-align: center; font-family: 'Orbitron', sans-serif; font-weight: bold; z-index: 50; }
         .game-msg { font-size: 2.5rem; display: none; text-shadow: 0 0 15px #000; padding: 15px; border-radius: 8px; background: rgba(0,0,0,0.5); }
         #off-track-warning { color: #ff0000; text-shadow: 0 0 20px #ff0000; border: 2px solid #ff0000; }
         #lap-complete-msg  { color: #00ff00; text-shadow: 0 0 20px #00ff00; border: 2px solid #00ff00; }
         #collision-msg     { color: #ff8800; text-shadow: 0 0 20px #ff8800; border: 2px solid #ff8800; }
-
+ 
         /* ══ HUD DE POSIÇÕES — topo esquerdo ══ */
         #hud-left {
             position: fixed; top: 20px; left: 20px;
@@ -185,7 +184,7 @@
             font-family: 'Orbitron', sans-serif;
             min-width: 220px;
         }
-
+ 
         /* Bloco do cronômetro */
         .hud-timer {
             background: rgba(0,0,0,0.75);
@@ -207,7 +206,7 @@
             font-size: 0.52rem; color: #557; margin-top: 2px;
             letter-spacing: 1px; font-family: 'Inter', sans-serif;
         }
-
+ 
         /* Bloco de posição do jogador */
         .hud-pos-block {
             background: rgba(0,0,0,0.75);
@@ -233,7 +232,7 @@
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
             max-width: 130px;
         }
-
+ 
         /* Linhas de piloto à frente / atrás */
         .hud-rivals {
             background: rgba(0,0,0,0.75);
@@ -262,7 +261,7 @@
         .hud-rival-gap  { text-align: right; font-family: 'Inter', sans-serif; font-size: 0.56rem; color: #446; }
         .hud-rival-gap.close { color: #cc4; }
         .hud-rival-gap.very-close { color: #f84; }
-
+ 
         /* Flash vermelho de colisão na borda da tela */
         #impact-flash {
             display: none; position: fixed; inset: 0; pointer-events: none; z-index: 90;
@@ -280,7 +279,7 @@
             0%   { border-color:rgba(255,30,0,0.8); box-shadow:inset 0 0 140px rgba(255,30,0,0.6); }
             100% { border-color:rgba(255,30,0,0.0); box-shadow:inset 0 0 0px rgba(255,30,0,0.0); }
         }
-
+ 
         /* ══════════════════════════════════
            PORTFOLIO — APRESENTAÇÃO PROFISSIONAL
         ══════════════════════════════════ */
@@ -293,7 +292,7 @@
         }
         #portfolio-overlay.show { display: block; animation: poFadeIn 0.4s ease; }
         @keyframes poFadeIn { from{opacity:0} to{opacity:1} }
-
+ 
         /* Linha superior — resultado da volta */
         .po-topbar {
             position: sticky; top: 0; z-index: 10;
@@ -320,7 +319,7 @@
             cursor: pointer; transition: 0.2s;
         }
         .po-close-btn:hover { color: #e8eaf0; border-color: #556; }
-
+ 
         /* Layout principal */
         .po-body {
             max-width: 1100px; margin: 0 auto;
@@ -333,7 +332,7 @@
         @media (max-width: 800px) {
             .po-body { grid-template-columns: 1fr; gap: 32px; padding: 32px 20px 60px; }
         }
-
+ 
         /* ── Coluna esquerda: identidade ── */
         .po-sidebar {}
         .po-avatar {
@@ -356,7 +355,7 @@
             letter-spacing: 2px; text-transform: uppercase;
             margin-bottom: 28px;
         }
-
+ 
         /* Competências na sidebar */
         .po-sidebar-section-title {
             font-size: 0.62rem; color: #445; letter-spacing: 3px;
@@ -384,7 +383,7 @@
         .sf-db     { background: #0077ee; }
         .sf-ia     { background: #9933ff; }
         .sf-front  { background: #00bb66; }
-
+ 
         /* Contatos / links sidebar */
         .po-contact-list { margin-top: 28px; }
         .po-contact-item {
@@ -394,7 +393,7 @@
         }
         .po-contact-icon { font-size: 1rem; width: 20px; text-align: center; }
         .po-contact-val  { color: #889; }
-
+ 
         /* ── Coluna direita: projetos ── */
         .po-main {}
         .po-section-heading {
@@ -406,7 +405,7 @@
         .po-section-heading span {
             color: #00d4ff; margin-right: 8px;
         }
-
+ 
         /* Grid de projetos */
         .po-projects-grid {
             display: grid;
@@ -424,7 +423,7 @@
             border-color: #2a2f3a;
             transform: translateY(-3px);
         }
-
+ 
         /* Área de imagem do projeto */
         .po-project-img {
             width: 100%; aspect-ratio: 16/9;
@@ -460,7 +459,7 @@
             transition: color 0.2s;
         }
         .po-project-img:hover .po-project-img-hint { color: #445; }
-
+ 
         .po-project-body { padding: 16px 18px 18px; }
         .po-project-tags {
             display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;
@@ -476,7 +475,7 @@
         .tag-ia    { background: rgba(140,0,230,0.12); color: #a030ee; border: 1px solid rgba(140,0,230,0.25); }
         .tag-front { background: rgba(0,180,90,0.12);  color: #00aa55; border: 1px solid rgba(0,180,90,0.25); }
         .tag-api   { background: rgba(0,180,200,0.12); color: #00aacc; border: 1px solid rgba(0,180,200,0.25); }
-
+ 
         .po-project-name {
             font-family: 'Orbitron', sans-serif;
             font-size: 0.92rem; font-weight: 700;
@@ -486,7 +485,7 @@
             font-size: 0.75rem; color: #556;
             line-height: 1.6; font-family: 'Inter', sans-serif;
         }
-
+ 
         /* Botão de adicionar projeto */
         .po-add-project {
             display: flex; align-items: center; justify-content: center; gap: 10px;
@@ -498,7 +497,7 @@
             background: transparent;
         }
         .po-add-project:hover { border-color: #333; color: #445; background: rgba(255,255,255,0.01); }
-
+ 
         /* ── DRIVER SELECTION ── */
         .driver-grid {
             display: grid; grid-template-columns: 1fr 1fr;
@@ -516,7 +515,7 @@
         .driver-card .dc-num  { font-size:1.0rem; color: inherit; }
         .driver-card .dc-name { font-size:0.65rem; letter-spacing:1px; opacity:0.8; }
         .driver-card .dc-team { font-size:0.58rem; opacity:0.5; letter-spacing:2px; text-transform:uppercase; }
-
+ 
         #selected-driver-display {
             padding: 10px 14px; border-radius: 8px;
             border: 1px solid rgba(255,255,255,0.1);
@@ -526,7 +525,7 @@
             letter-spacing: 1px;
         }
         #selected-driver-display span { color: #ffeb3b; font-size:0.9rem; }
-
+ 
         /* ── Driver grid ── */
         .driver-grid {
             display: grid; grid-template-columns: repeat(2, 1fr);
@@ -551,7 +550,7 @@
         .dc-name { font-size:0.70rem; margin-bottom:2px; }
         .dc-team { font-size:0.52rem; color:#555; letter-spacing:1px; text-transform:uppercase; }
         .driver-card.active .dc-team { color:#887700; }
-
+ 
         #selected-driver-display {
             font-size:0.78rem; color:#888; margin-bottom:10px;
             padding: 8px 10px; border-left: 3px solid #333;
@@ -569,28 +568,28 @@
     </style>
 </head>
 <body>
-
+ 
 <div id="garage-menu">
-
+ 
     <!-- ── Painel esquerdo: controles ── -->
     <div id="garage-left">
         <h1>SPEED CODER</h1>
         <div id="portfolio-badge">⚡ Simulador Pro V9</div>
-
+ 
         <div class="section-title">Circuito</div>
         <div class="grid-container" id="track-grid" style="grid-template-columns:repeat(3,1fr)">
             <button class="btn-select active" onclick="selectTrack(this,'interlagos')">☀️ Interlagos</button>
             <button class="btn-select" onclick="selectTrack(this,'monza')">🏎️ Monza</button>
             <button class="btn-select" onclick="selectTrack(this,'night')">🌙 Jeddah</button>
         </div>
-
+ 
         <div class="section-title">Piloto</div>
         <div id="selected-driver-display">Selecione um piloto para continuar</div>
         <div id="driver-grid" class="driver-grid"></div>
-
+ 
         <button id="start-race-btn" onclick="startCountdown()" disabled style="opacity:0.4;cursor:not-allowed">▶ ESCOLHA UM PILOTO</button>
     </div>
-
+ 
     <!-- ── Painel direito: showroom 3D ── -->
     <div id="garage-right">
         <canvas id="showroom-canvas"></canvas>
@@ -598,12 +597,12 @@
         <div id="showroom-team-name" style="color:#ff6600">Maclata</div>
         <div id="showroom-hint">arraste para girar • scroll para zoom</div>
     </div>
-
+ 
 </div>
-
+ 
 <!-- ══ PORTFÓLIO PROFISSIONAL ══ -->
 <div id="portfolio-overlay">
-
+ 
   <!-- Barra superior com resultado da volta -->
   <div class="po-topbar">
     <div class="po-lap-chip">
@@ -615,18 +614,18 @@
     </div>
     <button class="po-close-btn" onclick="closePortfolio()">▶ CONTINUAR CORRENDO</button>
   </div>
-
+ 
   <!-- Corpo em duas colunas -->
   <div class="po-body">
-
+ 
     <!-- ── Sidebar: identidade + competências ── -->
     <aside class="po-sidebar">
       <div class="po-avatar">👤</div>
       <div class="po-dev-name">SEU NOME</div>
       <div class="po-dev-role">Desenvolvedor de Software</div>
-
+ 
       <div class="po-sidebar-section-title">Competências</div>
-
+ 
       <div class="po-skill-item">
         <div class="po-skill-label">Java <span class="po-skill-pct">85%</span></div>
         <div class="po-skill-track"><div class="po-skill-fill sf-java" data-level="85"></div></div>
@@ -643,7 +642,7 @@
         <div class="po-skill-label">Frontend <span class="po-skill-pct">65%</span></div>
         <div class="po-skill-track"><div class="po-skill-fill sf-front" data-level="65"></div></div>
       </div>
-
+ 
       <div class="po-contact-list">
         <div class="po-sidebar-section-title" style="margin-top:24px">Contato</div>
         <div class="po-contact-item">
@@ -660,119 +659,71 @@
         </div>
       </div>
     </aside>
-
+ 
     <!-- ── Main: projetos ── -->
     <main class="po-main">
       <div class="po-section-heading"><span>◈</span> Projetos</div>
-
+ 
       <div class="po-projects-grid" id="po-projects-grid">
-
+ 
         <!-- Projeto 1 -->
         <div class="po-project-card">
-          <div class="po-project-img" id="pimg-0">
-            <input type="file" accept="image/*" class="po-project-img-input" onchange="loadProjectImg(this,'pimg-0')">
-            <img id="pimg-0-img" alt="">
-            <div class="po-project-img-placeholder">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
-                <path d="M21 15l-5-5L5 21"/>
-              </svg>
-              Clique para adicionar imagem
-            </div>
-            <span class="po-project-img-hint">📎 upload</span>
-          </div>
-          <div class="po-project-body">
-            <div class="po-project-tags">
-              <span class="po-project-tag tag-java">Java</span>
-              <span class="po-project-tag tag-db">SQL</span>
-              <span class="po-project-tag tag-api">API REST</span>
-            </div>
-            <div class="po-project-name">Nome do Projeto 1</div>
-            <div class="po-project-desc">Descreva brevemente o que este projeto faz, a tecnologia utilizada e o problema que ele resolve.</div>
-          </div>
+      <div class="po-project-img" id="pimg-0">
+        <img id="pimg-0-img" src="assets/sua-imagem.jpg" alt="Imagem do Projeto 1">
+      </div>
+  
+      <div class="po-project-body">
+        <div class="po-project-tags">
+          <span class="po-project-tag tag-java">Java</span>
+          <span class="po-project-tag tag-db">SQL</span>
+          <span class="po-project-tag tag-api">API REST</span>
         </div>
-
-        <!-- Projeto 2 -->
-        <div class="po-project-card">
-          <div class="po-project-img" id="pimg-1">
-            <input type="file" accept="image/*" class="po-project-img-input" onchange="loadProjectImg(this,'pimg-1')">
-            <img id="pimg-1-img" alt="">
-            <div class="po-project-img-placeholder">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
-                <path d="M21 15l-5-5L5 21"/>
-              </svg>
-              Clique para adicionar imagem
-            </div>
-            <span class="po-project-img-hint">📎 upload</span>
+        <div class="po-project-name">Nome do Projeto 1</div>
+        <div class="po-project-desc">Descreva brevemente o que este projeto faz, a tecnologia utilizada e o problema que ele resolve.</div>
+      </div>
+    </div
+ 
+        <!-- Projeto 3 -->
+            <div class="po-project-card">
+              <div class="po-project-img" id="pimg-1">
+            <img id="pimg-1-img" src="assets/sua-imagem-2.jpg" alt="Imagem do Projeto 2">
           </div>
+  
           <div class="po-project-body">
-            <div class="po-project-tags">
-              <span class="po-project-tag tag-ia">IA</span>
-              <span class="po-project-tag tag-front">Frontend</span>
-            </div>
+        <div class="po-project-tags">
+          <span class="po-project-tag tag-ia">IA</span>
+          <span class="po-project-tag tag-front">Frontend</span>
+        </div>
             <div class="po-project-name">Nome do Projeto 2</div>
             <div class="po-project-desc">Descreva brevemente o que este projeto faz, a tecnologia utilizada e o problema que ele resolve.</div>
           </div>
         </div>
-
-        <!-- Projeto 3 -->
-        <div class="po-project-card">
-          <div class="po-project-img" id="pimg-2">
-            <input type="file" accept="image/*" class="po-project-img-input" onchange="loadProjectImg(this,'pimg-2')">
-            <img id="pimg-2-img" alt="">
-            <div class="po-project-img-placeholder">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
-                <path d="M21 15l-5-5L5 21"/>
-              </svg>
-              Clique para adicionar imagem
-            </div>
-            <span class="po-project-img-hint">📎 upload</span>
-          </div>
-          <div class="po-project-body">
-            <div class="po-project-tags">
-              <span class="po-project-tag tag-db">Banco de Dados</span>
-              <span class="po-project-tag tag-java">Java</span>
-            </div>
-            <div class="po-project-name">Nome do Projeto 3</div>
-            <div class="po-project-desc">Descreva brevemente o que este projeto faz, a tecnologia utilizada e o problema que ele resolve.</div>
-          </div>
-        </div>
-
+ 
         <!-- Projeto 4 -->
-        <div class="po-project-card">
-          <div class="po-project-img" id="pimg-3">
-            <input type="file" accept="image/*" class="po-project-img-input" onchange="loadProjectImg(this,'pimg-3')">
-            <img id="pimg-3-img" alt="">
-            <div class="po-project-img-placeholder">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
-                <path d="M21 15l-5-5L5 21"/>
-              </svg>
-              Clique para adicionar imagem
-            </div>
-            <span class="po-project-img-hint">📎 upload</span>
-          </div>
-          <div class="po-project-body">
-            <div class="po-project-tags">
-              <span class="po-project-tag tag-front">Frontend</span>
-              <span class="po-project-tag tag-api">API</span>
-            </div>
-            <div class="po-project-name">Nome do Projeto 4</div>
-            <div class="po-project-desc">Descreva brevemente o que este projeto faz, a tecnologia utilizada e o problema que ele resolve.</div>
-          </div>
-        </div>
-
+       <div class="po-project-card">
+  <div class="po-project-img" id="pimg-3">
+    <img id="pimg-3-img" src="assets/sua-imagem-4.jpg" alt="Imagem do Projeto 4">
+  </div>
+  
+  <div class="po-project-body">
+    <div class="po-project-tags">
+      <span class="po-project-tag tag-front">Frontend</span>
+      <span class="po-project-tag tag-api">API</span>
+    </div>
+    <div class="po-project-name">Nome do Projeto 4</div>
+    <div class="po-project-desc">Descreva brevemente o que este projeto faz, a tecnologia utilizada e o problema que ele resolve.</div>
+  </div>
+</div>
+ 
       </div><!-- /po-projects-grid -->
-
+ 
     </main>
-
+ 
   </div><!-- /po-body -->
 </div>
-
+ 
 <div id="countdown-ui">3</div>
-
+ 
 <!-- HUD esquerdo: timer + posição + rivais -->
 <div id="hud-left">
     <div class="hud-timer">
@@ -793,23 +744,23 @@
     <div class="hud-rivals" id="hud-rivals"></div>
 </div>
 <div id="minimap-container"><canvas id="minimap" width="200" height="200"></canvas></div>
-
+ 
 <div id="game-messages">
     <div id="off-track-warning" class="game-msg">⚠️ FORA DA PISTA ⚠️</div>
     <div id="lap-complete-msg"  class="game-msg">🏁 VOLTA COMPLETA! 🏁</div>
     <div id="collision-msg"     class="game-msg">💥 IMPACTO!</div>
 </div>
-
+ 
 <div id="impact-flash"></div>
-
+ 
 <div id="telemetry">
     <div class="status-row"><div class="indicator" id="drs-indicator">DRS</div><div id="gear-display">N</div></div>
     <div id="speed-display">0 km/h</div>
 </div>
-
+ 
 <div id="instructions">Setas/WASD: Acelerar | <span class="highlight">Espaço</span>: DRS | <span class="highlight">C</span>: Câmera</div>
 <canvas id="game-canvas"></canvas>
-
+ 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 // ═══════════════════════════════════════════════════════
@@ -818,17 +769,17 @@
 (function initShowroom() {
     const canvas = document.getElementById('showroom-canvas');
     const W = () => canvas.clientWidth, H = () => canvas.clientHeight;
-
+ 
     const sr = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:true });
     sr.setPixelRatio(Math.min(devicePixelRatio,2));
     sr.setClearColor(0x000000, 0);
     sr.shadowMap.enabled = true;
-
+ 
     const sc = new THREE.Scene();
     const cam = new THREE.PerspectiveCamera(42, W()/H(), 0.1, 2000);
     cam.position.set(30, 18, 60);
     cam.lookAt(0, 6, 0);
-
+ 
     // Luzes do showroom
     sc.add(new THREE.AmbientLight(0xffffff, 0.5));
     const key = new THREE.DirectionalLight(0xffffff, 1.2);
@@ -841,7 +792,7 @@
     const spot = new THREE.SpotLight(0xffffff, 1.8);
     spot.angle = 0.35; spot.penumbra = 0.5; spot.position.set(0, 120, 0);
     spot.target.position.set(0, 0, 0); sc.add(spot); sc.add(spot.target);
-
+ 
     // Chão reflexivo
     const floorMesh = new THREE.Mesh(
         new THREE.PlaneGeometry(600, 600),
@@ -849,12 +800,12 @@
     );
     floorMesh.rotation.x = -Math.PI/2; floorMesh.position.y = -0.5;
     sc.add(floorMesh);
-
+ 
     // Grid de linhas no chão (estilo showroom)
     const gridHelper = new THREE.GridHelper(300, 30, 0x1a2035, 0x111820);
     gridHelper.position.y = -0.4;
     sc.add(gridHelper);
-
+ 
     // Partículas de brilho flutuantes
     const ptGeo = new THREE.BufferGeometry();
     const ptPos = new Float32Array(120*3);
@@ -863,14 +814,14 @@
     const ptMesh = new THREE.Points(ptGeo,
         new THREE.PointsMaterial({color:0x00ccff,size:0.8,transparent:true,opacity:0.35}));
     sc.add(ptMesh);
-
+ 
     // Estado do showroom
     let srCar = null;
     let srRotY = -0.4;
     let srAutoRot = true;
     let srZoom = 60;
     let dragging = false, lastMX = 0;
-
+ 
     // Reutiliza a função createCarModel do jogo principal
     // (definida depois deste bloco — chamamos via window após load)
     window.srRebuildCar = function(primary, secondary) {
@@ -882,7 +833,7 @@
         srCar.traverse(c => { if(c.isMesh) { c.castShadow=true; c.receiveShadow=true; } });
         sc.add(srCar);
     };
-
+ 
     // Interação: arrastar para girar
     canvas.addEventListener('mousedown', e => { dragging=true; lastMX=e.clientX; srAutoRot=false; });
     canvas.addEventListener('mousemove', e => {
@@ -906,34 +857,34 @@
         cam.position.setLength(srZoom);
         e.preventDefault();
     }, { passive:false });
-
+ 
     // Loop do showroom
     let srFrame = 0;
     function srLoop() {
         requestAnimationFrame(srLoop);
         srFrame++;
-
+ 
         // Resize
         const cw = canvas.clientWidth, ch = canvas.clientHeight;
         if (sr.domElement.width !== cw || sr.domElement.height !== ch) {
             sr.setSize(cw, ch, false);
             cam.aspect = cw/ch; cam.updateProjectionMatrix();
         }
-
+ 
         if (srAutoRot && !dragging) srRotY += 0.008;
         if (srCar) srCar.rotation.y = srRotY;
-
+ 
         // Partículas flutuam levemente
         ptMesh.rotation.y += 0.0005;
         ptMesh.rotation.x += 0.0002;
-
+ 
         // Pulsação sutil no spot
         spot.intensity = 1.8 + Math.sin(srFrame * 0.02) * 0.2;
-
+ 
         sr.render(sc, cam);
     }
     srLoop();
-
+ 
     // Aguarda createCarModel estar disponível e monta o carro inicial
     function tryBuild() {
         if (typeof createCarModel === 'function') {
@@ -956,14 +907,14 @@ let speed = 0, steering = 0, targetSteering = 0, gear = 0;
 let cameraMode = 0, drsActive = false;
 let lapStartTime = 0, bestLap = Infinity;
 let playerSector = 0;
-
+ 
 // ═══════════════════════════════════════════════════════
 //  ÁUDIO
 // ═══════════════════════════════════════════════════════
 let engineAudio = new Audio('./assets/motor.mp3');
 engineAudio.loop = true; engineAudio.volume = 0.6;
 let audioCtx, engineOsc, gainNode, usingSynth = false;
-
+ 
 function initAudio() {
     engineAudio.play().catch(() => {
         usingSynth = true;
@@ -991,7 +942,7 @@ function updateEngineSound() {
         gainNode.gain.setTargetAtTime(0.05+p*0.05, audioCtx.currentTime, 0.1);
     }
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 //  SETUP THREE.JS
 // ═══════════════════════════════════════════════════════
@@ -999,12 +950,12 @@ const scene    = new THREE.Scene();
 const camera   = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 80000);
 const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('game-canvas'), antialias: true });
 renderer.setSize(innerWidth, innerHeight); renderer.shadowMap.enabled = true;
-
+ 
 // Luzes globais — serão reconfiguradas por buildTrackEnvironment()
 let ambientLight = new THREE.AmbientLight(0xffffff, 0.7); scene.add(ambientLight);
 let sunLight = new THREE.DirectionalLight(0xffffff, 1.0);
 sunLight.position.set(200,400,200); sunLight.castShadow=true; scene.add(sunLight);
-
+ 
 // Pool de SpotLights para pista noturna (reutilizados, não criados por frame)
 const SPOT_POOL_SIZE = 80;
 const spotPool = [];
@@ -1019,17 +970,17 @@ for (let i=0; i<SPOT_POOL_SIZE; i++) {
     scene.add(sp.target);
     spotPool.push(sp);
 }
-
+ 
 // ─── ESTADO DE COLISÃO ────────────────────────────────────────────
 const CAR_COLLISION_RADIUS = 14;   // raio de colisão por carro (unidades)
 let impactShake      = 0;           // contador de frames de shake da câmera
 let impactFlash      = 0;           // contador de frames do flash vermelho
 let lastImpactTime   = 0;           // debounce — evita detecções múltiplas no mesmo frame
-
+ 
 let trackGroup = new THREE.Group(); scene.add(trackGroup);
 let trackCurve, logicPoints, roadWidth = 150;
 const KERB_W = 22; // zebra — zona de graça
-
+ 
 // ═══════════════════════════════════════════════════════
 //  PISTAS
 // ═══════════════════════════════════════════════════════
@@ -1037,7 +988,7 @@ function buildTrackEnvironment() {
     scene.remove(trackGroup); trackGroup = new THREE.Group(); scene.add(trackGroup);
     roadWidth = 150;
     let pts = [];
-
+ 
     if (currentTrack === 'interlagos') {
         pts = [
             new THREE.Vector3(0,0,800),   new THREE.Vector3(-300,0,300),
@@ -1079,11 +1030,11 @@ function buildTrackEnvironment() {
             new THREE.MeshLambertMaterial({color:0x1a1208}));
         g.rotation.x=-Math.PI/2; g.position.y=-3; trackGroup.add(g);
     }
-
+ 
     pts = pts.map(p => p.multiplyScalar(6.0));
     trackCurve = new THREE.CatmullRomCurve3(pts, true);
     logicPoints = trackCurve.getSpacedPoints(1800);
-
+ 
     // Asfalto
     const av=[], ai=[];
     for (let i=0;i<1800;i++) {
@@ -1107,7 +1058,7 @@ function buildTrackEnvironment() {
     rg.setAttribute('position',new THREE.Float32BufferAttribute(av,3));
     rg.setIndex(ai); rg.computeVertexNormals();
     trackGroup.add(new THREE.Mesh(rg, roadMat));
-
+ 
     // Zebras – ribbon contínuo, cor por vértice
     function buildKerbRibbon(sign) {
         const kv=[],kc=[],ki=[];
@@ -1133,7 +1084,7 @@ function buildTrackEnvironment() {
     }
     trackGroup.add(buildKerbRibbon(1));
     trackGroup.add(buildKerbRibbon(-1));
-
+ 
     // Gravilha nas curvas
     const curv=[];
     for (let i=0;i<1800;i++) curv[i]=trackCurve.getTangentAt(i/1800).angleTo(trackCurve.getTangentAt(((i+15)%1800)/1800));
@@ -1158,7 +1109,7 @@ function buildTrackEnvironment() {
         rgg.setIndex(ri); rgg.computeVertexNormals();
         trackGroup.add(new THREE.Mesh(rgg,new THREE.MeshLambertMaterial({color:0xd8b88c,side:THREE.DoubleSide})));
     }
-
+ 
     // Linha de chegada xadrez
     const flPt=trackCurve.getPointAt(0), flT=trackCurve.getTangentAt(0);
     const flN=new THREE.Vector3(-flT.z,0,flT.x).normalize();
@@ -1171,14 +1122,14 @@ function buildTrackEnvironment() {
         sq.rotation.x=-Math.PI/2; sq.rotation.z=Math.atan2(flT.x,flT.z);
         trackGroup.add(sq);
     }
-
+ 
     // ── Iluminação noturna ──────────────────────────────────────────
     if (isNight) buildNightLights();
-
+ 
     // ── Decorações ──────────────────────────────────────────────────
     buildDecorations();
 }
-
+ 
 // ─── UTILITÁRIO: distância mínima de um ponto XZ à pista ───────────
 // Garante que NENHUM objeto nasça dentro do asfalto (ou zebra)
 function distToTrack(x, z) {
@@ -1190,7 +1141,7 @@ function distToTrack(x, z) {
     }
     return minD;
 }
-
+ 
 // ─── ILUMINAÇÃO NOTURNA ────────────────────────────────────────────
 function buildNightLights() {
     const POLE_STEP      = 36;         // poste a cada 36 pontos (~60m) — muito mais denso
@@ -1198,32 +1149,32 @@ function buildNightLights() {
     const POLE_OFFSET    = roadWidth / 2 + KERB_W + 28;
     const LIGHT_INT      = 5.5;        // intensidade alta
     const LIGHT_DIST     = 1300;
-
+ 
     let spotIdx = 0;
-
+ 
     for (let i = 0; i < 1800; i += POLE_STEP) {
         const pt   = logicPoints[i];
         const tang = trackCurve.getTangentAt(i / 1800);
         const norm = new THREE.Vector3(-tang.z, 0, tang.x).normalize();
-
+ 
         // ── Coloca poste em AMBOS os lados simultaneamente ──
         for (let side of [1, -1]) {
             if (spotIdx >= SPOT_POOL_SIZE) break;
-
+ 
             const bx = pt.x + norm.x * POLE_OFFSET * side;
             const bz = pt.z + norm.z * POLE_OFFSET * side;
             const by = pt.y;
-
+ 
             // Geometria do poste
             const pg = new THREE.Group();
-
+ 
             const shaft = new THREE.Mesh(
                 new THREE.CylinderGeometry(1.6, 2.0, POLE_H, 8),
                 new THREE.MeshPhongMaterial({color:0xdddddd, depthWrite:true, shininess:80})
             );
             shaft.position.y = POLE_H / 2;
             pg.add(shaft);
-
+ 
             // Braço em direção à pista
             const armLen = 30;
             const armH = new THREE.Mesh(
@@ -1232,7 +1183,7 @@ function buildNightLights() {
             );
             armH.position.set(-armLen/2 * side, POLE_H + 1, 0);
             pg.add(armH);
-
+ 
             // Luminária LED grande
             const housing = new THREE.Mesh(
                 new THREE.BoxGeometry(28, 4, 12),
@@ -1240,7 +1191,7 @@ function buildNightLights() {
             );
             housing.position.set(-armLen * side, POLE_H - 2, 0);
             pg.add(housing);
-
+ 
             // Face emissiva brilhante
             const face = new THREE.Mesh(
                 new THREE.BoxGeometry(26, 2, 11),
@@ -1251,32 +1202,32 @@ function buildNightLights() {
             );
             face.position.set(-armLen * side, POLE_H - 4, 0);
             pg.add(face);
-
+ 
             pg.position.set(bx, by, bz);
             trackGroup.add(pg);
-
+ 
             // SpotLight: posicionado na luminária, apontando para pista
             const sp = spotPool[spotIdx++];
             sp.intensity = LIGHT_INT;
             sp.distance  = LIGHT_DIST;
             sp.color.setHex(0xfff8e0);
-
+ 
             sp.position.set(bx, by + POLE_H - 3, bz);
             sp.target.position.set(pt.x, pt.y, pt.z);
             sp.target.updateMatrixWorld();
         }
         if (spotIdx >= SPOT_POOL_SIZE) break;
     }
-
+ 
     // Desativa spots sobrando
     for (let i = spotIdx; i < SPOT_POOL_SIZE; i++) spotPool[i].intensity = 0;
 }
-
+ 
 // ─── DECORAÇÕES ────────────────────────────────────────────────────
 function buildDecorations() {
     const isNight = (currentTrack === 'night');
     const deco = new THREE.Group();
-
+ 
     // Materiais reutilizados
     const matTrunk   = new THREE.MeshPhongMaterial({color:0x5c3a1e, depthWrite:true});
     const matLeaves  = new THREE.MeshPhongMaterial({color:0x2d6a2d, depthWrite:true});
@@ -1289,15 +1240,15 @@ function buildDecorations() {
     const matGreen   = new THREE.MeshPhongMaterial({color:0x33cc55, depthWrite:true});
     const matBoard   = new THREE.MeshPhongMaterial({color:0x111122, depthWrite:true});
     const matBoardFr = new THREE.MeshPhongMaterial({color:0x0033ff, depthWrite:true, emissive:0x001133});
-
+ 
     // Limite mínimo de distância do centro da pista para colocar objetos
     const SAFE_DIST = roadWidth / 2 + KERB_W + 65; // além da zebra + gravilha
-
+ 
     // ── Helper: tenta posicionar objeto só fora da pista ──
     function tryPlace(x, z) {
         return distToTrack(x, z) >= SAFE_DIST;
     }
-
+ 
     // ── Prédio iluminado estilo Jeddah ──
     function makeBuilding(w, h, d) {
         const g = new THREE.Group();
@@ -1328,7 +1279,7 @@ function buildDecorations() {
         topLight.position.y = h + 21; g.add(topLight);
         return g;
     }
-
+ 
     // ── Árvore estilizada ──
     function makeTree(h, r) {
         const g = new THREE.Group();
@@ -1343,7 +1294,7 @@ function buildDecorations() {
         g.add(trunk, canopy1, canopy2, canopy3);
         return g;
     }
-
+ 
     // ── Tribuna (arquibancada) ──
     function makeTribune(w, d, rows) {
         const g = new THREE.Group();
@@ -1366,7 +1317,7 @@ function buildDecorations() {
         g.add(roof);
         return g;
     }
-
+ 
     // ── Bandeira de largada (poste + banner) ──
     function makeFlagPole(col) {
         const g = new THREE.Group();
@@ -1378,7 +1329,7 @@ function buildDecorations() {
         g.add(pole, flag);
         return g;
     }
-
+ 
     // ── Placar eletrônico ──
     function makeScoreboard() {
         const g = new THREE.Group();
@@ -1400,7 +1351,7 @@ function buildDecorations() {
         g.add(pillarL, pillarR, board, screen);
         return g;
     }
-
+ 
     // ── Pneus de barreira (stack de 3) ──
     function makeTireStack(col) {
         const g = new THREE.Group();
@@ -1413,7 +1364,7 @@ function buildDecorations() {
         }
         return g;
     }
-
+ 
     // ── Poste de luz ──
     function makeLightPole() {
         const g = new THREE.Group();
@@ -1426,7 +1377,7 @@ function buildDecorations() {
         g.add(pole, arm, bulb);
         return g;
     }
-
+ 
     // ── Gradil de segurança (cerca) ──
     function makeFence(length) {
         const g = new THREE.Group();
@@ -1446,22 +1397,22 @@ function buildDecorations() {
         }
         return g;
     }
-
+ 
     // ────────────────────────────────────────────────────────────────
     // COLOCAÇÃO DOS OBJETOS — posições amostradas ao longo da pista,
     // deslocadas para FORA. Se cair em cima da pista, descarta.
     // ────────────────────────────────────────────────────────────────
     const OUTER_DIST = SAFE_DIST + 20; // distância base de colocação
-
+ 
     for (let i = 0; i < 1800; i += 1) {
         const t0 = i / 1800;
         const pt   = logicPoints[i];
         const tang = trackCurve.getTangentAt(t0);
         const norm = new THREE.Vector3(-tang.z, 0, tang.x).normalize();
-
+ 
         // Alterna lado a cada segmento
         const side = (Math.floor(i / 90) % 2 === 0) ? 1 : -1;
-
+ 
         // ── Árvores (dia) / Prédios (noite): a cada ~100m ──
         if (i % 90 === 0) {
             for (let s of [1, -1]) {
@@ -1484,7 +1435,7 @@ function buildDecorations() {
                 }
             }
         }
-
+ 
         // ── Tribuna: 2 por pista, em retas longas ──
         if (i === 180 || i === 900) {
             for (let s of [1, -1]) {
@@ -1498,7 +1449,7 @@ function buildDecorations() {
                 deco.add(trib);
             }
         }
-
+ 
         // ── Placar eletrônico: 1 por pista, numa reta ──
         if (i === 450) {
             const dist = OUTER_DIST + 60;
@@ -1511,7 +1462,7 @@ function buildDecorations() {
                 deco.add(sb);
             }
         }
-
+ 
         // ── Postes de luz: a cada ~150m, ambos os lados ──
         if (i % 135 === 0) {
             for (let s of [1, -1]) {
@@ -1524,7 +1475,7 @@ function buildDecorations() {
                 deco.add(lp);
             }
         }
-
+ 
         // ── Pneus de barreira: nas saídas de curva (curvatura alta) ──
         if (i % 45 === 0) {
             const tNext = ((i+20)%1800)/1800;
@@ -1541,7 +1492,7 @@ function buildDecorations() {
                 }
             }
         }
-
+ 
         // ── Gradil de segurança: arco que SEGUE a pista ponto a ponto ──
         // Gerado como ribbon contínuo nos dois lados — nunca cruza a pista
         if (i === 0) {
@@ -1576,7 +1527,7 @@ function buildDecorations() {
                 }
             }
         }
-
+ 
         // ── Bandeiras: na linha de chegada e em 3 pontos ──
         if (i === 0 || i === 600 || i === 1200) {
             for (let s of [1, -1]) {
@@ -1592,19 +1543,19 @@ function buildDecorations() {
             }
         }
     }
-
+ 
     // Pasto verde mais rico ao redor dos gradis
     // (já está no chão, mas podemos adicionar variação de cor em círculos)
-
+ 
     trackGroup.add(deco);
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 //  MODELO F1 — FORMAS LIMPAS + PROPORCIONAL
 // ═══════════════════════════════════════════════════════
 function createCarModel(primary, secondary) {
     const group = new THREE.Group();
-
+ 
     const pMat    = new THREE.MeshPhongMaterial({ color:primary, depthWrite:true, shininess:160, specular:0x333333 });
     const sMat    = new THREE.MeshPhongMaterial({ color:(secondary!==0x111111?secondary:0x222222), depthWrite:true, shininess:100 });
     const cMat    = new THREE.MeshPhongMaterial({ color:0x111111, depthWrite:true, shininess:30 });
@@ -1612,7 +1563,7 @@ function createCarModel(primary, secondary) {
     const rimMat  = new THREE.MeshPhongMaterial({ color:0xaaaaaa, depthWrite:true, shininess:200, specular:0x999999 });
     const visorMat= new THREE.MeshPhongMaterial({ color:0x001020, depthWrite:true, shininess:255, specular:0x4488ff, transparent:true, opacity:0.85 });
     const blackMat= new THREE.MeshPhongMaterial({ color:0x050505, depthWrite:true });
-
+ 
     // ═══════════════════════════
     //  RODAS — tamanho reduzido
     // ═══════════════════════════
@@ -1620,17 +1571,17 @@ function createCarModel(primary, secondary) {
         const wg = new THREE.Group();
         const R  = rear ? 1.32 : 1.18;   // era 1.55/1.38 — reduzido
         const W  = rear ? 1.80 : 1.40;   // era 2.0/1.55 — reduzido
-
+ 
         const tire = new THREE.Mesh(new THREE.CylinderGeometry(R, R, W, 20), tireMat);
         tire.rotation.z = Math.PI / 2;
-
+ 
         const sidewall = new THREE.Mesh(new THREE.CylinderGeometry(R*0.98, R*0.98, 0.12, 20),
             new THREE.MeshPhongMaterial({color:0xdddddd, depthWrite:true}));
         sidewall.rotation.z = Math.PI/2; sidewall.position.x = W*0.44;
-
+ 
         const rimDisk = new THREE.Mesh(new THREE.CylinderGeometry(R*0.60, R*0.60, W*0.85, 14), rimMat);
         rimDisk.rotation.z = Math.PI/2;
-
+ 
         for (let i = 0; i < 5; i++) {
             const spoke = new THREE.Mesh(new THREE.BoxGeometry(W*0.70, R*0.11, R*0.50), rimMat);
             spoke.rotation.z = Math.PI/2;
@@ -1640,11 +1591,11 @@ function createCarModel(primary, secondary) {
         const hub = new THREE.Mesh(new THREE.CylinderGeometry(R*0.18, R*0.18, W*0.88, 8),
             new THREE.MeshPhongMaterial({color:0x1a1a1a, depthWrite:true}));
         hub.rotation.z = Math.PI/2;
-
+ 
         wg.add(tire, sidewall, rimDisk, hub);
         return wg;
     }
-
+ 
     const fL_Pivot = new THREE.Group(); fL_Pivot.position.set(-3.0, 1.18, 4.4);
     const fR_Pivot = new THREE.Group(); fR_Pivot.position.set( 3.0, 1.18, 4.4);
     const wFLg = makeWheel(false); fL_Pivot.add(wFLg);
@@ -1652,33 +1603,33 @@ function createCarModel(primary, secondary) {
     const wRLg = makeWheel(true);  wRLg.position.set(-3.1, 1.32, -4.0);
     const wRRg = makeWheel(true);  wRRg.position.set( 3.1, 1.32, -4.0);
     group.add(wRLg, wRRg, fL_Pivot, fR_Pivot);
-
+ 
     // Push-rods finos
     for (let s of [-1,1]) {
         const pr = new THREE.Mesh(new THREE.CylinderGeometry(0.10,0.10,3.5,5), cMat);
         pr.rotation.z = Math.PI/2; pr.position.set(s*1.5, 0.85, 4.4); group.add(pr);
         const pr2 = pr.clone(); pr2.position.set(s*1.5, 0.85, -4.0); group.add(pr2);
     }
-
+ 
     // ═══════════════════════════
     //  PISO / FLOOR
     // ═══════════════════════════
     const floor = new THREE.Mesh(new THREE.BoxGeometry(3.8, 0.12, 11.5), cMat);
     floor.position.set(0, 0.46, 0.3);
     group.add(floor);
-
+ 
     // ═══════════════════════════
     //  MONOQUE CENTRAL
     // ═══════════════════════════
-
+ 
     // Base larga — monocoque inferior
     const monoLow = new THREE.Mesh(new THREE.BoxGeometry(3.4, 0.75, 9.0), pMat);
     monoLow.position.set(0, 1.25, 0.5);
-
+ 
     // Topo central mais estreito
     const monoTop = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.65, 8.0), pMat);
     monoTop.position.set(0, 1.93, 0.5);
-
+ 
     // Rampa de transição ao nariz — CAIXAS escalonadas, SEM cilindros deitados
     // Cada caixa vai ficando menor em X e Y conforme avança em Z
     const ramp1 = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.65, 1.5), pMat);
@@ -1687,13 +1638,13 @@ function createCarModel(primary, secondary) {
     ramp2.position.set(0, 1.44, 7.0);
     const ramp3 = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.52, 1.5), pMat);
     ramp3.position.set(0, 1.40, 8.5);
-
+ 
     // Engine cover — caixote sobre o motor
     const engCover = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.1, 5.0), pMat);
     engCover.position.set(0, 2.18, -1.8);
     const engTop = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.45, 4.5), pMat);
     engTop.position.set(0, 2.78, -1.8);
-
+ 
     // Gearbox — CAIXAS escalonadas, SEM cilindro deitado
     const gb1 = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.80, 1.2), pMat);
     gb1.position.set(0, 1.40, -4.5);
@@ -1701,7 +1652,7 @@ function createCarModel(primary, secondary) {
     gb2.position.set(0, 1.35, -5.7);
     const gb3 = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.55, 1.0), pMat);
     gb3.position.set(0, 1.30, -6.7);
-
+ 
     // ═══════════════════════════
     //  SIDEPODS
     // ═══════════════════════════
@@ -1709,55 +1660,55 @@ function createCarModel(primary, secondary) {
         const sp = new THREE.Mesh(new THREE.BoxGeometry(1.35, 0.92, 6.5), pMat);
         sp.position.set(s*2.38, 1.18, -0.5);
         group.add(sp);
-
+ 
         const spTop = new THREE.Mesh(new THREE.BoxGeometry(1.20, 0.38, 5.8), pMat);
         spTop.position.set(s*2.35, 1.68, -0.6);
         group.add(spTop);
-
+ 
         // Entrada de ar
         const inlet = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.72, 1.15), blackMat);
         inlet.position.set(s*3.05, 1.22, 1.8);
         group.add(inlet);
-
+ 
         // Soleira lateral
         const sill = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.30, 6.0), cMat);
         sill.position.set(s*3.10, 0.62, -0.5);
         group.add(sill);
     }
-
+ 
     // ═══════════════════════════
     //  NARIZ — tudo em CAIXAS
     //  Sem nenhum cilindro deitado
     // ═══════════════════════════
-
+ 
     // Tronco do nariz — saindo direto da ramp3
     const noseTrunk = new THREE.Mesh(new THREE.BoxGeometry(1.10, 0.50, 2.5), pMat);
     noseTrunk.position.set(0, 1.37, 10.5);
-
+ 
     // Afunilamento em caixas — cada uma mais fina
     const nose2 = new THREE.Mesh(new THREE.BoxGeometry(0.80, 0.42, 1.5), pMat);
     nose2.position.set(0, 1.34, 12.0);
-
+ 
     const nose3 = new THREE.Mesh(new THREE.BoxGeometry(0.50, 0.34, 1.0), pMat);
     nose3.position.set(0, 1.32, 13.2);
-
+ 
     // Ponta arredondada — esfera pequena só na extremidade
     const noseTip = new THREE.Mesh(new THREE.SphereGeometry(0.25, 8, 6), pMat);
     noseTip.scale.set(0.65, 0.50, 1.0);
     noseTip.position.set(0, 1.31, 13.72);
-
+ 
     // ═══════════════════════════
     //  COCKPIT + AIRBOX
     // ═══════════════════════════
-
+ 
     // Borda do cockpit
     const cpSurround = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.55, 2.8), pMat);
     cpSurround.position.set(0, 2.52, 1.5);
-
+ 
     // Interior escuro
     const cpInterior = new THREE.Mesh(new THREE.BoxGeometry(1.40, 0.70, 2.4), blackMat);
     cpInterior.position.set(0, 2.45, 1.5);
-
+ 
     // Airbox — entra onde ficava o capacete, logo atrás do cockpit
     // Base da airbox (bloco principal)
     const airboxBase = new THREE.Mesh(new THREE.BoxGeometry(1.20, 0.55, 1.80), pMat);
@@ -1774,11 +1725,11 @@ function createCarModel(primary, secondary) {
         af.position.set(s*0.65, 3.20, 0.2);
         group.add(af);
     }
-
+ 
     // Roll hoop integrado à airbox
     const rollHoop = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.35, 0.70), pMat);
     rollHoop.position.set(0, 3.94, -0.3);
-
+ 
     // ═══════════════════════════════════════════════
     //  SHARKTAIL (barbatana de tubarão)
     //  Nasce no topo da airbox (Z≈0, Y≈3.9)
@@ -1813,14 +1764,14 @@ function createCarModel(primary, secondary) {
         top.position.set(0, sy, sz);
         group.add(top);
     }
-
+ 
     // Antena / pirulito
     const pirulitoS = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 1.6, 6), cMat);
     pirulitoS.position.set(0, 2.90, 0.6);
     const pirulitoH = new THREE.Mesh(new THREE.SphereGeometry(0.14, 6, 5),
         new THREE.MeshPhongMaterial({color:0xff7700, depthWrite:true}));
     pirulitoH.position.set(0, 3.72, 0.6);
-
+ 
     // Espelhos
     for (let s of [-1, 1]) {
         const mArm = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.80, 0.12), cMat);
@@ -1830,7 +1781,7 @@ function createCarModel(primary, secondary) {
         mFace.position.set(s*2.0, 2.82, 2.7);
         group.add(mArm, mFace);
     }
-
+ 
     // ═══════════════════════════
     //  ASA DIANTEIRA
     //  Degraus corretos: plano
@@ -1839,32 +1790,32 @@ function createCarModel(primary, secondary) {
     //  Z maior = mais para frente
     // ═══════════════════════════
     const fwGroup = new THREE.Group();
-
+ 
     // Plano principal — o mais baixo e mais largo, mais à frente (Z maior)
     const fw1 = new THREE.Mesh(new THREE.BoxGeometry(7.2, 0.13, 1.55), sMat);
     fw1.position.set(0, 0.48, 11.2);
-
+ 
     // 2º elemento sobe e recua
     const fw2 = new THREE.Mesh(new THREE.BoxGeometry(6.4, 0.11, 0.90), sMat);
     fw2.position.set(0, 0.64, 10.2);
-
+ 
     // 3º elemento — mais alto, mais recuado (perto do nariz)
     const fw3 = new THREE.Mesh(new THREE.BoxGeometry(5.5, 0.09, 0.68), sMat);
     fw3.position.set(0, 0.78, 9.4);
-
+ 
     // Endplates verticais — cobrem o comprimento total da asa
     const fwEPL = new THREE.Mesh(new THREE.BoxGeometry(0.14, 1.10, 2.5), sMat);
     fwEPL.position.set(-3.6, 0.58, 10.6);
     const fwEPR = fwEPL.clone(); fwEPR.position.x = 3.6;
-
+ 
     // Pylons de suporte ao nariz
     const pylL = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.42, 2.0), cMat);
     pylL.position.set(-1.0, 0.65, 10.2);
     const pylR = pylL.clone(); pylR.position.x = 1.0;
-
+ 
     fwGroup.add(fw1, fw2, fw3, fwEPL, fwEPR, pylL, pylR);
     group.add(fwGroup);
-
+ 
     // Bargeboards
     for (let s of [-1,1]) {
         for (let i=0; i<2; i++) {
@@ -1873,12 +1824,12 @@ function createCarModel(primary, secondary) {
             group.add(bb);
         }
     }
-
+ 
     // ═══════════════════════════
     //  ASA TRASEIRA
     // ═══════════════════════════
     const rwGroup = new THREE.Group();
-
+ 
     const rw1 = new THREE.Mesh(new THREE.BoxGeometry(5.8, 0.15, 1.60), sMat);
     rw1.position.set(0, 3.85, -4.5);
     const rw2 = new THREE.Mesh(new THREE.BoxGeometry(5.2, 0.12, 1.05), sMat);
@@ -1887,14 +1838,14 @@ function createCarModel(primary, secondary) {
     rwEPL.position.set(-2.9, 3.30, -4.5);
     const rwEPR = rwEPL.clone(); rwEPR.position.x = 2.9;
     rwGroup.add(rw1, rw2, rwEPL, rwEPR);
-
+ 
     const rwPilL = new THREE.Mesh(new THREE.BoxGeometry(0.24, 2.05, 0.24), pMat);
     rwPilL.position.set(-1.3, 2.68, -4.5);
     const rwPilR = rwPilL.clone(); rwPilR.position.x = 1.3;
     const beam = new THREE.Mesh(new THREE.BoxGeometry(3.8, 0.11, 0.72), cMat);
     beam.position.set(0, 2.24, -4.5);
     group.add(rwGroup, rwPilL, rwPilR, beam);
-
+ 
     // ═══════════════════════════
     //  DIFUSOR + ESCAPE
     //  Escape DEITADO (rotation.x)
@@ -1908,27 +1859,27 @@ function createCarModel(primary, secondary) {
         fin.position.set(i*1.05, 0.58, -5.7); group.add(fin);
     }
     group.add(diff);
-
+ 
     // Escape deitado horizontalmente — CylinderGeometry com rotation.x = PI/2
     // Tubo principal saindo da lateral do engine cover
     const exhMat = new THREE.MeshPhongMaterial({color:0x111111, depthWrite:true, shininess:80});
     const exh = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.28, 2.2, 10), exhMat);
     exh.rotation.x = Math.PI / 2;   // deita o tubo horizontalmente (ao longo do eixo Z)
     exh.position.set(0, 2.20, -4.9); // saindo da traseira do engine cover
-
+ 
     // Boca do escape (ponteira) — aro emissivo
     const exhRim = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.12, 10), exhMat);
     exhRim.rotation.x = Math.PI / 2;
     exhRim.position.set(0, 2.20, -5.98);
-
+ 
     // Brilho de calor na saída
     const exhGlow = new THREE.Mesh(new THREE.CylinderGeometry(0.20, 0.20, 0.10, 10),
         new THREE.MeshPhongMaterial({color:0xff5500, emissive:0xff2200, emissiveIntensity:1.2, depthWrite:true}));
     exhGlow.rotation.x = Math.PI / 2;
     exhGlow.position.set(0, 2.20, -6.06);
-
+ 
     group.add(exh, exhRim, exhGlow);
-
+ 
     // ═══════════════════════════
     //  ADICIONA TUDO
     // ═══════════════════════════
@@ -1942,7 +1893,7 @@ function createCarModel(primary, secondary) {
         airboxBase, airboxTop, airboxMouth, rollHoop,
         pirulitoS, pirulitoH
     );
-
+ 
     return {
         group,
         pivotFL: fL_Pivot, pivotFR: fR_Pivot,
@@ -1951,12 +1902,12 @@ function createCarModel(primary, secondary) {
         damage: { frontWing:false, rearWing:false }
     };
 }
-
+ 
 // ─── SISTEMA DE DANO ───────────────────────────────────────────────
 // Aplica dano visual ao carro do jogador baseado na intensidade do impacto
 function applyDamage(carData, impactForce, fromFront) {
     const d = carData.damage;
-
+ 
     if (fromFront && !d.frontWing && impactForce > 0.35) {
         // Asa dianteira destacada: tomba para o lado e cai
         d.frontWing = true;
@@ -1967,7 +1918,7 @@ function applyDamage(carData, impactForce, fromFront) {
         // Avisa na tela
         showDamageMsg('🔧 ASA DIANTEIRA DANIFICADA!', 0xff6600);
     }
-
+ 
     if (!fromFront && !d.rearWing && impactForce > 0.45) {
         d.rearWing = true;
         carData.rwGroup.position.y  -= 0.3;
@@ -1976,7 +1927,7 @@ function applyDamage(carData, impactForce, fromFront) {
         showDamageMsg('🔧 ASA TRASEIRA DANIFICADA!', 0xff4400);
     }
 }
-
+ 
 function showDamageMsg(txt, col) {
     const el = document.getElementById('collision-msg');
     el.innerText = txt;
@@ -1985,14 +1936,14 @@ function showDamageMsg(txt, col) {
     el.style.display = 'block';
     setTimeout(()=>el.style.display='none', 2200);
 }
-
+ 
 let playerCarData, playerCar;
 let aiCars = [];
-
+ 
 function initCars() {
     if (playerCar) scene.remove(playerCar);
     aiCars.forEach(ai => scene.remove(ai.mesh)); aiCars = [];
-
+ 
     playerCarData = createCarModel(playerPrimaryColor, playerSecondaryColor);
     playerCar = playerCarData.group;
     // Garante que dano começa zerado
@@ -2000,7 +1951,7 @@ function initCars() {
     const pProg=0.999, pt=trackCurve.getPointAt(pProg), tg=trackCurve.getTangentAt(pProg);
     playerCar.position.copy(pt); playerCar.position.y=pt.y+1.5;
     playerCar.rotation.y=Math.atan2(tg.x,tg.z); scene.add(playerCar);
-
+ 
     // 9 equipes com liveries corretas — primary / secondary / accent(capacete)
     // O modelo usa: pMat=primary, sMat=secondary, bMat=fibra de carbono (sempre preto — não alterar)
     const aiTeams = [
@@ -2026,7 +1977,7 @@ function initCars() {
         aiData.group.position.copy(p).add(new THREE.Vector3(-t.z,0,t.x).normalize().multiplyScalar(offset));
         aiData.group.position.y=p.y+1.5; aiData.group.rotation.y=Math.atan2(t.x,t.z);
         scene.add(aiData.group);
-
+ 
         // Atribui nome e número do piloto correspondente ao AI
         // Os 20 carros de IA pegam os outros pilotos do TEAMS (exceto o escolhido pelo jogador)
         const allDriversFlat = TEAMS.flatMap(t => t.drivers.map(d => ({
@@ -2036,7 +1987,7 @@ function initCars() {
             !selectedDriver || d.name !== selectedDriver.driver?.name
         );
         const driverInfo = otherDrivers[i % otherDrivers.length];
-
+ 
         aiCars.push({
             data:aiData, mesh:aiData.group, progress:prog,
             speed:0.00030+Math.random()*0.00008, offset,
@@ -2047,7 +1998,7 @@ function initCars() {
         });
     }
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 //  HUD DE POSIÇÕES — piloto à frente e atrás apenas
 // ═══════════════════════════════════════════════════════
@@ -2055,7 +2006,7 @@ let standingsVisible = true;
 let playerProgress   = 0;
 let playerLaps       = 0;
 let playerLastProg   = 0.999;
-
+ 
 function toggleStandings() {
     standingsVisible = !standingsVisible;
     const rivals = document.getElementById('hud-rivals');
@@ -2063,10 +2014,10 @@ function toggleStandings() {
     rivals.style.display = standingsVisible ? 'block' : 'none';
     pos.style.display    = standingsVisible ? 'block' : 'none';
 }
-
+ 
 function updateStandings() {
     const playerName = selectedDriver ? selectedDriver.driver.name : 'Você';
-
+ 
     // Monta lista plana de todos — só o necessário para ordenar
     const all = [
         { name: playerName, color: playerPrimaryColor,
@@ -2077,22 +2028,22 @@ function updateStandings() {
         }))
     ];
     all.sort((a, b) => b.prog - a.prog);
-
+ 
     const playerIdx = all.findIndex(e => e.isPlayer);
     const pos       = playerIdx + 1;
     const total     = all.length;
-
+ 
     // Atualiza posição e nome
     document.getElementById('hud-pos').textContent       = pos;
     document.getElementById('hud-player-name').textContent = playerName;
-
+ 
     // Piloto à frente e atrás
     const ahead  = playerIdx > 0          ? all[playerIdx - 1] : null;
     const behind = playerIdx < total - 1  ? all[playerIdx + 1] : null;
-
+ 
     const rivals = document.getElementById('hud-rivals');
     rivals.innerHTML = '';
-
+ 
     function gapStr(diff) {
         const s = Math.abs(diff * 100);
         return s < 0.1 ? '<0.1s' : s.toFixed(1) + 's';
@@ -2113,13 +2064,13 @@ function updateStandings() {
             <span class="hud-rival-gap ${gc}">${g}</span>
         </div>`;
     }
-
+ 
     if (ahead)  makeRow('▲', ahead,  ahead.prog  - playerProgress);
     if (behind) makeRow('▼', behind, playerProgress - behind.prog);
     if (!ahead && !behind) rivals.innerHTML =
         '<div class="hud-rival-row" style="color:#555;font-size:0.55rem;padding:6px 14px">Sozinho na pista</div>';
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 //  MINIMAP
 // ═══════════════════════════════════════════════════════
@@ -2135,7 +2086,7 @@ function updateMinimap() {
     aiCars.forEach(ai=>{ mmCtx.beginPath(); mmCtx.arc(ai.mesh.position.x,ai.mesh.position.z,60,0,Math.PI*2); mmCtx.fill(); });
     mmCtx.restore();
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 //  PORTFOLIO SCREEN
 // ═══════════════════════════════════════════════════════
@@ -2178,7 +2129,7 @@ function loadProjectImg(input, containerId) {
     };
     reader.readAsDataURL(file);
 }
-
+ 
 // ═══════════════════════════════════════════════════════
 //  CONTROLES E INICIALIZAÇÃO
 // ═══════════════════════════════════════════════════════
@@ -2209,9 +2160,9 @@ const TEAMS = [
     { id:'bulls',     name:'BullsRacing',    primary:0xffffff, secondary:0x1144cc, css:'#1144cc',
       drivers:[ {num:3,  name:'Lindiblad'},       {num:22, name:'HomemLei'} ] },
 ];
-
+ 
 let selectedDriver = null;  // { team, driver }
-
+ 
 function buildDriverGrid() {
     const grid = document.getElementById('driver-grid');
     grid.innerHTML = '';
@@ -2231,16 +2182,16 @@ function buildDriverGrid() {
         });
     });
 }
-
+ 
 function selectDriver(card, team, driver) {
     document.querySelectorAll('.driver-card').forEach(c => c.classList.remove('active'));
     card.classList.add('active');
     selectedDriver = { team, driver };
-
+ 
     // Atualiza display
     document.getElementById('selected-driver-display').innerHTML =
         `<span>#${driver.num} ${driver.name}</span><br>${team.name}`;
-
+ 
     // Atualiza cores e showroom
     playerPrimaryColor   = team.primary;
     playerSecondaryColor = team.secondary;
@@ -2248,17 +2199,17 @@ function selectDriver(card, team, driver) {
         window.srRebuildCar(team.primary, team.secondary);
     const nm = document.getElementById('showroom-team-name');
     if (nm) { nm.innerText = team.name; nm.style.color = team.css; }
-
+ 
     // Habilita botão
     const btn = document.getElementById('start-race-btn');
     btn.disabled = false;
     btn.style.opacity = '1'; btn.style.cursor = 'pointer';
     btn.textContent = '▶ IR PARA O GRID';
 }
-
+ 
 // Constrói grid ao carregar
 buildDriverGrid();
-
+ 
 function selectTrack(btn, t) {
     document.querySelectorAll('#track-grid .btn-select').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active'); currentTrack=t;
@@ -2282,7 +2233,7 @@ function startCountdown() {
     // Seta nome do piloto no HUD
     if (selectedDriver)
         document.getElementById('hud-player-name').textContent = selectedDriver.driver.name;
-
+ 
     if (currentTrack === 'night') {
         scene.background = new THREE.Color(0x03050f);
         scene.fog = new THREE.FogExp2(0x03050f, 0.000025);
@@ -2299,10 +2250,10 @@ function startCountdown() {
         // Desativa todos os spots do pool
         spotPool.forEach(sp => sp.intensity = 0);
     }
-
+ 
     gameActive=true; lapStartTime=Date.now(); raceStarted=true; playerSector=0;
 }
-
+ 
 const keys={};
 document.addEventListener('keydown', e=>{
     keys[e.code]=true;
@@ -2313,7 +2264,7 @@ document.addEventListener('keyup', e=>{
     keys[e.code]=false;
     if (e.code==='Space') { drsActive=false; document.getElementById('drs-indicator').classList.remove('drs-active'); }
 });
-
+ 
 // ═══════════════════════════════════════════════════════
 //  LOOP PRINCIPAL
 // ═══════════════════════════════════════════════════════
@@ -2321,14 +2272,14 @@ function animate() {
     requestAnimationFrame(animate);
     if (!gameActive) { renderer.render(scene,camera); return; }
     updateEngineSound();
-
+ 
     if (raceStarted) {
         let angle = playerCar.rotation.y;
         if (drsActive) document.getElementById('drs-indicator').classList.add('drs-active');
-
+ 
         const currentTime = (Date.now()-lapStartTime)/1000;
         document.getElementById('current-time').innerText = currentTime.toFixed(2);
-
+ 
         // IA — incrementa laps quando progress wraps
         aiCars.forEach(ai=>{
             const prevProg = ai.progress;
@@ -2341,34 +2292,34 @@ function animate() {
             ai.data.wFLg.rotation.x+=sp; ai.data.wFRg.rotation.x+=sp;
             ai.data.wRLg.rotation.x+=sp; ai.data.wRRg.rotation.x+=sp;
         });
-
+ 
         // Atualiza shake de câmera por colisão
         if (impactShake > 0) impactShake--;
-
+ 
         // Input do jogador
         if (keys['ArrowUp']||keys['KeyW'])   speed+=drsActive?0.38:0.30;
         if (keys['ArrowDown']||keys['KeyS'])  speed-=0.40;
         if (keys['ArrowLeft']||keys['KeyA'])  targetSteering=1;
         else if (keys['ArrowRight']||keys['KeyD']) targetSteering=-1;
         else targetSteering=0;
-
+ 
         steering+=(targetSteering-steering)*0.12;
         playerCarData.pivotFL.rotation.y=steering*0.4;
         playerCarData.pivotFR.rotation.y=steering*0.4;
-
+ 
         speed*=drsActive?0.99:0.98;
         speed=Math.max(-3, Math.min(drsActive?18:15, speed));
         if (Math.abs(speed)>0.1) angle+=steering*0.024*(speed>0?1:-1);
-
+ 
         const sp=speed*0.3;
         playerCarData.wFLg.rotation.x+=sp; playerCarData.wFRg.rotation.x+=sp;
         playerCarData.wRLg.rotation.x+=sp; playerCarData.wRRg.rotation.x+=sp;
-
+ 
         document.getElementById('speed-display').innerText=Math.abs(Math.floor(speed*20))+' km/h';
-
+ 
         let nextX=playerCar.position.x+Math.sin(angle)*speed;
         let nextZ=playerCar.position.z+Math.cos(angle)*speed;
-
+ 
         // ── SISTEMA DE COLISÃO ───────────────────────────────────────
         const now = Date.now();
         aiCars.forEach(ai => {
@@ -2376,42 +2327,42 @@ function animate() {
             const dx=ax-nextX, dz=az-nextZ;
             const dist2=dx*dx+dz*dz;
             const minD=CAR_COLLISION_RADIUS*2;
-
+ 
             if (dist2 < minD*minD) {
                 const d = Math.sqrt(dist2) || 0.01;
                 const overlap = minD - d;
                 const nx=dx/d, nz=dz/d;
-
+ 
                 // Separa carros
                 nextX -= nx * overlap * 0.6;
                 nextZ -= nz * overlap * 0.6;
                 ai.offset += (ai.offset>=0?1:-1) * overlap * 0.04;
-
+ 
                 // Redução de velocidade por impacto
                 const impact = Math.min(overlap/minD, 1.0);
                 speed *= 1.0 - impact*0.4;
                 ai.speed = Math.max(ai.speed * (1.0 - impact*0.12), 0.00018);
-
+ 
                 // Detecta se o impacto é frontal ou traseiro
                 const fwd2d = new THREE.Vector2(Math.sin(angle), Math.cos(angle));
                 const toAI  = new THREE.Vector2(dx, dz).normalize();
                 const dot   = fwd2d.dot(toAI);          // >0 = à frente, <0 = atrás
                 const fromFront = dot > 0.2;
-
+ 
                 // Sistema de dano
                 applyDamage(playerCarData, impact, fromFront);
-
+ 
                 // Feedback visual — debounce 350ms
                 if (now - lastImpactTime > 350) {
                     lastImpactTime = now;
                     impactShake = 20;
-
+ 
                     // Flash borda vermelha
                     const fl=document.getElementById('impact-flash');
                     fl.classList.remove('hit');
                     void fl.offsetWidth;
                     fl.classList.add('hit');
-
+ 
                     // Mensagem proporcional à velocidade
                     const kmh=Math.abs(Math.floor(speed*20));
                     const cm=document.getElementById('collision-msg');
@@ -2421,14 +2372,14 @@ function animate() {
                 }
             }
         });
-
+ 
         // Aplica shake de câmera por colisão
         if (impactShake > 0) {
             const s = impactShake * 0.55;
             camera.position.x += (Math.random()-0.5)*s;
             camera.position.y += (Math.random()-0.5)*s*0.5;
         }
-
+ 
         // Ponto mais próximo da pista
         let minDist=Infinity, closestIdx=0;
         for (let i=0;i<logicPoints.length;i+=5) {
@@ -2439,14 +2390,14 @@ function animate() {
             const dx=logicPoints[i].x-nextX, dz=logicPoints[i].z-nextZ, sq=dx*dx+dz*dz;
             if (sq<minDist) { minDist=sq; closestIdx=i; }
         }
-
+ 
         const dist     = Math.sqrt(minDist);
         const halfRoad = roadWidth/2;
         const softLim  = halfRoad + KERB_W;   // dentro da zebra: sem penalidade
         const hardLim  = softLim + 40;         // fora da zebra: freagem + parede
-
+ 
         const otw = document.getElementById('off-track-warning');
-
+ 
         if (dist > softLim) {
             otw.style.display='block';
             const over=dist-softLim;
@@ -2459,7 +2410,7 @@ function animate() {
                 speed*=0.88;
             }
         } else { otw.style.display='none'; }
-
+ 
         // Volta – máquina de estados
         const lp=closestIdx/logicPoints.length;
         if (playerSector===0 && lp>0.2  && lp<0.4)  playerSector=1;
@@ -2469,23 +2420,23 @@ function animate() {
             playerSector=0;
             showPortfolio(currentTime);
         }
-
+ 
         playerCar.position.set(nextX, logicPoints[closestIdx].y+1.5, nextZ);
         playerCar.rotation.y=angle;
         const pTan=trackCurve.getTangentAt(closestIdx/1800);
         playerCar.rotation.x=-Math.atan2(pTan.y, Math.sqrt(pTan.x*pTan.x+pTan.z*pTan.z));
-
+ 
         // Atualiza progresso acumulado do player para a tabela de posições
         const curFrac = closestIdx / logicPoints.length;
         // Detecta wrap (cruzou a linha) comparando com frame anterior
         if (playerLastProg > 0.85 && curFrac < 0.15) playerLaps++;
         playerLastProg = curFrac;
         playerProgress = playerLaps + curFrac;
-
+ 
         updateStandings();
         updateMinimap();
     }
-
+ 
     // ── CÂMERAS ──────────────────────────────────────────────────────
     if (cameraMode===1) {
         playerCar.updateMatrixWorld(true);
@@ -2505,16 +2456,16 @@ function animate() {
         camera.position.lerp(chasePos, 0.14);
         camera.lookAt(playerCar.position);
     }
-
+ 
     renderer.render(scene,camera);
 }
-
+ 
 window.addEventListener('resize',()=>{
     camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix();
     renderer.setSize(innerWidth,innerHeight);
 });
-
+ 
 animate();
 </script>
 </body>
-</html>
+</html
