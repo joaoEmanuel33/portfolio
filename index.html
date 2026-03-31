@@ -667,51 +667,57 @@
       <div class="po-projects-grid" id="po-projects-grid">
  
         <!-- Projeto 1 -->
-        <div class="po-project-card">
-      <div class="po-project-img" id="pimg-0">
+<div class="po-project-card">
+    <div class="po-project-img" id="pimg-0">
         <img id="pimg-0-img" src="assets/projetokkk.jpeg" alt="Imagem do Projeto 1">
-      </div>
-  
-      <div class="po-project-body">
-        <div class="po-project-tags">
-          <span class="po-project-tag tag-java">Java</span>
-          <span class="po-project-tag tag-db">SQL</span>
-          <span class="po-project-tag tag-api">API REST</span>
+        <div class="po-project-img-placeholder">
+            <svg>...</svg>
+            <span>Click para carregar imagem</span>
         </div>
-        <div class="po-project-name">Projeto de Gereniamento de Eventos</div>
-        <div class="po-project-desc">Proejeto de Gerenciamento de Eventos.</div>
-      </div>
-    </div
+        <input type="file" class="po-project-img-input" 
+               accept="image/*" 
+               onchange="saveProjectImageBase64(this, 'pimg-0')">
+        <div class="po-project-img-hint">UPLOAD</div>
+    </div>
+    <div class="po-project-body">
+        ...
+    </div>
+</div>
+ 
+       <!-- Projeto 2 -->
+<div class="po-project-card">
+    <div class="po-project-img" id="pimg-1">
+        <img id="pimg-1-img" src="assets/pizzaria.PNG" alt="Imagem do Projeto 2">
+        <div class="po-project-img-placeholder">
+            <svg>...</svg>
+            <span>Click para carregar imagem</span>
+        </div>
+        <input type="file" class="po-project-img-input" 
+               accept="image/*" 
+               onchange="saveProjectImageBase64(this, 'pimg-1')">
+        <div class="po-project-img-hint">UPLOAD</div>
+    </div>
+    <div class="po-project-body">
+        ...
+    </div>
+</div>
  
         <!-- Projeto 3 -->
-            <div class="po-project-card">
-              <div class="po-project-img" id="pimg-1">
-            <img id="pimg-1-img" src="assets/pizzaria.PNG" alt="Imagem do Projeto 2">
-          </div>
-  
-          <div class="po-project-body">
-        <div class="po-project-tags">
-          <span class="po-project-tag tag-ia">IA</span>
-          <span class="po-project-tag tag-front">Frontend</span>
+<div class="po-project-card">
+    <div class="po-project-img" id="pimg-3">
+        <img id="pimg-3-img" src="assets/jameswebb.PNG" alt="Imagem do Projeto 3">
+        <div class="po-project-img-placeholder">
+            <svg>...</svg>
+            <span>Click para carregar imagem</span>
         </div>
-            <div class="po-project-name">Sistema de e-commerce</div>
-            <div class="po-project-desc">Sistema de e-commerce com objetivo de facilitar pequenas empresas com soluções práticas.</div>
-          </div>
-        </div>
- 
-        <!-- Projeto 4 -->
-       <div class="po-project-card">
-  <div class="po-project-img" id="pimg-3">
-    <img id="pimg-3-img" src="assets/jameswebb.PNG" alt="Imagem do Projeto 4">
-  </div>
-  
-  <div class="po-project-body">
-    <div class="po-project-tags">
-      <span class="po-project-tag tag-front">Frontend</span>
+        <input type="file" class="po-project-img-input" 
+               accept="image/*" 
+               onchange="saveProjectImageBase64(this, 'pimg-3')">
+        <div class="po-project-img-hint">UPLOAD</div>
     </div>
-    <div class="po-project-name">Projeto de frontend</div>
-    <div class="po-project-desc">Desenvolvido em 2023, durate o curso de programação pelo Bairro da Juventude.</div>
-  </div>
+    <div class="po-project-body">
+        ...
+    </div>
 </div>
  
       </div><!-- /po-projects-grid -->
@@ -2128,6 +2134,52 @@ function loadProjectImg(input, containerId) {
     };
     reader.readAsDataURL(file);
 }
+
+    // Função para converter imagem para base64 e salvar
+function saveProjectImageBase64(input, containerId) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const base64String = e.target.result;
+        const img = document.getElementById(containerId + '-img');
+        const placeholder = document.querySelector('#' + containerId + ' .po-project-img-placeholder');
+        const hint = document.querySelector('#' + containerId + ' .po-project-img-hint');
+        
+        // Define a imagem com base64
+        img.src = base64String;
+        img.classList.add('loaded');
+        if (placeholder) placeholder.style.display = 'none';
+        if (hint) hint.style.display = 'none';
+        
+        // Salva em localStorage
+        localStorage.setItem('projectImg_' + containerId, base64String);
+        console.log('Imagem salva em base64 para: ' + containerId);
+    };
+    reader.readAsDataURL(file);
+}
+
+// Função para carregar imagens salvas do localStorage ao iniciar
+function loadSavedProjectImages() {
+    const projectIds = ['pimg-0', 'pimg-1', 'pimg-3'];
+    projectIds.forEach(id => {
+        const savedImage = localStorage.getItem('projectImg_' + id);
+        if (savedImage) {
+            const img = document.getElementById(id + '-img');
+            const placeholder = document.querySelector('#' + id + ' .po-project-img-placeholder');
+            const hint = document.querySelector('#' + id + ' .po-project-img-hint');
+            
+            img.src = savedImage;
+            img.classList.add('loaded');
+            if (placeholder) placeholder.style.display = 'none';
+            if (hint) hint.style.display = 'none';
+        }
+    });
+}
+
+// Chamar ao carregar a página
+window.addEventListener('load', loadSavedProjectImages);
  
 // ═══════════════════════════════════════════════════════
 //  CONTROLES E INICIALIZAÇÃO
